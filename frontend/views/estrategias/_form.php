@@ -2,6 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\date\DatePicker;
+use kartik\file\FileInput;
+use yii\helpers\Url;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
@@ -12,24 +16,35 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'id_objetivo')->textInput() ?>
-
+    <?= $form->field($model, 'id_objetivo')->dropDownList($model->comboObjetivos) ?>
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
+<?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
+    <?=DatePicker::widget([
+        'name' => 'fecha_inicio',
+        'value' => $model->FechaObjetivo->fecha_inicio,
+        'type' => DatePicker::TYPE_RANGE,
+        'name2' => 'fecha_fin',
+        'value2' => $model->FechaObjetivo->fecha_fin,
+        'pluginOptions' => [
+            'autoclose' => false,
+            'format' => 'yyyy-m-dd'
+        ]
+    ]);
+    ?>
+            <?=$form->field($model, 'evidencias')->widget(FileInput::classname(), [
+    'options' => ['multiple' => true],
+    'pluginOptions' => ['previewFileType' => 'any']
+]);
+            ?> 
 
-    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
+<?= $form->field($model, 'presupuesto')->textInput() ?>
 
-    <?= $form->field($model, 'fecha_fin')->textInput() ?>
-
-    <?= $form->field($model, 'evidencias')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'presupuesto')->textInput() ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+<?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
 </div>

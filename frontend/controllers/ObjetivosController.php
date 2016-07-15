@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Objetivos;
+use app\models\Estrategias;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -35,6 +36,7 @@ class ObjetivosController extends Controller
      */
     public function actionIndex()
     {
+        
         $dataProvider = new ActiveDataProvider([
             'query' => Objetivos::find(),
         ]);
@@ -51,8 +53,12 @@ class ObjetivosController extends Controller
      */
     public function actionView($id)
     {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Estrategias::find()->where(['id_objetivo' => $id]),
+        ]);
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider,
         ]);
     }
 

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
 
-$this->title = 'Create Estrategias';
+$this->title = 'Crear Estrategias';
 $this->params['breadcrumbs'][] = ['label' => 'Estrategias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

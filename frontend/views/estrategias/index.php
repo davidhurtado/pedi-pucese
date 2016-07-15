@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Estrategias', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Crear Estrategias', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'descripcion',
             'responsables',
             'fecha_inicio',
-            // 'fecha_fin',
+             'fecha_fin',
             // 'evidencias',
             // 'presupuesto',
 

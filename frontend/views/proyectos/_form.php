@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'responsable')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
+    <?= $form->field($model, 'fecha_inicio')->textInput(['type'=>'date']) ?>
 
-    <?= $form->field($model, 'fecha_fin')->textInput() ?>
+    <?= $form->field($model, 'fecha_fin')->textInput(['type'=>'date']) ?>
 
     <?= $form->field($model, 'presupuesto')->textInput() ?>
 

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
 
-$this->title = 'Create Objetivos';
+$this->title = 'Crear Objetivos';
 $this->params['breadcrumbs'][] = ['label' => 'Objetivos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

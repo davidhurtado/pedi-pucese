@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "estrategias".
  *
@@ -77,5 +77,14 @@ class Estrategias extends \yii\db\ActiveRecord
     public function getProgramas()
     {
         return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
+    }
+    
+     public function getcomboObjetivos() {
+        $models = Objetivos::find()->asArray()->all();
+        return ArrayHelper::map($models, 'id', 'descripcion');
+    }
+    public function getFechaObjetivo() {
+        $modelObjetivo = Objetivos::findOne(Estrategias::findOne($_GET['id'])->id_objetivo);
+        return $modelObjetivo;
     }
 }

@@ -16,14 +16,14 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
+    <?= $form->field($model, 'fecha_inicio')->textInput(['type'=>'date']) ?>
 
-    <?= $form->field($model, 'fecha_fin')->textInput() ?>
+    <?= $form->field($model, 'fecha_fin')->textInput(['type'=>'date']) ?>
 
     <?= $form->field($model, 'evidencias')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Modificar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

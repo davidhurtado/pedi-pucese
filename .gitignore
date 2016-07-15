@@ -17,6 +17,7 @@ Thumbs.db
 
 # composer vendor dir
 /vendor
+/tests
 
 # composer itself is not needed
 composer.phar
@@ -32,4 +33,5 @@ phpunit.phar
 # vagrant runtime
 /.vagrant
 
+tests/_output/*
 tests/_output/*
