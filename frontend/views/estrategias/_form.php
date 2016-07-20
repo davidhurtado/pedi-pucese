@@ -37,8 +37,7 @@ use yii\helpers\Url;
         ?>
         <?=
         $form->field($model, 'evidencias')->widget(FileInput::classname(), [
-            'options' => ['multiple' => true],
-            'pluginOptions' => ['previewFileType' => 'any']
+            'options' => ['multiple' => true]
         ]);
         ?> 
 

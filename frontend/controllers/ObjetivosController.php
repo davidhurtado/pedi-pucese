@@ -127,8 +127,8 @@ public function actionCreate() {
             // process uploaded image file instance
             $image = $model->uploadDocument();
 
-               print_r($model->getDocumentFile());
-               //die();
+               //print_r($model->evidencias);
+              // die();
             if ($model->save()) {
                 // upload only if valid uploaded file instance found
                 if ($image !== false) {

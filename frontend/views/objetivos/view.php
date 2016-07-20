@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ])
         ?>
     </p>
-<?='E -> '.var_dump($model->evidencias)?>
+
     <?=
     DetailView::widget([
         'model' => $model,

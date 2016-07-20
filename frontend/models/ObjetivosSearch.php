@@ -64,7 +64,7 @@ class ObjetivosSearch extends Objetivos
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'evidencias', $this->evidencias]);
+            ->andFilterWhere(['like', 'evidencia', $this->evidencias]);
 
         return $dataProvider;
     }
