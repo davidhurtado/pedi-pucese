@@ -79,12 +79,8 @@ class Estrategias extends \yii\db\ActiveRecord
         return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
     }
     
-     public function getcomboObjetivos() {
-        $models = Objetivos::find()->asArray()->all();
-        return ArrayHelper::map($models, 'id', 'descripcion');
-    }
     public function getFechaObjetivo() {
-        $modelObjetivo = Objetivos::findOne(Estrategias::findOne($_GET['id'])->id_objetivo);
+        $modelObjetivo = Objetivos::findOne($_GET['id']);
         return $modelObjetivo;
     }
 }

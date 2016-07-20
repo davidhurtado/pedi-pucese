@@ -3,7 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
-
+use yii\helpers\Url;
+use yii\bootstrap\Modal;
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
 
@@ -27,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ])
         ?>
     </p>
-
+<?='E -> '.var_dump($model->evidencias)?>
     <?=
     DetailView::widget([
         'model' => $model,
@@ -39,7 +40,16 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ])
     ?>
+    
     <h3>ESTRATEGIAS</h3>
+     <?=
+        Html::button('Crear Estrategias', [
+            'class' => 'btn btn-success btn-ajax-modal',
+            'value' => Url::to(['/estrategias/create', 'id' => $model->id]),
+            'id'=>'agregar_estrategias',
+            'data-target' => '#modal_add_estrategias',
+        ]);
+        ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -74,5 +84,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ]);
             ?>
+ <?php
+    Modal::begin([
+        'id' => 'modal_add_estrategias',
+        'header' => '<h4>Estrategias</h4>',
+    ]);
+    echo '
+    <?php
+    $this->re<div id="modal-content"></div>';
+    Modal::end();
+    ?>
+    <?php
+    $this->registerJs('
+        $(\'.btn-ajax-modal\').click(function (){
+    var elm = $(this),
+        target = elm.attr(\'data-target\'),
+        ajax_body = elm.attr(\'value\');
 
+    $(target).modal(\'show\')
+        .find(\'.modal-content\')
+        .load(ajax_body);
+});
+    ');
+    ?>
 </div>

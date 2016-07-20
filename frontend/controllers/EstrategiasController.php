@@ -61,11 +61,20 @@ class EstrategiasController extends Controller {
      */
     public function actionCreate() {
         $model = new Estrategias();
+        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ActiveForm::validate($model);
+        }
+          $model->id_objetivo=$_GET['id'];
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(Yii::$app->request->referrer);
+        }elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('create', [
+                        'model' => $model
+            ]);
         } else {
             return $this->render('create', [
-                        'model' => $model,
+                        'model' => $model
             ]);
         }
     }
