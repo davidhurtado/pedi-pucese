@@ -48,6 +48,11 @@ AppAsset::register($this);
                             '<li class="divider"></li>',
                             '<li class="dropdown-header">Reportes</li>',
                             ['label' => 'SEGUIMIENTO', 'url' => [ '/proyectos']],
+                            //-- Mod - organigrama --//
+                            '<li class="divider"></li>',
+                            '<li class="dropdown-header">Organigrama</li>',
+                            ['label' => 'Organigramas', 'url' => [ '/organigrama']],
+                            ['label' => 'Niveles', 'url' => [ '/nivel']],
                         ],
                     ];
                     $menuItems[] = ['label' => 'Users RBAC', 'url' => ['/user/admin/index']];
