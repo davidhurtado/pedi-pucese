@@ -105,6 +105,7 @@ class Objetivos extends \yii\db\ActiveRecord
 
         // generate a unique file name
         $this->evidencias = Yii::$app->security->generateRandomString() . ".{$ext}";
+
         // the uploaded image instance
         return $evidencias;
     }

@@ -52,8 +52,7 @@ use kartik\file\FileInput;
     <?=
     $form->field($model, 'evidencias')->widget(FileInput::classname(), [
         'options' => ['multiple' => true],
-        'pluginOptions' => ['previewFileType' => 'any'],
-        
+        'pluginOptions' => ['previewFileType' => 'any']
     ]);
     ?> 
 

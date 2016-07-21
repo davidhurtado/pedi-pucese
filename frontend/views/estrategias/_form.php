@@ -37,26 +37,18 @@ use yii\helpers\Url;
         ?>
         <?=
         $form->field($model, 'evidencias')->widget(FileInput::classname(), [
-            'options' => ['multiple' => true],
-            'pluginOptions' => [
-                'uploadUrl' => Url::to(['/site/file-upload']),
-                'uploadExtraData' => [
-                    'album_id' => 20,
-                    'cat_id' => 'Nature'
-                ],
-                'maxFileCount' => 10
-            ]
+            'options' => ['multiple' => true]
         ]);
         ?> 
 
-        <?= $form->field($model, 'presupuesto')->textInput() ?>
+<?= $form->field($model, 'presupuesto')->textInput() ?>
 
 
         <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
 
-        <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
     </div>
 </div>
