@@ -119,16 +119,14 @@ class ObjetivosController extends Controller {
     }*/
 public function actionCreate() {
         $model = new Objetivos();
-
-
-
+        
         if ($model->load(Yii::$app->request->post())) {
-
+            //$model->evil=$model->evidencias;
             // process uploaded image file instance
             $image = $model->uploadDocument();
 
-               //print_r($model->evidencias);
-              // die();
+               print_r($model->evidencias);
+
             if ($model->save()) {
                 // upload only if valid uploaded file instance found
                 if ($image !== false) {
