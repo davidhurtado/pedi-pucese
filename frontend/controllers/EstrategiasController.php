@@ -6,9 +6,9 @@ use Yii;
 use app\models\Estrategias;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
-use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
@@ -18,12 +18,14 @@ class EstrategiasController extends Controller {
     /**
      * @inheritdoc
      */
+    public $evidencias_array = Array();
+
     public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['POST', 'GET'],
                 ],
             ],
         ];
@@ -61,20 +63,42 @@ class EstrategiasController extends Controller {
      */
     public function actionCreate() {
         $model = new Estrategias();
-        if(Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())){
+        if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return ActiveForm::validate($model);
         }
-          $model->id_objetivo=$_GET['id'];
+        $model->id_objetivo = $_GET['id'];
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $i = 0;
+            $Evidencias = UploadedFile::getInstances($model, 'evidencias');
+            $txtEvidencias = '';
+            foreach ($Evidencias as $evide):
+                $ext = end((explode(".", $evide->name)));
+                // generate a unique file name
+                $this->evidencias_array[$i] = Yii::$app->security->generateRandomString() . ".{$ext}";
+                $txtEvidencias.= $this->evidencias_array[$i] . ';';
+                $i++;
+            endforeach;
+            $connection = Yii::$app->db;
+            $command = $connection->createCommand("UPDATE estrategias SET evidencias='" . $txtEvidencias . "' WHERE id=" . $model['id']);
+            // ->bindValue(':id', $_GET['id']);
+            $command->execute();
+            //die();
+            $path = $model->getDocumentFile();
+            // upload only if valid uploaded file instance found
+            $i = 0;
+            foreach ($Evidencias as $file) {
+                $ext = end((explode(".", $file->name)));
+                // generate a unique file name
+                $model->evidencias = $this->evidencias_array[$i];
+                $file->saveAs($path . $model->evidencias);
+                $i++;
+            }
             return $this->redirect(Yii::$app->request->referrer);
-        }elseif (Yii::$app->request->isAjax) {
-            return $this->renderAjax('create', [
-                        'model' => $model
-            ]);
         } else {
-            return $this->render('create', [
-                        'model' => $model
+            return $this->renderAjax('create', [
+                        'model' => $model,
             ]);
         }
     }
@@ -105,56 +129,14 @@ class EstrategiasController extends Controller {
      */
     public function actionDelete($id) {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
-    public function actionUpload() {
-        $imageFile = UploadedFile::getInstanceByName('evidencias[name]');
-        $directory = \Yii::getAlias('@frontend/web/pdf/estrategias') . DIRECTORY_SEPARATOR . Yii::$app->session->id . DIRECTORY_SEPARATOR;
-        if (!is_dir($directory)) {
-            mkdir($directory);
-        }
-        if ($imageFile) {
-            $uid = uniqid(time(), true);
-            $fileName = $uid . '.' . $imageFile->extension;
-            $filePath = $directory . $fileName;
-            if ($imageFile->saveAs($filePath)) {
-                $path = '/pdf/estrategias/' . Yii::$app->session->id . DIRECTORY_SEPARATOR . $fileName;
-                return Json::encode([
-                            'files' => [[
-                            'name' => $fileName,
-                            'size' => $imageFile->size,
-                            "url" => $path,
-                            "thumbnailUrl" => $path,
-                            "deleteUrl" => 'image-delete?name=' . $fileName,
-                            "deleteType" => "POST"
-                                ]]
-                ]);
-            }
-        }
-        return '';
-    }
-
-    public function actionImageDelete($name) {
-        $directory = \Yii::getAlias('@frontend/web/pdf/estrategias') . DIRECTORY_SEPARATOR . Yii::$app->session->id;
-        if (is_file($directory . DIRECTORY_SEPARATOR . $name)) {
-            unlink($directory . DIRECTORY_SEPARATOR . $name);
-        }
-        $files = FileHelper::findFiles($directory);
-        $output = [];
-        foreach ($files as $file) {
-            $path = '/pdf/estrategias/' . Yii::$app->session->id . DIRECTORY_SEPARATOR . basename($file);
-            $output['files'][] = [
-                'name' => basename($file),
-                'size' => filesize($file),
-                "url" => $path,
-                "thumbnailUrl" => $path,
-                "deleteUrl" => 'image-delete?name=' . basename($file),
-                "deleteType" => "POST"
-            ];
-        }
-        return Json::encode($output);
+    public function actionDeleteDocument() {
+        // $this->findModel($id)->delete();
+        echo 'yes';
+        die();
+        //return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**

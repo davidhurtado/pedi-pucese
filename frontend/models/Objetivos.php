@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\web\UploadedFile;
+
 /**
  * This is the model class for table "objetivos".
  *
@@ -16,37 +17,36 @@ use yii\web\UploadedFile;
  *
  * @property Estrategias[] $estrategias
  */
-class Objetivos extends \yii\db\ActiveRecord
-{
+class Objetivos extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
     public $evidencias;
-    public static function tableName()
-    {
+    public $evidencias_array = Array();
+
+    public static function tableName() {
         return 'objetivos';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'evidencias'], 'required'],
             [['fecha_inicio', 'fecha_fin'], 'safe'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
             [['evidencias'], 'file', 'extensions' => 'pdf'],
-            //[['evidencias'], 'string', 'max' => 300],
+                //[['evidencias'], 'string', 'max' => 300],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'descripcion' => 'Descripcion',
@@ -56,20 +56,20 @@ class Objetivos extends \yii\db\ActiveRecord
             'evidencias' => 'Evidencias',
         ];
     }
-  //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute){
+
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+    public function verifDate($attribute) {
         $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
         $currentDate = $time->format('Y-m-d h:m:s');
-        
-        if($this->$attribute <=  $currentDate ){
+
+        if ($this->$attribute <= $currentDate) {
             $this->addError($attribute, 'No puede ser menor a la fecha actual');
         }
-        
     }
-    
-     public function getDocumentFile() {
-         Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/pdf/objetivos/';
-        return isset($this->evidencias) ? Yii::$app->params['uploadPath'] . $this->evidencias : null;
+
+    public function getDocumentFile() {
+        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/pdf/objetivos/';
+        return isset($this->evidencias) ? Yii::$app->params['uploadPath'] : null;
     }
 
     /**
@@ -81,33 +81,6 @@ class Objetivos extends \yii\db\ActiveRecord
         // return a default image placeholder if your source avatar is not found
         $evidencias = isset($this->evidencias) ? $this->evidencias : null;
         return Yii::$app->params['uploadUrl'] . $evidencias;
-    }
-
-    /**
-     * Process upload of image
-     *
-     * @return mixed the uploaded image instance
-     */
-    public function uploadDocument() {
-        // get the uploaded file instance. for multiple file uploads
-        // the following data will return an array (you may need to use
-        // getInstances method)
-        $evidencias = UploadedFile::getInstance($this, 'evidencias');
-        
-        // if no image was uploaded abort the upload
-        if (empty($evidencias)) {
-            return false;
-        }
-
-        // store the source file name
-        $this->evidencias = $evidencias->name;
-        $ext = end((explode(".", $evidencias->name)));
-
-        // generate a unique file name
-        $this->evidencias = Yii::$app->security->generateRandomString() . ".{$ext}";
-
-        // the uploaded image instance
-        return $evidencias;
     }
 
     /**
@@ -137,8 +110,35 @@ class Objetivos extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getEstrategias()
-    {
+    public function getEstrategias() {
         return $this->hasMany(Estrategias::className(), ['id_objetivo' => 'id']);
+    }
+  public function getEvidencias_preview() {
+        $aux = explode(';', $this->getAttribute('evidencias'));
+        $evidencias_preview = Array();
+        for ($i = 0; $i < count($aux); $i++):
+            array_push($evidencias_preview, $this->getDocumentFile() . 'pdf/objetivos/' . $aux[$i]);
+        endfor;
+        if(empty($this->getAttribute('evidencias'))){
+            return '';
+        }
+        return $evidencias_preview ;
+    }
+
+    public function getEvidencias() {
+        $aux = explode(';', $this->getAttribute('evidencias'));
+        $evidencias = Array();
+        for ($i = 0; $i < count($aux); $i++):
+            array_push($evidencias, [
+                'type' => 'pdf',
+                'caption' => $aux[$i],
+                'url' => 'pdf/objetivos/' . $aux[$i],
+                'key' => $i
+            ]);
+        endfor;
+        if(empty($this->getAttribute('evidencias'))){
+            return '';
+        }
+        return $evidencias;
     }
 }

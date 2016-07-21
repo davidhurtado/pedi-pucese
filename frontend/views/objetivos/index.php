@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
                 'descripcion',
-                'evidencias',
+                //'evidencias',
                 [
                     'attribute' => 'fecha_inicio',
                     'value' => 'fecha_inicio',
@@ -82,16 +82,16 @@ $this->params['breadcrumbs'][] = $this->title;
         ?>
         <?php
         Modal::begin([
+            'size' => Modal::SIZE_LARGE,
             'id' => 'modal_add_objetivos',
             'header' => '<h4>Objetivos</h4>',
         ]);
-        echo '
-    <?php
-    $this->re<div id="modal-content"></div>';
+        echo '<div id="modal-content"></div>';
         Modal::end();
         ?>
         <?php
         $this->registerJs('
+             $(\'.modal-lg\').css(\'width\', \'90%\');
         $(\'.btn-ajax-modal\').click(function (){
     var elm = $(this),
         target = elm.attr(\'data-target\'),

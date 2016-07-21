@@ -22,33 +22,63 @@ use yii\helpers\Url;
         <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
+        <div class="row" style="margin-bottom: 8px">
+        <div class="col-sm-6">
+            <?=
+            $form->field($model, 'fecha_inicio')->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'language' => 'es',
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'minView' => 0,
+                ]
+            ]);
+            ?>
+        </div>
+        <div class="col-sm-6">
+            <?=
+            $form->field($model, 'fecha_fin')->widget(DatePicker::classname(), [
+                'options' => ['placeholder' => 'Fecha de fin ...'],
+                'language' => 'es',
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'minView' => 0,
+                ]
+            ]);
+            ?>
+        </div>
+    </div>
         <?=
-        DatePicker::widget([
-            'name' => 'fecha_inicio',
-            'value' => $model->FechaObjetivo->fecha_inicio,
-            'type' => DatePicker::TYPE_RANGE,
-            'name2' => 'fecha_fin',
-            'value2' => $model->FechaObjetivo->fecha_fin,
+        $form->field($model, 'evidencias[]')->widget(FileInput::classname(), [
+            'options' => ['multiple' => true],
             'pluginOptions' => [
-                'autoclose' => false,
-                'format' => 'yyyy-m-dd'
+                'uploadUrl' => '/estrategias/delete-document/',
+                'previewFileType' => 'any',
+                'showPreview' => true,
+                'showCaption' => true,
+                'showRemove' => false,
+                'showUpload' => false,
+                'initialPreview' => $evidencias_preview,
+                        'initialPreviewAsData' => true,
+                        'initialPreviewConfig' => $evidencias,
+                'overwriteInitial' => false,
+                'maxFileSize' => 2800
             ]
-        ]);
-        ?>
-        <?=
-        $form->field($model, 'evidencias')->widget(FileInput::classname(), [
-            'options' => ['multiple' => true]
         ]);
         ?> 
 
-<?= $form->field($model, 'presupuesto')->textInput() ?>
+        <?= $form->field($model, 'presupuesto')->textInput() ?>
 
 
         <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
 
-<?php ActiveForm::end(); ?>
+        <?php ActiveForm::end(); ?>
 
     </div>
 </div>

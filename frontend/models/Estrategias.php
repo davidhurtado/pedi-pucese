@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
+
 /**
  * This is the model class for table "estrategias".
  *
@@ -19,21 +21,22 @@ use yii\helpers\ArrayHelper;
  * @property Objetivos $idObjetivo
  * @property Programas[] $programas
  */
-class Estrategias extends \yii\db\ActiveRecord
-{
+class Estrategias extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public $evidencias;
+    public $evidencias_array = Array();
+
+    public static function tableName() {
         return 'estrategias';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_objetivo'], 'integer'],
@@ -41,7 +44,7 @@ class Estrategias extends \yii\db\ActiveRecord
             [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
-            [['evidencias'], 'string', 'max' => 300],
+            //[['evidencias'], 'string', 'max' => 600],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
     }
@@ -49,8 +52,7 @@ class Estrategias extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'id_objetivo' => 'Id Objetivo',
@@ -63,24 +65,97 @@ class Estrategias extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getDocumentFile() {
+        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/pdf/estrategias/';
+        return isset($this->evidencias) ? Yii::$app->params['uploadPath'] : null;
+    }
+
+    /**
+     * fetch stored image url
+     * @return string
+     */
+    public function getDocumentUrl() {
+        Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/pdf/estrategias/';
+// return a default image placeholder if your source avatar is not found
+        $evidencias = isset($this->evidencias) ? $this->evidencias : null;
+        return Yii::$app->params['uploadUrl'] . $evidencias;
+    }
+
+    /**
+     * Process deletion of image
+     *
+     * @return boolean the status of deletion
+     */
+    public function deleteDocument() {
+        $file = $this->getDocumentFile().$this->getAttribute('evidencias')[2];
+
+// check if file exists on server
+        if (empty($file) || !file_exists($file)) {
+            return false;
+        }
+
+// check if uploaded file can be deleted on server
+        if (!unlink($file)) {
+            return false;
+        }
+
+// if deletion successful, reset your file attributes
+        $this->evidencias = null;
+
+        return true;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdObjetivo()
-    {
+    public function getIdObjetivo() {
         return $this->hasOne(Objetivos::className(), ['id' => 'id_objetivo']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProgramas()
-    {
+    public function getProgramas() {
         return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
     }
-    
+
     public function getFechaObjetivo() {
         $modelObjetivo = Objetivos::findOne($_GET['id']);
         return $modelObjetivo;
     }
+
+    public function getObjetivo($id) {
+        $modelObjetivo = Objetivos::findOne($id)->descripcion;
+        return $modelObjetivo;
+    }
+
+    public function getEvidencias_preview() {
+        $aux = explode(';', $this->getAttribute('evidencias'));
+        $evidencias_preview = Array();
+        for ($i = 0; $i < count($aux); $i++):
+            array_push($evidencias_preview, $this->getDocumentFile() . 'pdf/estrategias/' . $aux[$i]);
+        endfor;
+         if(empty($this->getAttribute('evidencias'))){
+            return '';
+        }
+        return $evidencias_preview ;
+    }
+
+    public function getEvidencias() {
+        $aux = explode(';', $this->getAttribute('evidencias'));
+        $evidencias = Array();
+        for ($i = 0; $i < count($aux); $i++):
+            array_push($evidencias, [
+                'type' => 'pdf',
+                'caption' => $aux[$i],
+                'url' => 'pdf/estrategias/' . $aux[$i],
+                'key' => $i+1
+            ]);
+        endfor;
+         if(empty($this->getAttribute('evidencias'))){
+            return '';
+        }
+        return $evidencias;
+    }
+
 }
