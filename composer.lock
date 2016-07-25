@@ -4,25 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "448ec7e0a92447e158e4476d36c89c98",
-    "content-hash": "c576e643ed794ce9616e5acbd44f2bf6",
+    "hash": "e78996ee55db811ae1728f9b9040d7e6",
+    "content-hash": "12332b9b2ce41ff0cc98e0c4c2ac6ace",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
-            "version": "v3.3.5",
+            "version": "v3.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482"
+                "reference": "81df608a40bf0629a1dc08e584849bb1e43e0b7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/16b48259a62f576e52c903c476bd42b90ab22482",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/81df608a40bf0629a1dc08e584849bb1e43e0b7a",
+                "reference": "81df608a40bf0629a1dc08e584849bb1e43e0b7a",
                 "shasum": ""
             },
             "require": {
-                "bower-asset/jquery": ">=1.9.1"
+                "bower-asset/jquery": ">=1.9.1,<3.0"
             },
             "type": "bower-asset-library",
             "extra": {
@@ -57,17 +57,71 @@
             ]
         },
         {
-            "name": "bower-asset/jquery",
-            "version": "2.2.3",
+            "name": "bower-asset/fullcalendar",
+            "version": "v2.9.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
-                "reference": "af22a351b2ea5801ffb1695abb3bb34d5bed9198"
+                "url": "https://github.com/fullcalendar/fullcalendar.git",
+                "reference": "05938998f5b9fef9a3516572f33c141c0f792928"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/af22a351b2ea5801ffb1695abb3bb34d5bed9198",
-                "reference": "af22a351b2ea5801ffb1695abb3bb34d5bed9198",
+                "url": "https://api.github.com/repos/fullcalendar/fullcalendar/zipball/05938998f5b9fef9a3516572f33c141c0f792928",
+                "reference": "05938998f5b9fef9a3516572f33c141c0f792928",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.7.1",
+                "bower-asset/moment": ">=2.5.0"
+            },
+            "require-dev": {
+                "bower-asset/bootstrap": "~3.2.0",
+                "bower-asset/jasmine-fixture": "~2.0.0",
+                "bower-asset/jasmine-jquery": "~2.1.1",
+                "bower-asset/jquery-mockjax": "~2.2.0",
+                "bower-asset/jquery-simulate": "~1.0.1",
+                "bower-asset/jquery-ui": ">=1.11.1",
+                "bower-asset/moment-timezone": "~0.2.1"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "dist/fullcalendar.js",
+                    "dist/fullcalendar.css"
+                ],
+                "bower-asset-ignore": [
+                    "*",
+                    "**/.*",
+                    "!/dist/**",
+                    "!/README.*",
+                    "!/LICENSE.*",
+                    "!/CHANGELOG.*",
+                    "!/CONTRIBUTING.*"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Full-sized drag & drop event calendar",
+            "keywords": [
+                "calendar",
+                "event",
+                "full-sized",
+                "jquery-plugin"
+            ]
+        },
+        {
+            "name": "bower-asset/jquery",
+            "version": "2.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jquery/jquery-dist.git",
+                "reference": "c0185ab7c75aab88762c5aae780b9d83b80eda72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/c0185ab7c75aab88762c5aae780b9d83b80eda72",
+                "reference": "c0185ab7c75aab88762c5aae780b9d83b80eda72",
                 "shasum": ""
             },
             "type": "bower-asset-library",
@@ -86,6 +140,31 @@
                 "jquery",
                 "library"
             ]
+        },
+        {
+            "name": "bower-asset/jquery-ui",
+            "version": "1.11.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jqueryui.git",
+                "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
+                "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": [
+                    "jquery-ui.js"
+                ],
+                "bower-asset-ignore": []
+            }
         },
         {
             "name": "bower-asset/jquery.inputmask",
@@ -132,6 +211,43 @@
                 "mask",
                 "plugins"
             ]
+        },
+        {
+            "name": "bower-asset/moment",
+            "version": "2.14.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moment/moment.git",
+                "reference": "227746b29044a4c2160ae7c597c7f24aacac2635"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moment/moment/zipball/227746b29044a4c2160ae7c597c7f24aacac2635",
+                "reference": "227746b29044a4c2160ae7c597c7f24aacac2635",
+                "shasum": ""
+            },
+            "type": "bower-asset-library",
+            "extra": {
+                "bower-asset-main": "moment.js",
+                "bower-asset-ignore": [
+                    "**/.*",
+                    "benchmarks",
+                    "bower_components",
+                    "meteor",
+                    "node_modules",
+                    "scripts",
+                    "tasks",
+                    "test",
+                    "component.json",
+                    "composer.json",
+                    "CONTRIBUTING.md",
+                    "ender.js",
+                    "Gruntfile.js",
+                    "Moment.js.nuspec",
+                    "package.js",
+                    "package.json"
+                ]
+            }
         },
         {
             "name": "bower-asset/punycode",
@@ -256,6 +372,56 @@
             "time": "2015-03-06 05:28:07"
         },
         {
+            "name": "dektrium/yii2-rbac",
+            "version": "0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dektrium/yii2-rbac.git",
+                "reference": "4c5c383f577256d34cbc37ed26809a8ff109b2ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dektrium/yii2-rbac/zipball/4c5c383f577256d34cbc37ed26809a8ff109b2ec",
+                "reference": "4c5c383f577256d34cbc37ed26809a8ff109b2ec",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-widget-select2": "*",
+                "yiisoft/yii2": "2.0.*"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "bootstrap": "dektrium\\rbac\\Bootstrap"
+            },
+            "autoload": {
+                "psr-4": {
+                    "dektrium\\rbac\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Erofeev",
+                    "email": "dmeroff@gmail.com",
+                    "homepage": "http://dmeroff.ru"
+                }
+            ],
+            "description": "RBAC management module for Yii2",
+            "keywords": [
+                "dektrium",
+                "rbac gui",
+                "rbac management",
+                "rbac module",
+                "yii rbac",
+                "yii2",
+                "yii2-rbac"
+            ],
+            "time": "2016-03-30 12:19:16"
+        },
+        {
             "name": "dektrium/yii2-user",
             "version": "v0.9.3",
             "source": {
@@ -361,17 +527,73 @@
             "time": "2016-07-16 12:58:58"
         },
         {
+            "name": "fxp/composer-asset-plugin",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fxpio/composer-asset-plugin.git",
+                "reference": "8d74bc7c714aadbda54622c216b2e7bf786595cb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fxpio/composer-asset-plugin/zipball/8d74bc7c714aadbda54622c216b2e7bf786595cb",
+                "reference": "8d74bc7c714aadbda54622c216b2e7bf786595cb",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0.0"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Fxp\\Composer\\AssetPlugin\\FxpAssetPlugin",
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Fxp\\Composer\\AssetPlugin\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Pluchino",
+                    "email": "francois.pluchino@gmail.com"
+                }
+            ],
+            "description": "NPM/Bower Dependency Manager for Composer",
+            "homepage": "https://github.com/fxpio/composer-asset-plugin",
+            "keywords": [
+                "asset",
+                "bower",
+                "composer",
+                "dependency manager",
+                "nodejs",
+                "npm",
+                "package"
+            ],
+            "time": "2016-07-01 12:04:16"
+        },
+        {
             "name": "kartik-v/bootstrap-fileinput",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/bootstrap-fileinput.git",
-                "reference": "8dd9021a6678d176bdbcd1e7cbb8c8b4169e50e8"
+                "reference": "be6319564ea685f12183bf36ab113f53994dae2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/8dd9021a6678d176bdbcd1e7cbb8c8b4169e50e8",
-                "reference": "8dd9021a6678d176bdbcd1e7cbb8c8b4169e50e8",
+                "url": "https://api.github.com/repos/kartik-v/bootstrap-fileinput/zipball/be6319564ea685f12183bf36ab113f53994dae2b",
+                "reference": "be6319564ea685f12183bf36ab113f53994dae2b",
                 "shasum": ""
             },
             "type": "library",
@@ -411,7 +633,7 @@
                 "progress",
                 "upload"
             ],
-            "time": "2016-07-11 09:07:59"
+            "time": "2016-07-24 06:50:18"
         },
         {
             "name": "kartik-v/yii2-field-range",
@@ -521,12 +743,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-datepicker.git",
-                "reference": "4ccb7262716f405f51720956a453a61a1b48dd53"
+                "reference": "e589d2463b2a3077e07364b48a2eb7dc399ec49b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-datepicker/zipball/4ccb7262716f405f51720956a453a61a1b48dd53",
-                "reference": "4ccb7262716f405f51720956a453a61a1b48dd53",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-datepicker/zipball/e589d2463b2a3077e07364b48a2eb7dc399ec49b",
+                "reference": "e589d2463b2a3077e07364b48a2eb7dc399ec49b",
                 "shasum": ""
             },
             "require": {
@@ -567,7 +789,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-07-01 11:15:25"
+            "time": "2016-07-23 15:29:51"
         },
         {
             "name": "kartik-v/yii2-widget-datetimepicker",
@@ -624,12 +846,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-fileinput.git",
-                "reference": "b0fb41e4290fc4aa35a49a977bf4484cb30f8ff9"
+                "reference": "6fc8922716bf0b3638c67ff0895a9ff688b6c027"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-fileinput/zipball/b0fb41e4290fc4aa35a49a977bf4484cb30f8ff9",
-                "reference": "b0fb41e4290fc4aa35a49a977bf4484cb30f8ff9",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-fileinput/zipball/6fc8922716bf0b3638c67ff0895a9ff688b6c027",
+                "reference": "6fc8922716bf0b3638c67ff0895a9ff688b6c027",
                 "shasum": ""
             },
             "require": {
@@ -671,7 +893,109 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2016-07-06 19:27:12"
+            "time": "2016-07-23 15:30:48"
+        },
+        {
+            "name": "kartik-v/yii2-widget-select2",
+            "version": "v2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
+                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69",
+                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-krajee-base": "~1.7"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kartik\\select2\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kartik Visweswaran",
+                    "email": "kartikv2@gmail.com",
+                    "homepage": "http://www.krajee.com/"
+                }
+            ],
+            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
+            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
+            "keywords": [
+                "dropdown",
+                "extension",
+                "form",
+                "jquery",
+                "plugin",
+                "select2",
+                "widget",
+                "yii2"
+            ],
+            "time": "2016-02-17 11:49:30"
+        },
+        {
+            "name": "philippfrenzel/yii2fullcalendar",
+            "version": "2.5.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/philippfrenzel/yii2fullcalendar.git",
+                "reference": "a00862648a8cc81ddd8175b7b6f3ca6f09bde7c3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/philippfrenzel/yii2fullcalendar/zipball/a00862648a8cc81ddd8175b7b6f3ca6f09bde7c3",
+                "reference": "a00862648a8cc81ddd8175b7b6f3ca6f09bde7c3",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/fullcalendar": "2.*",
+                "php": ">=5.4.0",
+                "yiisoft/yii2": "*",
+                "yiisoft/yii2-jui": "*"
+            },
+            "require-dev": {
+                "codeception/codeception": "*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "yii2fullcalendar\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philipp Frenzel",
+                    "email": "philipp@frenzel.net",
+                    "homepage": "http://www.frenzel.net/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Yii2 fullcalendar Widgets",
+            "homepage": "http://www.frenzel.net/",
+            "keywords": [
+                "fullcalendar",
+                "yii2"
+            ],
+            "time": "2016-04-23 15:30:06"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1011,6 +1335,56 @@
             "time": "2016-02-06 00:49:24"
         },
         {
+            "name": "yiisoft/yii2-jui",
+            "version": "2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/yiisoft/yii2-jui.git",
+                "reference": "843a2160cfe30f5c8b0cb2e9dbd8ee6bcf97e71d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/yiisoft/yii2-jui/zipball/843a2160cfe30f5c8b0cb2e9dbd8ee6bcf97e71d",
+                "reference": "843a2160cfe30f5c8b0cb2e9dbd8ee6bcf97e71d",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/jquery-ui": "1.11.*@stable",
+                "yiisoft/yii2": ">=2.0.4"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                },
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "yii\\jui\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Qiang Xue",
+                    "email": "qiang.xue@gmail.com"
+                }
+            ],
+            "description": "The Jquery UI extension for the Yii framework",
+            "keywords": [
+                "jQuery UI",
+                "yii2"
+            ],
+            "time": "2016-07-22 22:26:59"
+        },
+        {
             "name": "yiisoft/yii2-swiftmailer",
             "version": "2.0.5",
             "source": {
@@ -1090,59 +1464,6 @@
             }
         },
         {
-            "name": "dektrium/yii2-rbac",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dektrium/yii2-rbac.git",
-                "reference": "b4c40531832ccd1ed0a2a74d06651526889df244"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dektrium/yii2-rbac/zipball/b4c40531832ccd1ed0a2a74d06651526889df244",
-                "reference": "b4c40531832ccd1ed0a2a74d06651526889df244",
-                "shasum": ""
-            },
-            "require": {
-                "kartik-v/yii2-widget-select2": "^2.0",
-                "yiisoft/yii2": "^2.0.8"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "bootstrap": "dektrium\\rbac\\Bootstrap",
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "dektrium\\rbac\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Dmitry Erofeev",
-                    "email": "dmeroff@gmail.com",
-                    "homepage": "http://dmeroff.ru"
-                }
-            ],
-            "description": "RBAC management module for Yii2",
-            "keywords": [
-                "dektrium",
-                "rbac gui",
-                "rbac management",
-                "rbac module",
-                "yii rbac",
-                "yii2",
-                "yii2-rbac"
-            ],
-            "time": "2016-07-19 17:12:14"
-        },
-        {
             "name": "fzaninotto/faker",
             "version": "v1.6.0",
             "source": {
@@ -1189,59 +1510,6 @@
                 "fixtures"
             ],
             "time": "2016-04-29 12:21:54"
-        },
-        {
-            "name": "kartik-v/yii2-widget-select2",
-            "version": "v2.0.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/kartik-v/yii2-widget-select2.git",
-                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69",
-                "reference": "4d03239c1e28ef8d3b96ab7fe360f5cbda34fb69",
-                "shasum": ""
-            },
-            "require": {
-                "kartik-v/yii2-krajee-base": "~1.7"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "kartik\\select2\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kartik Visweswaran",
-                    "email": "kartikv2@gmail.com",
-                    "homepage": "http://www.krajee.com/"
-                }
-            ],
-            "description": "Enhanced Yii2 wrapper for the Select2 jQuery plugin (sub repo split from yii2-widgets).",
-            "homepage": "https://github.com/kartik-v/yii2-widget-select2",
-            "keywords": [
-                "dropdown",
-                "extension",
-                "form",
-                "jquery",
-                "plugin",
-                "select2",
-                "widget",
-                "yii2"
-            ],
-            "time": "2016-02-17 11:49:30"
         },
         {
             "name": "phpspec/php-diff",
@@ -1435,8 +1703,7 @@
         "dektrium/yii2-user": 20,
         "kartik-v/yii2-widget-datepicker": 20,
         "kartik-v/bootstrap-fileinput": 20,
-        "kartik-v/yii2-widget-fileinput": 20,
-        "dektrium/yii2-rbac": 20
+        "kartik-v/yii2-widget-fileinput": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

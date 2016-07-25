@@ -34,7 +34,7 @@ class Programas extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_estrategia', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_estrategia'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],

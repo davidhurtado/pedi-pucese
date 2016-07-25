@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="container">
     <div class="objetivos-create">
 
-        <h3><?= Html::encode($this->title) ?></h3>
+        <h3 style="text-align: center"><?= Html::encode($this->title) ?></h3>
 
         <?=
         $this->render('_form', [

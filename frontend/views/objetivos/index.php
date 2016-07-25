@@ -6,6 +6,7 @@ use yii\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\datetime\DateTimePicker;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ObjetivosSearch */

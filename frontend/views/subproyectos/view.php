@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-
+use yii\helpers\Url;
+use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Subproyectos */
 
@@ -28,8 +29,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'id_proyecto',
             'nombre',
             'descripcion',
             'evidencias_subproyectos',
@@ -37,5 +36,41 @@ $this->params['breadcrumbs'][] = $this->title;
             'fecha_fin',
         ],
     ]) ?>
-
+<h3>ACTIVIDADES</h3>
+  <?= Html::a('Crear Actividades',  Url::to(['/actividades/index', 'pid' => $model->id]), ['class' => 'btn btn-success']) ?>
+    <?=
+    GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            //'id',
+            ['class' => 'yii\grid\SerialColumn'],
+            'descripcion',
+            'codigo_presupuestario',
+            //'fecha_inicio',
+            //'fecha_fin',
+            // 'evidencias',
+             'presupuesto',
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{view}{update}{delete}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['actividades/view', 'id' => $model['id']], [
+                                    'title' => Yii::t('yii', 'Ver'),
+                        ]);
+                    },
+                            'update' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['actividades/update', 'id' => $model['id']], [
+                                    'title' => Yii::t('yii', 'Modificar'),
+                        ]);
+                    },
+                            'delete' => function ($url, $model) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['actividades/delete', 'id' => $model['id']], [
+                                    'title' => Yii::t('yii', 'Eliminar'),
+                        ]);
+                    },
+                        ]
+                    ],
+                ],
+            ]);
+            ?>
 </div>

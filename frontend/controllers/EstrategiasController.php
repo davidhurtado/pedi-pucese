@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use app\models\Programas;
 
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
@@ -51,8 +52,12 @@ class EstrategiasController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Programas::find()->where(['id_estrategia' => $id]),
+        ]);
         return $this->render('view', [
                     'model' => $this->findModel($id),
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -95,6 +100,7 @@ class EstrategiasController extends Controller {
                 $file->saveAs($path . $model->evidencias);
                 $i++;
             }
+
             return $this->redirect(Yii::$app->request->referrer);
         } else {
             return $this->renderAjax('create', [
@@ -116,9 +122,40 @@ class EstrategiasController extends Controller {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                        'model' => $model,
+                'model' => $model,
             ]);
         }
+        /*
+        $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $i = 0;
+//            $txtEvidencias = '123';
+//            foreach ($Evidencias as $evide):
+//                $ext = end((explode(".", $evide->name)));
+//                // generate a unique file name
+//                $this->evidencias_array[$i] = Yii::$app->security->generateRandomString() . ".{$ext}";
+//                $txtEvidencias.= $this->evidencias_array[$i] . ';';
+//                $i++;
+//            endforeach;
+//            $connection = Yii::$app->db;
+//            $command = $connection->createCommand("UPDATE estrategias SET evidencias='" . $txtEvidencias . "' WHERE id=" . $model->id);
+//            $command->execute();
+//            $path = $model->getDocumentFile();
+//            // upload only if valid uploaded file instance found
+//            $i = 0;
+//            foreach ($Evidencias as $file) {
+//                $ext = end((explode(".", $file->name)));
+//                // generate a unique file name
+//                $model->evidencias = $this->evidencias_array[$i];
+//                $file->saveAs($path . $model->evidencias);
+//                $i++;
+//            }
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                        'model' => $model,
+            ]);
+        }*/
     }
 
     /**

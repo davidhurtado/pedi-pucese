@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Subproyectos;
+use app\models\Actividades;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -51,8 +52,12 @@ class SubproyectosController extends Controller
      */
     public function actionView($id)
     {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Actividades::find()->where(['id_subproyecto' => $id]),
+        ]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -65,12 +70,21 @@ class SubproyectosController extends Controller
     {
         $model = new Subproyectos();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
+       if ($model->load(Yii::$app->request->post())) {
+            $model->id_proyecto = $_GET['id'];
+            if ($model->save()) {
+                return $this->redirect(Yii::$app->request->referrer);
+            } else {
+                return $this->renderAjax('create', [
+                            'model' => $model,
+                ]);
+            }
+        }elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('create', [
+                        'model' => $model
             ]);
+        }else{
+            return $this->redirect(['index']);
         }
     }
 

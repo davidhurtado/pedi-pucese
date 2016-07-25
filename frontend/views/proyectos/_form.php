@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\datetime\DateTimePicker;
 /* @var $this yii\web\View */
 /* @var $model app\models\Proyectos */
 /* @var $form yii\widgets\ActiveForm */
@@ -10,9 +10,11 @@ use yii\widgets\ActiveForm;
 
 <div class="proyectos-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'id_programa')->textInput() ?>
+    <?php
+    $form = ActiveForm::begin([
+                'id' => 'proyectos-form',
+    ]);
+    ?>
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
@@ -20,16 +22,43 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'responsable')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'fecha_inicio')->textInput(['type'=>'date']) ?>
-
-    <?= $form->field($model, 'fecha_fin')->textInput(['type'=>'date']) ?>
-
-    <?= $form->field($model, 'presupuesto')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+<div class="row" style="margin-bottom: 8px">
+        <div class="col-sm-6">
+            <?=
+            $form->field($model, 'fecha_inicio')->widget(DateTimePicker::classname(), [
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'language' => 'es',
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 4,
+                    'minView' => 2,
+                ]
+            ]);
+            ?>
+        </div>
+        <div class="col-sm-6">
+            <?=
+            $form->field($model, 'fecha_fin')->widget(DateTimePicker::classname(), [
+                'options' => ['placeholder' => 'Fecha de fin ...'],
+                'language' => 'es',
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 4,
+                    'minView' => 2,
+                ]
+            ]);
+            ?>
+        </div>
     </div>
 
-    <?php ActiveForm::end(); ?>
+        <?= $form->field($model, 'presupuesto')->textInput() ?>
+
+    <div class="form-group">
+    <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    </div>
+
+<?php ActiveForm::end(); ?>
 
 </div>

@@ -37,7 +37,7 @@ class Proyectos extends \yii\db\ActiveRecord
         return [
             [['id_programa', 'nombre', 'descripcion', 'responsable', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_programa'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'safe'],
+            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
@@ -61,6 +61,15 @@ class Proyectos extends \yii\db\ActiveRecord
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
         ];
+    }
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+    public function verifDate($attribute) {
+        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
+        $currentDate = $time->format('Y-m-d h:m:s');
+           
+        if ($this->$attribute <= $currentDate) {
+            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+        }
     }
 
     /**

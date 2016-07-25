@@ -12,25 +12,21 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="estrategias-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Crear Estrategias', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'id_objetivo',
             'descripcion',
             'responsables',
             'fecha_inicio',
-             'fecha_fin',
+            'fecha_fin',
             // 'evidencias',
             // 'presupuesto',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+    ]);
+    ?>
 </div>

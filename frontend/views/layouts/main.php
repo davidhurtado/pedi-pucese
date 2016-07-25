@@ -47,11 +47,12 @@ AppAsset::register($this);
                         '<li class="divider"></li>',
                         '<li class="dropdown-header">Consultas</li>',
                         ['label' => 'ESTRATEGIAS', 'url' => [ '/estrategias']],
-                         ['label' => 'PROGRAMAS', 'url' => [ '/programas']],
-                         ['label' => 'PROYECTOS', 'url' => [ '/proyectos']],
+                        ['label' => 'PROGRAMAS', 'url' => [ '/programas']],
+                        ['label' => 'PROYECTOS', 'url' => [ '/proyectos']],
+                        ['label' => 'SUBPROYECTOS', 'url' => [ '/subproyectos']],
                         '<li class="divider"></li>',
                         '<li class="dropdown-header">Reportes</li>',
-                        ['label' => 'SEGUIMIENTO', 'url' => [ '/proyectos']],
+                        ['label' => 'ACTIVIDADES', 'url' => [ '/actividades']],
                     ],
                 ];
                 $menuItems[] = '<li>'

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Programas;
+use app\models\Proyectos;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,18 +13,17 @@ use yii\filters\VerbFilter;
 /**
  * ProgramasController implements the CRUD actions for Programas model.
  */
-class ProgramasController extends Controller
-{
+class ProgramasController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['POST','GET'],
                 ],
             ],
         ];
@@ -33,14 +33,13 @@ class ProgramasController extends Controller
      * Lists all Programas models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
         $dataProvider = new ActiveDataProvider([
             'query' => Programas::find(),
         ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -49,10 +48,13 @@ class ProgramasController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Proyectos::find()->where(['id_programa' => $id]),
+        ]);
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -61,16 +63,23 @@ class ProgramasController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new Programas();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
+        if ($model->load(Yii::$app->request->post())) {
+            $model->id_estrategia = $_GET['id'];
+            if ($model->save()) {
+                return $this->redirect(Yii::$app->request->referrer);
+            } else {
+                return $this->renderAjax('create', [
+                            'model' => $model,
+                ]);
+            }
+        }elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('create', [
+                        'model' => $model
             ]);
+        }else{
+            return $this->redirect(['index']);
         }
     }
 
@@ -80,15 +89,14 @@ class ProgramasController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                        'model' => $model,
             ]);
         }
     }
@@ -99,11 +107,11 @@ class ProgramasController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
+        
+     return $this->redirect(Yii::$app->request->referrer);
+        //return $this->redirect(['index']);
     }
 
     /**
@@ -113,12 +121,12 @@ class ProgramasController extends Controller
      * @return Programas the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Programas::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

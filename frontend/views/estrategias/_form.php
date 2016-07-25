@@ -56,7 +56,7 @@ use yii\helpers\Url;
         $form->field($model, 'evidencias[]')->widget(FileInput::classname(), [
             'options' => ['multiple' => true],
             'pluginOptions' => [
-                'uploadUrl' => '/estrategias/delete-document/',
+                'uploadUrl' => '/',
                 'previewFileType' => 'any',
                 'showPreview' => true,
                 'showCaption' => true,

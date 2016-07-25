@@ -38,13 +38,13 @@ class Estrategias extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_objetivo', 'descripcion', 'responsables','evidencias', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_objetivo'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'safe'],
+            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
-            //[['evidencias'], 'string', 'max' => 600],
+            [['evidencias'], 'string', 'max' => 600],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
     }
@@ -63,6 +63,15 @@ class Estrategias extends \yii\db\ActiveRecord {
             'evidencias' => 'Evidencias',
             'presupuesto' => 'Presupuesto',
         ];
+    }
+     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+    public function verifDate($attribute) {
+        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
+        $currentDate = $time->format('Y-m-d h:m:s');
+
+        if ($this->$attribute <= $currentDate) {
+            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+        }
     }
 
     public function getDocumentFile() {
@@ -132,19 +141,16 @@ class Estrategias extends \yii\db\ActiveRecord {
     public function getEvidencias_preview() {
         $aux = explode(';', $this->getAttribute('evidencias'));
         $evidencias_preview = Array();
-        for ($i = 0; $i < count($aux); $i++):
+        for ($i = 0; $i < count($aux)-1; $i++):
             array_push($evidencias_preview, $this->getDocumentFile() . 'pdf/estrategias/' . $aux[$i]);
         endfor;
-         if(empty($this->getAttribute('evidencias'))){
-            return '';
-        }
         return $evidencias_preview ;
     }
 
     public function getEvidencias() {
         $aux = explode(';', $this->getAttribute('evidencias'));
         $evidencias = Array();
-        for ($i = 0; $i < count($aux); $i++):
+        for ($i = 0; $i < count($aux)-1; $i++):
             array_push($evidencias, [
                 'type' => 'pdf',
                 'caption' => $aux[$i],
@@ -152,9 +158,6 @@ class Estrategias extends \yii\db\ActiveRecord {
                 'key' => $i+1
             ]);
         endfor;
-         if(empty($this->getAttribute('evidencias'))){
-            return '';
-        }
         return $evidencias;
     }
 
