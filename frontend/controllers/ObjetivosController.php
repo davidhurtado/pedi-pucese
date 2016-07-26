@@ -12,7 +12,7 @@ use yii\data\ActiveDataProvider;
 use app\models\Estrategias;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
-
+use yii\data\Pagination;
 /**
  * ObjetivosController implements the CRUD actions for Objetivos model.
  */
@@ -42,7 +42,15 @@ class ObjetivosController extends Controller {
         $searchModel = new ObjetivosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+          // $query = Post::find()->where(['visible' => 1])->orderBy(['fecha' => SORT_DESC]);
+      /*  $countQuery = clone $query;
+        $pages = new Pagination([ 'defaultPageSize' => 2, 'totalCount' => $countQuery->count()]);
+        $query = $query->offset($pages->offset)
+                ->limit($pages->limit)
+                ->all();
+      //  Yii::$app->params['paginas'] = $pages;
+        //Yii::$app->params['modelPost'] = $dataProvider;*/
+         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
@@ -62,14 +70,6 @@ class ObjetivosController extends Controller {
                     'model' => $this->findModel($id),
                     'dataProvider' => $dataProvider,
         ]);
-
-
-//        $searchModel = new ObjetivosSearch();
-//        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-//        return $this->render('view', [
-//                    'model' => $this->findModel($id),
-//                    'dataProvider' => $dataProvider,
-//        ]);
     }
 
     /**
@@ -89,10 +89,7 @@ class ObjetivosController extends Controller {
                         'model' => $model
             ]);
         } else {
-            return $this->render('create', [
-                        'model' => $model
-            ]);
-            //return $this->redirect(['index']);
+            return $this->redirect(['index']);
         }
     }
 
@@ -118,8 +115,8 @@ class ObjetivosController extends Controller {
         if ($model->load(Yii::$app->request->post())) {
              $model->responsables = implode(",", $model->responsables);
             if ($model->save()) {
-                return $this->redirect(['index']);
-                return $this->redirect(Yii::$app->request->referrer);
+                return $this->redirect(['view', 'id' => $model->id]);
+                //return $this->redirect(Yii::$app->request->referrer);
             }
         } elseif (Yii::$app->request->isAjax) {
             return $this->renderAjax('update', [

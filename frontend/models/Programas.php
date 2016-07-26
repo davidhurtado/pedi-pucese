@@ -75,4 +75,34 @@ class Programas extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Proyectos::className(), ['id_programa' => 'id']);
     }
+    
+    public function getLevels() {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'nid', 'org_id'])
+                ->from('niveles')->where(['rid' => 9])
+                ->orderBy(['title' => SORT_DESC]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+
+        return $levels;
+    }
+
+    public function getResponsables($resp) {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'org_id'])
+                ->from('niveles')->where(['nid' => $resp]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+        $textResp='';
+        foreach ($levels as $responsable):
+            $textResp.="(".$responsable['title'].") ";
+        endforeach;
+        return $textResp;
+    }
 }

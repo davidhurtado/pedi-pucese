@@ -32,66 +32,78 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]);
                     ?>                </p>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-6">
                 <!--?= $form->field($model, 'id')->dropDownList([])->label('Copiadora') ?-->
                 <?php
                 $form = ActiveForm::begin([
                             'enableAjaxValidation' => true,
+                            'options' => ['enctype' => 'multipart/form-data'],
+                            'action' => 'index.php?r=objetivos',
+                            'method' => 'get',
                 ]);
                 ?>
-                <?=
-                DateTimePicker::widget([
-                    'model' => $searchModel,
-                    'attribute' => 'fecha_inicio',
-                    'language' => 'es',
-                    'options' => ['placeholder' => 'Seleccione Año'],
-                    'type' => DateTimePicker::TYPE_COMPONENT_APPEND,
-                    'pluginOptions' => [
-                        'format' => 'yyyy',
-                        'autoclose' => true,
-                        'startView' => 4,
-                        'minView' => 4,
-                    ],
-                ])
-                ?>
+                <div class="col-xs-6">
+                    <?=
+                    DateTimePicker::widget([
+                        'name' => 'anio',
+                        'language' => 'es',
+                        'options' => ['placeholder' => 'Seleccione Año'],
+                        'type' => DateTimePicker::TYPE_COMPONENT_APPEND,
+                        'pluginOptions' => [
+                            'format' => 'yyyy',
+                            'autoclose' => true,
+                            'startView' => 4,
+                            'minView' => 4,
+                        ],
+                    ])
+                    ?>
+                </div>
+                <div class="col-xs-6">
+                    <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
+                </div>
 
                 <?php ActiveForm::end(); ?>
             </div>
         </div>
-        <?=
-        GridView::widget([
-            'dataProvider' => $dataProvider,
-            'filterModel' => $searchModel,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
-                'descripcion',
-                //'evidencias',
-                [
-                    'attribute' => 'fecha_inicio',
-                    'value' => 'fecha_inicio',
-                    'filter' => false,
-                ],
-                [
-                    'attribute' => 'fecha_fin',
-                    'value' => 'fecha_fin',
-                    'filter' => false
-                ],
-                // 'evidencias',
-                ['class' => 'yii\grid\ActionColumn'],
+    </div>
+    <?=
+    GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\CheckboxColumn',
+                'name' => 'id'
             ],
-        ]);
-        ?>
-        <?php
-        Modal::begin([
-            'size' => Modal::SIZE_LARGE,
-            'id' => 'modal_add_objetivos',
-            'header' => '<h4>Objetivos</h4>',
-        ]);
-        echo '<div id="modal-content"></div>';
-        Modal::end();
-        ?>
-        <?php
-        $this->registerJs('
+            'descripcion',
+            //'evidencias',
+            [
+                'attribute' => 'fecha_inicio',
+                'value' => 'fecha_inicio',
+                'filter' => false,
+            ],
+            [
+                'attribute' => 'fecha_fin',
+                'value' => 'fecha_fin',
+                'filter' => false
+            ],
+            // 'evidencias',
+            ['class' => 'yii\grid\ActionColumn'],
+        ],
+    ]);
+    ?>
+    <?php
+    Modal::begin([
+        'size' => Modal::SIZE_LARGE,
+        'id' => 'modal_add_objetivos',
+        'header' => '<h4>Objetivos</h4>',
+    ]);
+    echo '<div id="modal-content"></div>';
+    Modal::end();
+    ?>
+    <?php
+    $this->registerJs('
              $(\'.modal-lg\').css(\'width\', \'90%\');
         $(\'.btn-ajax-modal\').click(function (){
     var elm = $(this),
@@ -103,5 +115,5 @@ $this->params['breadcrumbs'][] = $this->title;
         .load(ajax_body);
 });
     ');
-        ?>
-    </div>
+    ?>
+</div>

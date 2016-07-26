@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Programas;
+use app\models\ProgramasSearch;
 use app\models\Proyectos;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -34,11 +35,11 @@ class ProgramasController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Programas::find(),
-        ]);
+         $searchModel = new ProgramasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
+                    'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
     }
@@ -67,6 +68,7 @@ class ProgramasController extends Controller {
         $model = new Programas();
         if ($model->load(Yii::$app->request->post())) {
             $model->id_estrategia = $_GET['id'];
+            $model->responsables = implode(",", $model->responsables);
             if ($model->save()) {
                 return $this->redirect(Yii::$app->request->referrer);
             } else {
@@ -90,14 +92,22 @@ class ProgramasController extends Controller {
      * @return mixed
      */
     public function actionUpdate($id) {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+         $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+             $model->responsables = implode(",", $model->responsables);
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+                //return $this->redirect(Yii::$app->request->referrer);
+            }
+        } elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('update', [
+                        'model' => $model
+            ]);
         } else {
             return $this->render('update', [
-                        'model' => $model,
+                        'model' => $model
             ]);
+            //return $this->redirect(['index']);
         }
     }
 

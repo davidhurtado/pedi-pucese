@@ -35,13 +35,13 @@ class Proyectos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_programa', 'nombre', 'descripcion', 'responsable', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_programa'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsable'], 'string', 'max' => 100],
+            [['responsables'], 'string', 'max' => 100],
             [['id_programa'], 'exist', 'skipOnError' => true, 'targetClass' => Programas::className(), 'targetAttribute' => ['id_programa' => 'id']],
         ];
     }
@@ -56,7 +56,7 @@ class Proyectos extends \yii\db\ActiveRecord
             'id_programa' => 'Id Programa',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripcion',
-            'responsable' => 'Responsable',
+            'responsables' => 'Responsable',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
@@ -86,5 +86,34 @@ class Proyectos extends \yii\db\ActiveRecord
     public function getSubproyectos()
     {
         return $this->hasMany(Subproyectos::className(), ['id_proyecto' => 'id']);
+    }
+     public function getLevels() {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'nid', 'org_id'])
+                ->from('niveles')->where(['rid' => 8])
+                ->orderBy(['title' => SORT_DESC]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+
+        return $levels;
+    }
+
+    public function getResponsables($resp) {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'org_id'])
+                ->from('niveles')->where(['nid' => $resp]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+        $textResp='';
+        foreach ($levels as $responsable):
+            $textResp.="(".$responsable['title'].") ";
+        endforeach;
+        return $textResp;
     }
 }

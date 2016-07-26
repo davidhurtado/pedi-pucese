@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "estrategias".
@@ -38,13 +39,13 @@ class Estrategias extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_objetivo', 'descripcion', 'responsables','evidencias', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_objetivo', 'descripcion', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_objetivo'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
-            [['evidencias'], 'string', 'max' => 600],
+            //[['evidencias'], 'string', 'max' => 600],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
     }
@@ -64,7 +65,8 @@ class Estrategias extends \yii\db\ActiveRecord {
             'presupuesto' => 'Presupuesto',
         ];
     }
-     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
     public function verifDate($attribute) {
         $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
         $currentDate = $time->format('Y-m-d h:m:s');
@@ -72,6 +74,20 @@ class Estrategias extends \yii\db\ActiveRecord {
         if ($this->$attribute <= $currentDate) {
             $this->addError($attribute, 'No puede ser menor a la fecha actual');
         }
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdObjetivo() {
+        return $this->hasOne(Objetivos::className(), ['id' => 'id_objetivo']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProgramas() {
+        return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
     }
 
     public function getDocumentFile() {
@@ -90,43 +106,43 @@ class Estrategias extends \yii\db\ActiveRecord {
         return Yii::$app->params['uploadUrl'] . $evidencias;
     }
 
-    /**
-     * Process deletion of image
-     *
-     * @return boolean the status of deletion
-     */
-    public function deleteDocument() {
-        $file = $this->getDocumentFile().$this->getAttribute('evidencias')[2];
+    public function getDocuments() {
+        // get the uploaded file instance. for multiple file uploads
+        // the following data will return an array (you may need to use
+        // getInstances method)
+        $image = UploadedFile::getInstances($this, 'evidencias');
 
-// check if file exists on server
-        if (empty($file) || !file_exists($file)) {
+        // if no image was uploaded abort the upload
+        if (empty($image)) {
             return false;
         }
+        $i = 0;
+        $txtEvidencias = '';
+        foreach ($image as $evide):
+            $ext = end((explode(".", $evide->name)));
+            // generate a unique file name
+            $this->evidencias_array[$i] = Yii::$app->security->generateRandomString() . ".{$ext}";
+            $txtEvidencias.= $this->evidencias_array[$i] . ';';
+            $i++;
+        endforeach;
+        
+        return $txtEvidencias;
+    }
 
-// check if uploaded file can be deleted on server
-        if (!unlink($file)) {
+    public function uploadDocument() {
+        // get the uploaded file instance. for multiple file uploads
+        // the following data will return an array (you may need to use
+        // getInstances method)
+        $image = UploadedFile::getInstances($this, 'evidencias');
+
+        // if no image was uploaded abort the upload
+        if (empty($image)) {
             return false;
         }
-
-// if deletion successful, reset your file attributes
-        $this->evidencias = null;
-
-        return true;
+        return $image;
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdObjetivo() {
-        return $this->hasOne(Objetivos::className(), ['id' => 'id_objetivo']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getProgramas() {
-        return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
-    }
+   
 
     public function getFechaObjetivo() {
         $modelObjetivo = Objetivos::findOne($_GET['id']);
@@ -141,24 +157,57 @@ class Estrategias extends \yii\db\ActiveRecord {
     public function getEvidencias_preview() {
         $aux = explode(';', $this->getAttribute('evidencias'));
         $evidencias_preview = Array();
-        for ($i = 0; $i < count($aux)-1; $i++):
+        for ($i = 0; $i < count($aux) - 1; $i++):
             array_push($evidencias_preview, $this->getDocumentFile() . 'pdf/estrategias/' . $aux[$i]);
         endfor;
-        return $evidencias_preview ;
+        return $evidencias_preview;
     }
 
     public function getEvidencias() {
         $aux = explode(';', $this->getAttribute('evidencias'));
+        $key = $this->id;
         $evidencias = Array();
-        for ($i = 0; $i < count($aux)-1; $i++):
+        $url = Url::to(['estrategias/view', 'id' => $key]);
+        for ($i = 0; $i < count($aux) - 1; $i++):
             array_push($evidencias, [
                 'type' => 'pdf',
                 'caption' => $aux[$i],
                 'url' => 'pdf/estrategias/' . $aux[$i],
-                'key' => $i+1
+                'key' => $aux[$i]
+                    //'key' => $i + 1
             ]);
         endfor;
         return $evidencias;
+    }
+
+    public function getLevels() {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'nid', 'org_id'])
+                ->from('niveles')->where(['rid' => 7])
+                ->orderBy(['title' => SORT_DESC]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+
+        return $levels;
+    }
+
+    public function getResponsables($resp) {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'org_id'])
+                ->from('niveles')->where(['nid' => $resp]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+        $textResp = '';
+        foreach ($levels as $responsable):
+            $textResp.="(" . $responsable['title'] . ") ";
+        endforeach;
+        return $textResp;
     }
 
 }

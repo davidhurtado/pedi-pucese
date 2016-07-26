@@ -71,7 +71,7 @@ class Objetivos extends \yii\db\ActiveRecord {
         return $this->hasMany(Estrategias::className(), ['id_objetivo' => 'id']);
     }
 
-    public function getFirstLevels() {
+    public function getLevels() {
 
 
         $query = new \yii\db\Query();
@@ -84,4 +84,21 @@ class Objetivos extends \yii\db\ActiveRecord {
 
         return $levels;
     }
+
+    public function getResponsables($resp) {
+
+
+        $query = new \yii\db\Query();
+        $query->select(['niveles.*', 'title', 'org_id'])
+                ->from('niveles')->where(['nid' => $resp]);
+
+        $cmd = $query->createCommand();
+        $levels = $cmd->queryAll();
+        $textResp='';
+        foreach ($levels as $responsable):
+            $textResp.="(".$responsable['title'].") ";
+        endforeach;
+        return $textResp;
+    }
+
 }

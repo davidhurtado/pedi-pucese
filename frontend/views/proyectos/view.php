@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id_programa',
             'nombre',
             'descripcion',
-            'responsable',
+            'responsables',
             'fecha_inicio',
             'fecha_fin',
             'presupuesto',

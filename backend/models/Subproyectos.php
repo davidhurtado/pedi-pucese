@@ -34,12 +34,12 @@ class Subproyectos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_proyecto', 'nombre', 'descripcion', 'evidencias_subproyectos', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_proyecto', 'nombre', 'descripcion', 'evidencias', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_proyecto'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'safe'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
-            [['evidencias_subproyectos'], 'string', 'max' => 300],
+            [['evidencias'], 'string', 'max' => 300],
             [['id_proyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Proyectos::className(), 'targetAttribute' => ['id_proyecto' => 'id']],
         ];
     }
@@ -54,7 +54,7 @@ class Subproyectos extends \yii\db\ActiveRecord
             'id_proyecto' => 'Id Proyecto',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripcion',
-            'evidencias_subproyectos' => 'Evidencias Subproyectos',
+            'evidencias' => 'Evidencias Subproyectos',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
         ];

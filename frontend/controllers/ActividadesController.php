@@ -41,8 +41,8 @@ class ActividadesController extends Controller {
     public function actionIndex() {
         if (isset($_GET['pid'])) {
             $events = Actividades::find()->where(['id_subproyecto' => $_GET['pid']])->all();
-        }else{
-             $events = Actividades::find()->all();
+        } else {
+            $events = Actividades::find()->all();
         }
         $tasks = [];
         foreach ($events AS $eve) {
@@ -93,27 +93,25 @@ class ActividadesController extends Controller {
      */
     public function actionCreate($date = null) {
         $model = new Actividades();
-        //if ($date != null) {
-        $model->fecha_inicio = date('Y-m-d h:m:s', strtotime($date));
+        if ($date != null) {
+            $model->fecha_inicio = date('Y-m-d h:m:s', strtotime($date));
+            if (isset($_GET['pid'])) {
+                $model->id_subproyecto = $_GET['pid'];
+            }
 
-
-        // ESTA PARTE PARA QUE RENDERICER CON AJAX AHI MISMO
-        // Documentacion
-        //http://www.yiiframework.com/doc-2.0/guide-input-validation.html
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            //return $this->redirect(['view', 'id' => $model->id]);
-            return $this->redirect(['index', 'pid' => $_GET['pid']]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                //return $this->redirect(['view', 'id' => $model->id]);
+                return $this->redirect(['index', 'pid' => $_GET['pid']]);
+            } else {
+                //print_r($model);
+                //die();
+                return $this->renderAjax('create', [
+                            'model' => $model,
+                ]);
+            }
         } else {
-            //print_r($model);
-            //die();
-            return $this->renderAjax('create', [
-                        'model' => $model,
-            ]);
+            return $this->redirect(['index']);
         }
-        // } else {
-        //     return $this->redirect(['index']);
-        // }
     }
 
     /**

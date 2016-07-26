@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Proyectos;
+use app\models\ProyectosSearch;
 use app\models\Subproyectos;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -34,12 +35,12 @@ class ProyectosController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Proyectos::find(),
-        ]);
+       $searchModel = new ProyectosSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -67,6 +68,7 @@ class ProyectosController extends Controller {
         $model = new Proyectos();
         if ($model->load(Yii::$app->request->post())) {
             $model->id_programa = $_GET['id'];
+            $model->responsables = implode(",", $model->responsables);
             if ($model->save()) {
                 return $this->redirect(Yii::$app->request->referrer);
             } else {
@@ -90,14 +92,26 @@ class ProyectosController extends Controller {
      * @return mixed
      */
     public function actionUpdate($id) {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+         $model = $this->findModel($id);
+        if ($model->load(Yii::$app->request->post())) {
+             $model->responsables = implode(",", $model->responsables);
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+                //return $this->redirect(Yii::$app->request->referrer);
+            }else{
+                return $this->render('update', [
+                        'model' => $model
+            ]);
+            }
+        } elseif (Yii::$app->request->isAjax) {
+            return $this->renderAjax('update', [
+                        'model' => $model
+            ]);
         } else {
             return $this->render('update', [
-                        'model' => $model,
+                        'model' => $model
             ]);
+            //return $this->redirect(['index']);
         }
     }
 

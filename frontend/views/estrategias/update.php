@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = 'Update';
 <div class="estrategias-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
- 
+
     <?=
     $this->render('_form', [
         'model' => $model,
@@ -21,5 +21,26 @@ $this->params['breadcrumbs'][] = 'Update';
         'evidencias' => $model->getEvidencias(),
     ])
     ?>
-
+    <?php
+    $this->registerJs('
+$(".kv-file-remove").on("click", function() {
+   
+    $.ajax({
+        type: "GET",
+        data: {
+            action: "deletefile",
+            file: $(this).data("url"),
+            id:' . $_GET['id'] . ',
+            fileName: $(this).data("key"),
+        },
+        url: "index.php?r=estrategias/delete-document",
+        success: function(msg) {
+        $(".kv-fileinput-error").hide();
+        alert("Exito");
+        self.parent.location.reload(); 
+        },
+    })
+})
+    ');
+    ?>
 </div>

@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'codigo_presupuestario')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'presupuesto_actividades')->textInput() ?>
+    <?= $form->field($model, 'presupuesto')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

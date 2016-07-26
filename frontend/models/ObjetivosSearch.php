@@ -10,13 +10,12 @@ use app\models\Objetivos;
 /**
  * ObjetivosSearch represents the model behind the search form about `app\models\Objetivos`.
  */
-class ObjetivosSearch extends Objetivos
-{
+class ObjetivosSearch extends Objetivos {
+
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id'], 'integer'],
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'evidencias'], 'safe'],
@@ -26,8 +25,7 @@ class ObjetivosSearch extends Objetivos
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,8 +37,7 @@ class ObjetivosSearch extends Objetivos
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
+    public function search($params) {
         $query = Objetivos::find();
 
         // add conditions that should always apply here
@@ -58,14 +55,14 @@ class ObjetivosSearch extends Objetivos
         }
 
         // grid filtering conditions
-        $query->andFilterWhere([
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
-        ]);
-
+        if (isset($params['anio']) && !empty($params['anio'])) {
+            $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
+                ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
+        }
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'evidencia', $this->evidencias]);
+                ->andFilterWhere(['like', 'evidencia', $this->evidencias]);
 
         return $dataProvider;
     }
+
 }

@@ -18,9 +18,7 @@ use \yii\db\Expression;
     $form = ActiveForm::begin([
                     //'enableAjaxValidation' => true,
     ]);
-    if (isset($_GET['pid'])) {
-        $model->id_subproyecto = $_GET['pid'];
-    }
+   
     ?>
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 

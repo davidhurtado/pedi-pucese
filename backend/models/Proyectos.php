@@ -35,13 +35,13 @@ class Proyectos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_programa', 'nombre', 'descripcion', 'responsable', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_programa', 'nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_programa'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsable'], 'string', 'max' => 100],
+            [['responsables'], 'string', 'max' => 100],
             [['id_programa'], 'exist', 'skipOnError' => true, 'targetClass' => Programas::className(), 'targetAttribute' => ['id_programa' => 'id']],
         ];
     }
@@ -56,7 +56,7 @@ class Proyectos extends \yii\db\ActiveRecord
             'id_programa' => 'Id Programa',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripcion',
-            'responsable' => 'Responsable',
+            'responsables' => 'Responsable',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',

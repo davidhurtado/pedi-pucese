@@ -24,7 +24,7 @@ use kartik\select2\Select2;
     <?php
     $model->responsables=array_map('intval', explode(',', $model->responsables));
      echo $form->field($model, 'responsables')->widget(Select2::className(), [
-            'data' => ArrayHelper::map($model->getFirstLevels(), 'nid', 'title'),
+            'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
             'options' => [
                 'id' => 'items',
                 'multiple' => true,

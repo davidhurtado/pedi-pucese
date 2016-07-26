@@ -44,29 +44,20 @@ $this->params['breadcrumbs'][] = $this->title;
     ));
     ?>
     <?php
-    $this->registerJs('
-        $(\'.modal-lg\').css(\'width\', \'80%\');
-        
-$(function(){
-    
-        //var moment = $(\'#calendar\').fullCalendar(\'getDate\');
-    //alert("The current date of the calendar is " + moment);
-    
-    $(document).on(\'click\',\'.fc-day\',function(){
-        var moment = $(\'#calendar\').fullCalendar(\'getDate\');
-        
-            
-            var date= $(this).attr(\'data-date\');            
-            $.get(\'index.php?r=actividades/create\',{\'date\':date,\'pid\':'.isset($_GET['pid'])?'':$_GET['pid'].'}, function(data){ 
-                
-             $(\'#modal\').modal(\'show\')
+    if(isset($_GET['pid'])){
+        $this->registerJs('
+             $(\'.modal-lg\').css(\'width\', \'90%\');
+             $(function(){
+             $(document).on(\'click\',\'.fc-day\',function(){
+              var moment = $(\'#calendar\').fullCalendar(\'getDate\');
+              var date= $(this).attr(\'data-date\');  
+              $.get(\'index.php?r=actividades/create\',{\'date\':date,\'pid\':'.print_r($_GET['pid'],true).'}, function(data){
+                  $(\'#modal\').modal(\'show\')
                 .find(\'#modalContent\')
-                .html(data);               
-            });
-    });
-
- 
-});');
-    ?>
-
+                .html(data);
+                });
+            });   
+        });');
+    }
+        ?>
 </div>

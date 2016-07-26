@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\datetime\DateTimePicker;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\Proyectos */
 /* @var $form yii\widgets\ActiveForm */
@@ -20,7 +22,18 @@ use kartik\datetime\DateTimePicker;
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'responsable')->textInput(['maxlength' => true]) ?>
+    <?php
+    $model->responsables=array_map('intval', explode(',', $model->responsables));
+     echo $form->field($model, 'responsables')->widget(Select2::className(), [
+            'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
+            'options' => [
+                'id' => 'items',
+                'multiple' => true,
+                'tags' => true,
+                'tokenSeparators' => [',', ' '],
+            ],
+        ]);
+    ?>
 
 <div class="row" style="margin-bottom: 8px">
         <div class="col-sm-6">

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Subproyectos;
+use app\models\SubproyectosSearch;
 use app\models\Actividades;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -13,13 +14,13 @@ use yii\filters\VerbFilter;
 /**
  * SubproyectosController implements the CRUD actions for Subproyectos model.
  */
-class SubproyectosController extends Controller
-{
+class SubproyectosController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public $evidencias_array = Array();
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -34,14 +35,13 @@ class SubproyectosController extends Controller
      * Lists all Subproyectos models.
      * @return mixed
      */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Subproyectos::find(),
-        ]);
+    public function actionIndex() {
+        $searchModel = new SubproyectosSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -50,14 +50,13 @@ class SubproyectosController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         $dataProvider = new ActiveDataProvider([
             'query' => Actividades::find()->where(['id_subproyecto' => $id]),
         ]);
         return $this->render('view', [
                     'model' => $this->findModel($id),
-            'dataProvider' => $dataProvider,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -66,24 +65,38 @@ class SubproyectosController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new Subproyectos();
-
-       if ($model->load(Yii::$app->request->post())) {
-            $model->id_proyecto = $_GET['id'];
-            if ($model->save()) {
-                return $this->redirect(Yii::$app->request->referrer);
-            } else {
-                return $this->renderAjax('create', [
-                            'model' => $model,
-                ]);
+        if ($model->load(Yii::$app->request->post())) {
+            // process uploaded image file instance
+             $model->id_proyecto = $_GET['id'];
+            $image = $model->uploadDocument();
+            $model->evidencias = $model->getDocuments();
+            if ($image !== false) {
+                $path = $model->getDocumentFile();
+                $archivos = (explode(";", $model->evidencias));
+                $i = 0;
+                foreach ($image as $file) {
+                    $ext = end((explode(".", $file->name)));
+                    // generate a unique file name
+                    $file->saveAs($path . $archivos[$i]);
+                    $i++;
+                }
             }
-        }elseif (Yii::$app->request->isAjax) {
+            if ($model->save()) {
+                print_r($model->id . ' -> ' . $model->evidencias . ' -> ' . strlen($model->evidencias));
+                $connection = Yii::$app->db;
+                $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $model->evidencias . "' WHERE id=" . $model->id);
+                $command->execute();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->redirect(['index']);
+            }
+        } elseif (Yii::$app->request->isAjax) {
             return $this->renderAjax('create', [
                         'model' => $model
             ]);
-        }else{
+        } else {
             return $this->redirect(['index']);
         }
     }
@@ -94,15 +107,35 @@ class SubproyectosController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post())) {
+            // process uploaded image file instance
+            $image = $model->uploadDocument();
+            $model->evidencias = $model->getDocuments();
+            if ($image !== false) {
+                $path = $model->getDocumentFile();
+                $archivos = (explode(";", $model->evidencias));
+                $i = 0;
+                foreach ($image as $file) {
+                    $ext = end((explode(".", $file->name)));
+                    // generate a unique file name
+                    $file->saveAs($path . $archivos[$i]);
+                    $i++;
+                }
+            }
+            $model->evidencias = $model->oldAttributes['evidencias'] . $model->evidencias;
+            if ($model->save()) {
+                $connection = Yii::$app->db;
+                $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $model->evidencias . "' WHERE id=" . $model->id);
+                $command->execute();
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->redirect(['index']);
+            }
         } else {
             return $this->render('update', [
-                'model' => $model,
+                        'model' => $model
             ]);
         }
     }
@@ -113,11 +146,32 @@ class SubproyectosController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteDocument() {
+        $model = $this->findModel($_GET['id']);
+        if ($_GET['action'] == 'deletefile') {
+            $file = Yii::$app->basePath . '/web/' . $_GET['file'];
+        }
+        $evidencias = str_replace($_GET['fileName'] . ';', '', $model->oldAttributes['evidencias']);
+        echo ' -> ' . $evidencias;
+        $connection = Yii::$app->db;
+        $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $evidencias . "' WHERE id=" . $_GET['id']);
+        $command->execute();
+        // check if file exists on server
+        if (empty($file) || !file_exists($file)) {
+            return false;
+        }
+
+        // check if uploaded file can be deleted on server
+        if (!unlink($file)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -127,12 +181,12 @@ class SubproyectosController extends Controller
      * @return Subproyectos the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Subproyectos::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

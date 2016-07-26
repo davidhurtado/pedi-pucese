@@ -33,7 +33,7 @@ class Actividades extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_subproyecto', 'descripcion', 'codigo_presupuestario','fecha_inicio','fecha_fin'], 'required'],
+            [['descripcion', 'codigo_presupuestario','fecha_inicio','fecha_fin'], 'required'],
             [['id_subproyecto'], 'integer'],
             [['presupuesto'], 'number'],
             [['fecha_inicio','fecha_fin'], 'verifDate'],
