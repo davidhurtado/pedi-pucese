@@ -22,3 +22,10 @@ PARA HACER USO DE FULLCALENDAR
 	-Generar un token desde el repositorio
 	composer  require philippfrenzel/yii2fullcalendar "*"
 	php composer.phar require philippfrenzel/yii2fullcalendar "*"
+
+PARA HACER USO DE REPORTES
+	composer require kartik-v/yii2-mpdf "*"
+	-Instrucciones -> http://demos.krajee.com/mpdf
+	
+	composer require kartik-v/yii2-grid "@dev"
+	-Instrucciones -> http://demos.krajee.com/grid

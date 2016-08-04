@@ -2,7 +2,8 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
+//use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\datetime\DateTimePicker;
 use yii\widgets\ActiveForm;
@@ -26,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 <p>
                     <?=
                     Html::button('Crear Objetivos', [
+                        'id' => 'crear_objetivo_modal',
+                        //'name'=>'crear-objetivo',
                         'class' => 'btn btn-success btn-ajax-modal',
                         'value' => Url::to(['/objetivos/create']),
                         'data-target' => '#modal_add_objetivos',
@@ -69,13 +72,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
+        'summary'=>'.', 
         'filterModel' => $searchModel,
+        
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+           /* ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => 'yii\grid\CheckboxColumn',
                 'name' => 'id'
-            ],
+            ],*/
             'descripcion',
             //'evidencias',
             [
@@ -92,6 +97,37 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]);
+    /*
+      GridView::widget([
+      'id' => 'kv-grid-demo',
+      'dataProvider' => $dataProvider,
+      'filterModel' => $searchModel,
+      //'columns' => $gridColumns,
+      'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+      'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+      'filterRowOptions' => ['class' => 'kartik-sheet-style'],
+      'pjax' => true, // pjax is set to always true for this demo
+      // set your toolbar
+      'toolbar' => [
+      ['content' =>
+      Html::button('<i class="glyphicon glyphicon-plus"></i>', ['type' => 'button', 'title' => 'Add Book', 'class' => 'btn btn-success', 'onclick' => 'alert("This will launch the book creation form.\n\nDisabled for this demo!");']) . ' '.
+      Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], ['data-pjax' => 0, 'class' => 'btn btn-default', 'title' => 'Reset Grid'])
+      ],
+      '{export}',
+      '{toggleData}',
+      ],
+      // set export properties
+      'export' => [
+      'fontAwesome' => true
+      ],
+      // parameters from the demo form
+      'panel' => [
+      'type' => GridView::TYPE_PRIMARY,
+      ],
+      'persistResize' => false,
+      //'exportConfig' => $exportConfig,
+      ]);
+     */
     ?>
     <?php
     Modal::begin([

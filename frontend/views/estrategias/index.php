@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php
                 $form = ActiveForm::begin([
                             'enableAjaxValidation' => true,
-                            'options' => ['enctype' => 'multipart/form-data'],
                             'action' => 'index.php?r=estrategias',
                             'method' => 'get',
                 ]);
@@ -84,8 +83,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => 'fecha_fin',
                 'filter' => false
             ],
-            // 'evidencias',
-            // 'presupuesto',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]);

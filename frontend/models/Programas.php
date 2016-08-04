@@ -18,25 +18,23 @@ use Yii;
  * @property Estrategias $idEstrategia
  * @property Proyectos[] $proyectos
  */
-class Programas extends \yii\db\ActiveRecord
-{
+class Programas extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'programas';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_estrategia'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'safe'],
+            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
@@ -47,8 +45,7 @@ class Programas extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'id_estrategia' => 'Id Estrategia',
@@ -59,29 +56,35 @@ class Programas extends \yii\db\ActiveRecord
             'presupuesto' => 'Presupuesto',
         ];
     }
+ //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+    public function verifDate($attribute) {
+        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
+        $currentDate = $time->format('Y-m-d h:m:s');
 
+        if ($this->$attribute <= $currentDate) {
+            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+        }
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdEstrategia()
-    {
+    public function getIdEstrategia() {
         return $this->hasOne(Estrategias::className(), ['id' => 'id_estrategia']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProyectos()
-    {
+    public function getProyectos() {
         return $this->hasMany(Proyectos::className(), ['id_programa' => 'id']);
     }
-    
+
     public function getLevels() {
 
 
         $query = new \yii\db\Query();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')->where(['rid' => 9])
+                ->from('niveles')//->where(['rid' => 9])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();
@@ -99,10 +102,26 @@ class Programas extends \yii\db\ActiveRecord
 
         $cmd = $query->createCommand();
         $levels = $cmd->queryAll();
-        $textResp='';
+        $textResp = '';
         foreach ($levels as $responsable):
-            $textResp.="(".$responsable['title'].") ";
+            $textResp.="(" . $responsable['title'] . ") ";
         endforeach;
         return $textResp;
     }
+
+    //Para los Fixtures
+    public function savePrograma() {
+        if (!$this->validate()) {
+            return null;
+        }
+        $programa = new Programas();
+        $programa->id_estrategia = $this->id_estrategia;
+        $programa->descripcion = $this->descripcion;
+        $programa->responsables = $this->responsables;
+        $programa->fecha_inicio = $this->fecha_inicio;
+        $programa->fecha_fin = $this->fecha_fin;
+        $programa->presupuesto = $this->presupuesto;
+        return $programa->save() ? $programa : null;
+    }
+
 }

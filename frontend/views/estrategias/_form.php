@@ -64,27 +64,7 @@ use yii\helpers\ArrayHelper;
                 ?>
             </div>
         </div>
-        <?=
-        $form->field($model, 'evidencias[]')->widget(FileInput::classname(), [
-            'options' => ['multiple' => true],
-            'pluginOptions' => [
-                'allowedFileExtensions' => ['pdf'],
-                'uploadUrl' => '/',
-                'previewFileType' => 'any',
-                'showPreview' => true,
-                'showCaption' => true,
-                'showRemove' => true,
-                'showUpload' => false,
-                //'uploadAsync' => true,
-                'initialPreview' => $evidencias_preview,
-                'initialPreviewAsData' => true,
-                'initialPreviewConfig' => $evidencias,
-                'overwriteInitial' => false,
-                'autoReplace' => true,
-                'uploadClass'=>false
-            ],
-        ]);
-        ?>
+    
 <?= $form->field($model, 'presupuesto')->textInput() ?>
 
 

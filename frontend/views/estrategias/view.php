@@ -31,7 +31,6 @@ $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
     </p>
     <div class="col-sm-12">
         <div class="row">
-            <div class="col-sm-7">
                 <?=
                 DetailView::widget([
                     'model' => $model,
@@ -46,15 +45,6 @@ $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
                     ],
                 ])
                 ?>
-            </div>
-            <div class="col-sm-3">
-                <?=
-                Html::button('Ver Evidencias', [
-                    'class' => 'btn btn-success btn-ajax-modal',
-                    'data-target' => '#modal_ver_evidencia',
-                ]);
-                ?>
-            </div>
         </div>
     </div>
 
@@ -63,7 +53,7 @@ $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
     Html::button('Crear Programas', [
         'class' => 'btn btn-success btn-ajax-modal',
         'value' => Url::to(['/programas/create', 'id' => $model->id]),
-        'id' => 'agregar_programas',
+        'id' => 'crear_programa_modal',
         'data-target' => '#modal_add_programas',
     ]);
     ?>
@@ -105,39 +95,6 @@ $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
             <?php
             Modal::begin([
                 'size' => Modal::SIZE_LARGE,
-                'id' => 'modal_ver_evidencia',
-                'header' => '<h4>Evidencias</h4>',
-            ]);
-            echo FileInput::widget([
-                'name' => 'evidencias',
-                'options' => [
-                    'multiple' => true,
-                    'showRemove' => false,
-                     'layoutTemplates' => [
-                    'main2' => '<div class="kv-upload-progress hide"></div>{remove}{cancel}{upload}{preview}',
-                ]
-                ],
-                'pluginOptions' => [
-                    'overwriteInitial' => false,
-                    'initialPreview' => $model->getEvidencias_preview(),
-                    'initialPreviewAsData' => true,
-                    'initialPreviewConfig' => $model->getEvidencias(),
-                    'showPreview' => true,
-                    'showCaption' => false,
-                    'showRemove' => false,
-                    'showUpload' => false,
-                    'upload'=>false,
-                    'showBrowse' => false,
-                    'showremoveClass' => false,
-                    'showremoveIcon' => false,
-                    'showZoom'=> false,
-                ]
-            ]);
-            Modal::end();
-            ?>
-            <?php
-            Modal::begin([
-                'size' => Modal::SIZE_LARGE,
                 'id' => 'modal_add_programas',
                 'header' => '<h4>Programas</h4>',
             ]);
@@ -156,25 +113,5 @@ $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
         .find(\'.modal-content\')
         .load(ajax_body);
 });');
- $this->registerJs('
-$(".kv-file-remove").on("click", function() {
-   
-    $.ajax({
-        type: "GET",
-        data: {
-            action: "deletefile",
-            file: $(this).data("url"),
-            id:'.$_GET['id'].',
-            fileName: $(this).data("key"),
-        },
-        url: "index.php?r=estrategias/delete-document",
-        success: function(msg) {
-        $(".kv-fileinput-error").hide();
-        alert("Exito");
-        self.parent.location.reload(); 
-        },
-    })
-})
-    ');
             ?>
 </div>

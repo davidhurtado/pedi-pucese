@@ -40,7 +40,7 @@ class Subproyectos extends \yii\db\ActiveRecord {
         return [
             [['id_proyecto', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_proyecto'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'safe'],
+            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
             //[['evidencias'], 'string', 'max' => 300],
@@ -174,6 +174,21 @@ class Subproyectos extends \yii\db\ActiveRecord {
             ]);
         endfor;
         return $evidencias;
+    }
+    
+    //Para los Fixtures
+    public function saveSubproyecto() {
+        if (!$this->validate()) {
+            return null;
+        }
+        $subproyecto = new Subproyectos();
+        $subproyecto->id_proyecto = $this->id_proyecto;
+        $subproyecto->nombre = $this->nombre;
+        $subproyecto->descripcion = $this->descripcion;
+        $subproyecto->evidencias = $this->evidencias;
+        $subproyecto->fecha_inicio = $this->fecha_inicio;
+        $subproyecto->fecha_fin = $this->fecha_fin;
+        return $subproyecto->save() ? $subproyecto : null;
     }
 
 }

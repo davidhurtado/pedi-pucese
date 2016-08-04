@@ -76,7 +76,7 @@ class Objetivos extends \yii\db\ActiveRecord {
 
         $query = new \yii\db\Query();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')->where(['rid' => 2])
+                ->from('niveles')//->where(['rid' => 2])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();
@@ -94,11 +94,24 @@ class Objetivos extends \yii\db\ActiveRecord {
 
         $cmd = $query->createCommand();
         $levels = $cmd->queryAll();
-        $textResp='';
+        $textResp = '';
         foreach ($levels as $responsable):
-            $textResp.="(".$responsable['title'].") ";
+            $textResp.="(" . $responsable['title'] . ") ";
         endforeach;
         return $textResp;
+    }
+
+    //Para los Fixtures
+    public function saveObjetivo() {
+        if (!$this->validate()) {
+            return null;
+        }
+        $objetivo = new Objetivos();
+        $objetivo->descripcion = $this->descripcion;
+        $objetivo->responsables = $this->responsables;
+        $objetivo->fecha_inicio = $this->fecha_inicio;
+        $objetivo->fecha_fin = $this->fecha_fin;
+        return $objetivo->save() ? $objetivo : null;
     }
 
 }

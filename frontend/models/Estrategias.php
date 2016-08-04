@@ -86,63 +86,6 @@ class Estrategias extends \yii\db\ActiveRecord {
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProgramas() {
-        return $this->hasMany(Programas::className(), ['id_estrategia' => 'id']);
-    }
-
-    public function getDocumentFile() {
-        Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/pdf/estrategias/';
-        return isset($this->evidencias) ? Yii::$app->params['uploadPath'] : null;
-    }
-
-    /**
-     * fetch stored image url
-     * @return string
-     */
-    public function getDocumentUrl() {
-        Yii::$app->params['uploadUrl'] = Yii::$app->urlManager->baseUrl . '/web/pdf/estrategias/';
-// return a default image placeholder if your source avatar is not found
-        $evidencias = isset($this->evidencias) ? $this->evidencias : null;
-        return Yii::$app->params['uploadUrl'] . $evidencias;
-    }
-
-    public function getDocuments() {
-        // get the uploaded file instance. for multiple file uploads
-        // the following data will return an array (you may need to use
-        // getInstances method)
-        $image = UploadedFile::getInstances($this, 'evidencias');
-
-        // if no image was uploaded abort the upload
-        if (empty($image)) {
-            return false;
-        }
-        $i = 0;
-        $txtEvidencias = '';
-        foreach ($image as $evide):
-            $ext = end((explode(".", $evide->name)));
-            // generate a unique file name
-            $this->evidencias_array[$i] = Yii::$app->security->generateRandomString() . ".{$ext}";
-            $txtEvidencias.= $this->evidencias_array[$i] . ';';
-            $i++;
-        endforeach;
-        
-        return $txtEvidencias;
-    }
-
-    public function uploadDocument() {
-        // get the uploaded file instance. for multiple file uploads
-        // the following data will return an array (you may need to use
-        // getInstances method)
-        $image = UploadedFile::getInstances($this, 'evidencias');
-
-        // if no image was uploaded abort the upload
-        if (empty($image)) {
-            return false;
-        }
-        return $image;
-    }
-
-   
 
     public function getFechaObjetivo() {
         $modelObjetivo = Objetivos::findOne($_GET['id']);
@@ -154,38 +97,12 @@ class Estrategias extends \yii\db\ActiveRecord {
         return $modelObjetivo;
     }
 
-    public function getEvidencias_preview() {
-        $aux = explode(';', $this->getAttribute('evidencias'));
-        $evidencias_preview = Array();
-        for ($i = 0; $i < count($aux) - 1; $i++):
-            array_push($evidencias_preview, $this->getDocumentFile() . 'pdf/estrategias/' . $aux[$i]);
-        endfor;
-        return $evidencias_preview;
-    }
-
-    public function getEvidencias() {
-        $aux = explode(';', $this->getAttribute('evidencias'));
-        $key = $this->id;
-        $evidencias = Array();
-        $url = Url::to(['estrategias/view', 'id' => $key]);
-        for ($i = 0; $i < count($aux) - 1; $i++):
-            array_push($evidencias, [
-                'type' => 'pdf',
-                'caption' => $aux[$i],
-                'url' => 'pdf/estrategias/' . $aux[$i],
-                'key' => $aux[$i]
-                    //'key' => $i + 1
-            ]);
-        endfor;
-        return $evidencias;
-    }
-
     public function getLevels() {
 
 
         $query = new \yii\db\Query();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')->where(['rid' => 7])
+                ->from('niveles')//->where(['rid' => 7])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();
@@ -208,6 +125,22 @@ class Estrategias extends \yii\db\ActiveRecord {
             $textResp.="(" . $responsable['title'] . ") ";
         endforeach;
         return $textResp;
+    }
+
+    //Para los Fixtures
+    public function saveEstrategia() {
+        if (!$this->validate()) {
+            return null;
+        }
+        $estrategia = new Estrategias();
+        $estrategia->id_objetivo = $this->id_objetivo;
+        $estrategia->descripcion = $this->descripcion;
+        $estrategia->responsables = $this->responsables;
+        $estrategia->fecha_inicio = $this->fecha_inicio;
+        $estrategia->fecha_fin = $this->fecha_fin;
+        $estrategia->evidencias = $this->evidencias;
+        $estrategia->presupuesto = $this->presupuesto;
+        return $estrategia->save() ? $estrategia : null;
     }
 
 }

@@ -77,25 +77,8 @@ class EstrategiasController extends Controller {
         if ($model->load(Yii::$app->request->post())) {
              $model->id_objetivo = $_GET['id'];
             // process uploaded image file instance
-            $image = $model->uploadDocument();
-            $model->evidencias = $model->getDocuments();
             $model->responsables = implode(",", $model->responsables);
-            if ($image !== false) {
-                $path = $model->getDocumentFile();
-                $archivos = (explode(";", $model->evidencias));
-                $i = 0;
-                foreach ($image as $file) {
-                    $ext = end((explode(".", $file->name)));
-                    // generate a unique file name
-                    $file->saveAs($path . $archivos[$i]);
-                    $i++;
-                }
-            }
             if ($model->save()) {
-                print_r($model->id . ' -> ' . $model->evidencias . ' -> ' . strlen($model->evidencias));
-                $connection = Yii::$app->db;
-                $command = $connection->createCommand("UPDATE estrategias SET evidencias='" . $model->evidencias . "' WHERE id=" . $model->id);
-                $command->execute();
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 return $this->redirect(['index']);
@@ -118,27 +101,9 @@ class EstrategiasController extends Controller {
     public function actionUpdate($id) {
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post())) {
-            // process uploaded image file instance
-            $image = $model->uploadDocument();
-            $model->evidencias = $model->getDocuments();
             $model->responsables = implode(",", $model->responsables);
-            if ($image !== false) {
-                $path = $model->getDocumentFile();
-                $archivos = (explode(";", $model->evidencias));
-                $i = 0;
-                foreach ($image as $file) {
-                    $ext = end((explode(".", $file->name)));
-                    // generate a unique file name
-                    $file->saveAs($path . $archivos[$i]);
-                    $i++;
-                }
-            }
-            $model->evidencias = $model->oldAttributes['evidencias'] . $model->evidencias;
+
             if ($model->save()) {
-                //print_r($model->id . ' -> ' . $model->evidencias . ' -> ' . strlen($model->evidencias));
-                $connection = Yii::$app->db;
-                $command = $connection->createCommand("UPDATE estrategias SET evidencias='" . $model->evidencias . "' WHERE id=" . $model->id);
-                $command->execute();
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
                 return $this->redirect(['index']);
@@ -162,27 +127,6 @@ class EstrategiasController extends Controller {
         return $this->redirect(['index']);
     }
 
-    public function actionDeleteDocument() {
-        $model = $this->findModel($_GET['id']);
-        if ($_GET['action'] == 'deletefile') {
-            $file = Yii::$app->basePath . '/web/' . $_GET['file'];
-        }
-        $evidencias=str_replace($_GET['fileName'].';','',$model->oldAttributes['evidencias']);
-         echo ' -> '.$evidencias;
-        $connection = Yii::$app->db;
-        $command = $connection->createCommand("UPDATE estrategias SET evidencias='" . $evidencias . "' WHERE id=" . $_GET['id']);
-        $command->execute();
-        // check if file exists on server
-        if (empty($file) || !file_exists($file)) {
-            return false;
-        }
-
-        // check if uploaded file can be deleted on server
-        if (!unlink($file)) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * Finds the Estrategias model based on its primary key value.
