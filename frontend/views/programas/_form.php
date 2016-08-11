@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\datetime\DateTimePicker;
+use kartik\date\DatePicker;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
@@ -29,30 +29,23 @@ use yii\helpers\ArrayHelper;
         ]);
     ?>
  <div class="row" style="margin-bottom: 8px">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             <?=
-            $form->field($model, 'fecha_inicio')->widget(DateTimePicker::classname(), [
+            DatePicker::widget([
+                'language' => 'es',
+                'model' => $model,
+                'attribute' => 'fecha_inicio',
+                'attribute2' => 'fecha_fin',
                 'options' => ['placeholder' => 'Fecha  de inicio ...'],
-                'language' => 'es',
+                'options2' => ['placeholder' => 'Fecha de fin ...'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
                 'pluginOptions' => [
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
-                    'startView' => 4,
-                    'minView' => 2,
-                ]
-            ]);
-            ?>
-        </div>
-        <div class="col-sm-6">
-            <?=
-            $form->field($model, 'fecha_fin')->widget(DateTimePicker::classname(), [
-                'options' => ['placeholder' => 'Fecha de fin ...'],
-                'language' => 'es',
-                'pluginOptions' => [
-                    'autoclose' => true,
-                    'format' => 'yyyy-mm-dd',
-                    'startView' => 4,
-                    'minView' => 2,
+                    'startView' => 2,
+                    'startDate' =>$model->getFechas()->fecha_inicio,
+                    'endDate'=>$model->getFechas()->fecha_fin,
                 ]
             ]);
             ?>

@@ -87,9 +87,9 @@ class Estrategias extends \yii\db\ActiveRecord {
      * @return \yii\db\ActiveQuery
      */
 
-    public function getFechaObjetivo() {
-        $modelObjetivo = Objetivos::findOne($_GET['id']);
-        return $modelObjetivo;
+    public function getFechas() {
+        $model_ = Objetivos::findOne($_GET['id']);
+        return $model_;
     }
 
     public function getObjetivo($id) {

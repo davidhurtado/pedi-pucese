@@ -2,7 +2,6 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-//use yii\grid\GridView;
 use kartik\grid\GridView;
 use yii\bootstrap\Modal;
 use kartik\datetime\DateTimePicker;
@@ -45,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'method' => 'get',
                 ]);
                 ?>
-                <div class="col-xs-6">
+                <div class="col-xs-10">
                     <?=
                     DateTimePicker::widget([
                         'name' => 'anio',
@@ -61,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     ])
                     ?>
                 </div>
-                <div class="col-xs-6">
+                <div class="col-xs-2">
                     <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
                 </div>
 
@@ -150,6 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
         .find(\'.modal-content\')
         .load(ajax_body);
 });
+
     ');
     ?>
 </div>

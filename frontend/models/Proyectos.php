@@ -84,6 +84,11 @@ class Proyectos extends \yii\db\ActiveRecord {
         return $this->hasMany(Subproyectos::className(), ['id_proyecto' => 'id']);
     }
 
+    public function getFechas() {
+        $model_ = Programas::findOne($_GET['id']);
+        return $model_;
+    }
+
     public function getLevels() {
 
 

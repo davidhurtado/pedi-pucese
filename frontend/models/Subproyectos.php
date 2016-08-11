@@ -87,6 +87,11 @@ class Subproyectos extends \yii\db\ActiveRecord {
         return $this->hasOne(Proyectos::className(), ['id' => 'id_proyecto']);
     }
 
+    public function getFechas() {
+        $model_ = Subproyectos::findOne($_GET['id']);
+        return $model_;
+    }
+
     public function getDocumentFile() {
         Yii::$app->params['uploadPath'] = Yii::$app->basePath . '/web/pdf/subproyectos/';
         return isset($this->evidencias) ? Yii::$app->params['uploadPath'] : null;
@@ -175,7 +180,7 @@ class Subproyectos extends \yii\db\ActiveRecord {
         endfor;
         return $evidencias;
     }
-    
+
     //Para los Fixtures
     public function saveSubproyecto() {
         if (!$this->validate()) {

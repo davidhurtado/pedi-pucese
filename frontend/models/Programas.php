@@ -56,7 +56,8 @@ class Programas extends \yii\db\ActiveRecord {
             'presupuesto' => 'Presupuesto',
         ];
     }
- //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
+
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
     public function verifDate($attribute) {
         $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
         $currentDate = $time->format('Y-m-d h:m:s');
@@ -65,6 +66,7 @@ class Programas extends \yii\db\ActiveRecord {
             $this->addError($attribute, 'No puede ser menor a la fecha actual');
         }
     }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -77,6 +79,11 @@ class Programas extends \yii\db\ActiveRecord {
      */
     public function getProyectos() {
         return $this->hasMany(Proyectos::className(), ['id_programa' => 'id']);
+    }
+
+    public function getFechas() {
+        $model_ = Estrategias::findOne($_GET['id']);
+        return $model_;
     }
 
     public function getLevels() {

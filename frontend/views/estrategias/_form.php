@@ -35,34 +35,27 @@ use yii\helpers\ArrayHelper;
         ]);
         ?>
         <div class="row" style="margin-bottom: 8px">
-            <div class="col-sm-6">
-                <?=
-                $form->field($model, 'fecha_inicio')->widget(DatePicker::classname(), [
-                    'options' => ['placeholder' => 'Fecha  de inicio ...'],
-                    'language' => 'es',
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'format' => 'yyyy-mm-dd',
-                        'startView' => 2,
-                        'minView' => 0,
-                    ]
-                ]);
-                ?>
-            </div>
-            <div class="col-sm-6">
-                <?=
-                $form->field($model, 'fecha_fin')->widget(DatePicker::classname(), [
-                    'options' => ['placeholder' => 'Fecha de fin ...'],
-                    'language' => 'es',
-                    'pluginOptions' => [
-                        'autoclose' => true,
-                        'format' => 'yyyy-mm-dd',
-                        'startView' => 2,
-                        'minView' => 0,
-                    ]
-                ]);
-                ?>
-            </div>
+            <div class="col-sm-12">
+            <?=
+            DatePicker::widget([
+                'language' => 'es',
+                'model' => $model,
+                'attribute' => 'fecha_inicio',
+                'attribute2' => 'fecha_fin',
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'options2' => ['placeholder' => 'Fecha de fin ...'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'startDate' =>$model->getFechas()->fecha_inicio,
+                    'endDate'=>$model->getFechas()->fecha_fin,
+                ]
+            ]);
+            ?>
+        </div>
         </div>
     
 <?= $form->field($model, 'presupuesto')->textInput() ?>

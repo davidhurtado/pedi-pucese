@@ -19,7 +19,7 @@ Thumbs.db
 /vendor
 /frontend/web/assets
 
-#/tests
+/tests
 # composer itself is not needed
 composer.phar
 
