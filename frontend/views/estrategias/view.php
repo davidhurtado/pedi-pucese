@@ -11,7 +11,6 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
-
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $model->id_objetivo, 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
 $this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;

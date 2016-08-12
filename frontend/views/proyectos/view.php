@@ -6,7 +6,6 @@ use yii\widgets\DetailView;
 /* @var $model app\models\Proyectos */
 ?>
 <div class="proyectos-view">
- 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [

@@ -88,13 +88,14 @@ class ActividadesController extends Controller
             /*
             *   Process for ajax request
             */
+            
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [
                     'title'=> "Create new Actividades",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
-                    ]),
+                    ]), 
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
