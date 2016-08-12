@@ -20,6 +20,20 @@ AppAsset::register($this);
         <?= Html::csrfMetaTags() ?>
         <title><?= Html::encode($this->title) ?></title>
         <?php $this->head() ?>
+        <?php
+$js = <<< 'SCRIPT'
+/* To initialize BS3 tooltips set this below */
+$(function () { 
+    $("[data-toggle='tooltip']").tooltip(); 
+});;
+/* To initialize BS3 popovers set this below */
+$(function () { 
+    $("[data-toggle='popover']").popover(); 
+});
+
+SCRIPT;
+$this->registerJs($js);
+        ?>
     </head>
     <body>
         <?php $this->beginBody() ?>

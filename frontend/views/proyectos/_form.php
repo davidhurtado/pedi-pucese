@@ -20,7 +20,7 @@ use yii\helpers\ArrayHelper;
 
     <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => false]) ?>
 
     <?php
     $model->responsables=array_map('intval', explode(',', $model->responsables));
@@ -67,6 +67,12 @@ use yii\helpers\ArrayHelper;
     </div>
 
         <?= $form->field($model, 'presupuesto')->textInput() ?>
+        
+        <label>Estado</label>
+        <?= Html::activeDropDownList($model, 'p_status',
+            array(1=>'Aceptado', 2=>'Borrador', 3 => 'En ejecucion'), ['class'=>'form-control']) ?>
+        
+        <hr>
 
     <div class="form-group">
     <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

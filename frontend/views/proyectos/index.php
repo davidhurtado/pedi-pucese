@@ -19,7 +19,9 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div class="col-sm-8">
         </div>
+
     </div>
+    
     <div class="col-sm-12">
         <div class="row">
             <div class="col-sm-6">
@@ -59,6 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
+
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -72,7 +75,33 @@ $this->params['breadcrumbs'][] = $this->title;
             //'id',
             //'id_programa',
             'nombre',
-            'descripcion',
+            'descripcion' => [
+                'label' => 'Descripcion',
+                'attribute' => 'descripcion',
+                'class' => 'yii\grid\DataColumn',
+                'value' => function($data){
+                    return $data->truncDesc();
+                },
+                'filter' => true,
+                'format' => 'raw'
+            ],
+            'p_status' => [
+                'label' => 'Estado',
+                'attribute' => 'p_status',
+                'format' => 'raw',
+                'value' => function($data){
+                    // estados :: mx1 -->
+                    $classEstados = array(1=>'success', 2=>'warning', 3=>'info', 0 => 'danger');
+                    $pr = ($data->p_status == 2 ? 'borrador' : ($data->p_status == 1 ? 'aceptado' : ($data->p_status == 3 ? 'en ejecucion' : 'NaN')));
+
+                    return Html::tag('span', ucfirst($pr), ['class' => 'label label-'.$classEstados[$data->p_status]] );
+
+                },
+                'filter' => true
+
+
+            ],
+            //'descripcion' => '$data->truncDesc()',
             //'responsables',
             [
                 'attribute' => 'fecha_inicio',
@@ -85,7 +114,27 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false
             ],
             // 'presupuesto',
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+                'template' => '{subprojects} {view} {update} {delete}',
+                'buttons' => [
+                    'subprojects' => function ($url, $model) {
+                        return Html::tag( 'span', '',
+                            [
+                                'class' => 'glyphicon glyphicon-list',
+                                'alt' => 'Ver subproyectos',
+                                'data-title'=>'Subproyectos',
+                                'data-content'=> $model->listSubProjects(),
+                                'data-toggle'=>'popover',
+
+                                'style'=>'text-decoration: underline; cursor:pointer;'
+                            ]
+                            
+                        );
+                    },
+                    'format' => 'raw',
+                ]
+
+            ],
         ],
     ]);
     ?>

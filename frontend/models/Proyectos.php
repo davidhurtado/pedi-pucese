@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use yii\helpers\Html;
 use Yii;
 
 /**
@@ -35,10 +36,11 @@ class Proyectos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'p_status'], 'required'],
             [['id_programa'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
+            [['p_status'], 'integer', 'max' => 3 ],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'string', 'max' => 100],
@@ -56,9 +58,10 @@ class Proyectos extends \yii\db\ActiveRecord
             'id_programa' => 'Id Programa',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripcion',
-            'responsables' => 'Responsable',
+            'responsables' => 'Responsables',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
+            'p_status' => 'Estado',
             'presupuesto' => 'Presupuesto',
         ];
     }
@@ -92,7 +95,7 @@ class Proyectos extends \yii\db\ActiveRecord
 
         $query = new \yii\db\Query();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')->where(['rid' => 8])
+                ->from('niveles')->where(['rid' => 2])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();
@@ -101,19 +104,44 @@ class Proyectos extends \yii\db\ActiveRecord
         return $levels;
     }
 
-    public function getResponsables($resp) {
+    public function getResponsables($resp = 1 ) {
 
+    	
+    }
 
-        $query = new \yii\db\Query();
-        $query->select(['niveles.*', 'title', 'org_id'])
-                ->from('niveles')->where(['nid' => $resp]);
+    // --> Truncar descripcion a x chars
+    public function truncDesc(){
+    	$tooltip_desc = Html::tag('span', '...', [
+		    'title'=> $this->descripcion,
+		    'data-toggle'=>'tooltip',
+		    'style'=>'text-decoration: underline; cursor:pointer;'
+		]);
+    	return (strlen(trim($this->descripcion, ' ')) > 20 ? substr($this->descripcion, 0, 20).$tooltip_desc : $this->descripcion);
+    }
+    public function listSubProjects(){
+    	$ret = '';
+
+    	$query = new \yii\db\Query();
+        $query->select(['subproyectos.*', 'nombre', 'descripcion', 'id'])
+                ->from('subproyectos')->where(['id_proyecto' => $this->id])
+                ->orderBy(['nombre' => SORT_ASC]);
 
         $cmd = $query->createCommand();
-        $levels = $cmd->queryAll();
-        $textResp='';
-        foreach ($levels as $responsable):
-            $textResp.="(".$responsable['title'].") ";
-        endforeach;
-        return $textResp;
+        $subprojects = $cmd->queryAll();
+
+        //print_r($subprojects[0]);
+
+        //$subprojects = $subprojects[0];
+        //die;
+
+    	if(sizeof($subprojects) > 0 ){
+    		foreach ($subprojects as $key => $subpr ) {
+    			$ret .= $subpr['nombre']."\n";
+    		}
+    	}else{
+    		$ret .= 'Sin subproyectos...';
+    	}
+
+    	return $ret;
     }
 }
