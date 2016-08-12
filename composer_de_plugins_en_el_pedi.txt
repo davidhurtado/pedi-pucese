@@ -23,9 +23,15 @@ PARA HACER USO DE FULLCALENDAR
 	composer  require philippfrenzel/yii2fullcalendar "*"
 	php composer.phar require philippfrenzel/yii2fullcalendar "*"
 
+
+composer require --prefer-dist johnitvn/yii2-ajaxcrud "*"
+
 PARA HACER USO DE REPORTES
 	composer require kartik-v/yii2-mpdf "*"
 	-Instrucciones -> http://demos.krajee.com/mpdf
 	
 	composer require kartik-v/yii2-grid "@dev"
 	-Instrucciones -> http://demos.krajee.com/grid
+
+PARA TOOLTIP
+	composer require --prefer-dist pavlinter/yii2-disposable-tooltip "dev-master"

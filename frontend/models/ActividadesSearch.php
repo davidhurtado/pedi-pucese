@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Proyectos;
+use app\models\Actividades;
 
 /**
- * ProyectosSearch represents the model behind the search form about `app\models\Proyectos`.
+ * ActividadesSearch represents the model behind the search form about `app\models\Actividades`.
  */
-class ProyectosSearch extends Proyectos
+class ActividadesSearch extends Actividades
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ class ProyectosSearch extends Proyectos
     public function rules()
     {
         return [
-            [['id', 'id_programa'], 'integer'],
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['id', 'id_subproyecto'], 'integer'],
+            [['descripcion', 'codigo_presupuestario', 'fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
         ];
     }
@@ -42,7 +42,7 @@ class ProyectosSearch extends Proyectos
      */
     public function search($params)
     {
-        $query = Proyectos::find();
+        $query = Actividades::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,15 +58,14 @@ class ProyectosSearch extends Proyectos
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'id_programa' => $this->id_programa,
+            'id_subproyecto' => $this->id_subproyecto,
+            'presupuesto' => $this->presupuesto,
             'fecha_inicio' => $this->fecha_inicio,
             'fecha_fin' => $this->fecha_fin,
-            'presupuesto' => $this->presupuesto,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+        $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
+            ->andFilterWhere(['like', 'codigo_presupuestario', $this->codigo_presupuestario]);
 
         return $dataProvider;
     }

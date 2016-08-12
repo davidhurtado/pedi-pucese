@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use yii\helpers\Url;
+use \yii\db\Query;
 
 /**
  * This is the model class for table "estrategias".
@@ -39,12 +40,12 @@ class Estrategias extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_objetivo', 'descripcion', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_objetivo'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'string', 'max' => 100],
+            [['responsables'], 'validarResponsables'],
             //[['evidencias'], 'string', 'max' => 600],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
@@ -76,6 +77,13 @@ class Estrategias extends \yii\db\ActiveRecord {
         }
     }
 
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
+    public function validarResponsables($attribute) {
+        if (empty($this->$attribute)) {
+            $this->addError($attribute, 'No existe ningun responsable');
+        }
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -86,7 +94,6 @@ class Estrategias extends \yii\db\ActiveRecord {
     /**
      * @return \yii\db\ActiveQuery
      */
-
     public function getFechas() {
         $model_ = Objetivos::findOne($_GET['id']);
         return $model_;
@@ -99,10 +106,13 @@ class Estrategias extends \yii\db\ActiveRecord {
 
     public function getLevels() {
 
-
-        $query = new \yii\db\Query();
+        $query = new Query();
+        $query_org = new Query();
+        $query_org->select(['id'])
+                ->from('organigrama')->where(['activo' => 1]);
+        $organigrama = $query_org->createCommand()->queryOne();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')//->where(['rid' => 7])
+                ->from('niveles')->where(['org_id' => $organigrama['id']])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();
@@ -138,7 +148,6 @@ class Estrategias extends \yii\db\ActiveRecord {
         $estrategia->responsables = $this->responsables;
         $estrategia->fecha_inicio = $this->fecha_inicio;
         $estrategia->fecha_fin = $this->fecha_fin;
-        $estrategia->evidencias = $this->evidencias;
         $estrategia->presupuesto = $this->presupuesto;
         return $estrategia->save() ? $estrategia : null;
     }

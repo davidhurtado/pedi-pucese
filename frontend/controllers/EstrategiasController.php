@@ -4,30 +4,29 @@ namespace frontend\controllers;
 
 use Yii;
 use app\models\Estrategias;
-use yii\data\ActiveDataProvider;
+use app\models\EstrategiaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
-use app\models\Programas;
-use app\models\EstrategiasSearch;
+use \yii\web\Response;
+use yii\helpers\Html;
 
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */
-class EstrategiasController extends Controller {
-
+class EstrategiasController extends Controller
+{
     /**
      * @inheritdoc
      */
-    public $evidencias_array = Array();
-
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST', 'GET'],
+                    'delete' => ['post'],
+                    'bulk-delete' => ['post'],
                 ],
             ],
         ];
@@ -37,96 +36,215 @@ class EstrategiasController extends Controller {
      * Lists all Estrategias models.
      * @return mixed
      */
-    public function actionIndex() {
-        $searchModel = new EstrategiasSearch();
+    public function actionIndex()
+    {    
+        $searchModel = new EstrategiaSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        /* $dataProvider = new ActiveDataProvider([
-          'query' => Estrategias::find(),
-          ]); */
-
         return $this->render('index', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Displays a single Estrategias model.
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id) {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Programas::find()->where(['id_estrategia' => $id]),
-        ]);
-        return $this->render('view', [
-                    'model' => $this->findModel($id),
-                    'dataProvider' => $dataProvider,
-        ]);
+    public function actionView($id)
+    {   
+        $request = Yii::$app->request;
+        if($request->isAjax){
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                    'title'=> "Estrategias #".$id,
+                    'content'=>$this->renderAjax('view', [
+                        'model' => $this->findModel($id),
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
+                ];    
+        }else{
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
+        }
     }
 
     /**
      * Creates a new Estrategias model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * For ajax request will return json object
+     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
-        $model = new Estrategias();
+    public function actionCreate()
+    {
+        $request = Yii::$app->request;
+        $model = new Estrategias();  
 
-        if ($model->load(Yii::$app->request->post())) {
-             $model->id_objetivo = $_GET['id'];
-            // process uploaded image file instance
-            $model->responsables = implode(",", $model->responsables);
-            if ($model->save()) {
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if($request->isGet){
+                return [
+                    'title'=> "Create new Estrategias",
+                    'content'=>$this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+        
+                ];         
+            }else if ($model->load($request->post())) {
+                $model->responsables = implode(",", $model->responsables);
+                if ($model->save()) {
+
+                    return $this->redirect(Yii::$app->request->referrer);
+                }
+            }else{           
+                return [
+                    'title'=> "Create new Estrategias",
+                    'content'=>$this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+        
+                ];         
+            }
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            if ($model->load($request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                return $this->redirect(['index']);
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
             }
-        } elseif (Yii::$app->request->isAjax) {
-            return $this->renderAjax('create', [
-                        'model' => $model
-            ]);
-        } else {
+        }
+       
+    }
+
+    /**
+     * Updates an existing Estrategias model.
+     * For ajax request will return json object
+     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);       
+
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if($request->isGet){
+                return [
+                    'title'=> "Update Estrategias #".$id,
+                    'content'=>$this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                ];         
+            }else  if ($model->load($request->post())) {
+                $model->responsables = implode(",", $model->responsables);
+                if ($model->save()) {
+
+                    return $this->redirect(Yii::$app->request->referrer);
+                }
+            }else{
+                 return [
+                    'title'=> "Update Estrategias #".$id,
+                    'content'=>$this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
+                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
+                ];        
+            }
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            if ($model->load($request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Delete an existing Estrategias model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $request = Yii::$app->request;
+        $this->findModel($id)->delete();
+
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
             return $this->redirect(['index']);
         }
+
+
     }
 
-    /**
-     * Updates an existing Estrategia model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     /**
+     * Delete multiple existing Estrategias model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id) {
-        $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-            $model->responsables = implode(",", $model->responsables);
-
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->redirect(['index']);
-            }
-        } else {
-            return $this->render('update', [
-                        'model' => $model
-            ]);
+    public function actionBulkDelete()
+    {        
+        $request = Yii::$app->request;
+        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
+        foreach ( $pks as $pk ) {
+            $model = $this->findModel($pk);
+            $model->delete();
         }
+
+        if($request->isAjax){
+            /*
+            *   Process for ajax request
+            */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+        }else{
+            /*
+            *   Process for non-ajax request
+            */
+            return $this->redirect(['index']);
+        }
+       
     }
-
-    /**
-     * Deletes an existing Estrategia model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id) {
-          $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
-    }
-
 
     /**
      * Finds the Estrategias model based on its primary key value.
@@ -135,12 +253,12 @@ class EstrategiasController extends Controller {
      * @return Estrategias the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = Estrategias::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
 }

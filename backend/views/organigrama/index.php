@@ -18,12 +18,15 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'summary'=>'',
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'name:ntext',
             'created',
+            ['attribute' => 'activo',
+                                'value' => function($data) {
+                                    return $data['activo'] == 1 ?  'Activado':'Desactivado';
+                                }],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

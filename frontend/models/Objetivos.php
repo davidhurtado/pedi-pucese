@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\helpers\ArrayHelper;
 use dektrium\rbac\components\DbManager;
+use \yii\db\Query;
 
 /**
  * This is the model class for table "objetivos".
@@ -37,7 +38,7 @@ class Objetivos extends \yii\db\ActiveRecord {
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'string', 'max' => 100],
+            [['responsables'], 'validarResponsables'],
         ];
     }
 
@@ -64,6 +65,13 @@ class Objetivos extends \yii\db\ActiveRecord {
         }
     }
 
+//  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
+    public function validarResponsables($attribute) {
+        if (empty($this->$attribute)) {
+            $this->addError($attribute, 'No existe ningun responsable');
+        }
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -74,9 +82,13 @@ class Objetivos extends \yii\db\ActiveRecord {
     public function getLevels() {
 
 
-        $query = new \yii\db\Query();
+        $query = new Query();
+        $query_org = new Query();
+        $query_org->select(['id'])
+                ->from('organigrama')->where(['activo' => 1]);
+        $organigrama = $query_org->createCommand()->queryOne();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')//->where(['rid' => 2])
+                ->from('niveles')->where(['org_id' => $organigrama['id']])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();

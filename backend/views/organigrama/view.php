@@ -30,6 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'name:ntext',
+             [
+                'label'=>'Estado',
+                'value' => $model->activo == 1 ?  'Activado':'Desactivado',
+            ],
             'created',
         ],
     ]) ?>

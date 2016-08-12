@@ -1,88 +1,65 @@
 <?php
-
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\ActiveForm;
 use yii\helpers\Url;
-use kartik\datetime\DateTimePicker;
+use yii\helpers\Html;
+use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use johnitvn\ajaxcrud\CrudAsset; 
+use johnitvn\ajaxcrud\BulkButtonWidget;
+
 /* @var $this yii\web\View */
+/* @var $searchModel app\models\SubproyectosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Subproyectos';
 $this->params['breadcrumbs'][] = $this->title;
+
+CrudAsset::register($this);
+
 ?>
 <div class="subproyectos-index">
-
-            <div class="row">
-        <div class="col-sm-4">
-        <h1><?= Html::encode($this->title) ?></h1>
-        </div>
-        <div class="col-sm-8">
-        </div>
+    <div id="ajaxCrudDatatable">
+        <?=GridView::widget([
+            'id'=>'crud-datatable',
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'pjax'=>true,
+            'columns' => require(__DIR__.'/_columns.php'),
+            'toolbar'=> [
+                ['content'=>
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
+                    ['role'=>'modal-remote','title'=> 'Create new Subproyectos','class'=>'btn btn-default']).
+                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
+                    ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
+                    '{toggleData}'.
+                    '{export}'
+                ],
+            ],          
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => true,          
+            'panel' => [
+                'type' => 'primary', 
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Subproyectos listing',
+                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'after'=>BulkButtonWidget::widget([
+                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
+                                ["bulk-delete"] ,
+                                [
+                                    "class"=>"btn btn-danger btn-xs",
+                                    'role'=>'modal-remote-bulk',
+                                    'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+                                    'data-request-method'=>'post',
+                                    'data-confirm-title'=>'Are you sure?',
+                                    'data-confirm-message'=>'Are you sure want to delete this item'
+                                ]),
+                        ]).                        
+                        '<div class="clearfix"></div>',
+            ]
+        ])?>
     </div>
-    <div class="col-sm-12">
-        <div class="row">
-            <div class="col-sm-6">
-
-            </div>
-            <div class="col-sm-6">
-                <!--?= $form->field($model, 'id')->dropDownList([])->label('Copiadora') ?-->
-                <?php
-                $form = ActiveForm::begin([
-                            'enableAjaxValidation' => true,
-                            'options' => ['enctype' => 'multipart/form-data'],
-                            'action' => 'index.php?r=subproyectos',
-                            'method' => 'get',
-                ]);
-                ?>
-                <div class="col-xs-6">
-                    <?=
-                    DateTimePicker::widget([
-                        'name' => 'anio',
-                        'language' => 'es',
-                        'options' => ['placeholder' => 'Seleccione Año'],
-                        'type' => DateTimePicker::TYPE_COMPONENT_APPEND,
-                        'pluginOptions' => [
-                            'format' => 'yyyy',
-                            'autoclose' => true,
-                            'startView' => 4,
-                            'minView' => 4,
-                        ],
-                    ])
-                    ?>
-                </div>
-                <div class="col-xs-6">
-                    <?= Html::submitButton('Buscar', ['class' => 'btn btn-primary']) ?>
-                </div>
-
-                <?php ActiveForm::end(); ?>
-            </div>
-        </div>
-    </div>
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'class' => 'yii\grid\CheckboxColumn',
-                'name' => 'id'
-            ],
-            'nombre',
-            'descripcion',
-            [
-                'attribute' => 'fecha_inicio',
-                'value' => 'fecha_inicio',
-                'filter' => false,
-            ],
-            [
-                'attribute' => 'fecha_fin',
-                'value' => 'fecha_fin',
-                'filter' => false
-            ],
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]);
-    ?>
 </div>
+<?php Modal::begin([
+    "id"=>"ajaxCrudModal",
+    "footer"=>"",// always need it for jquery plugin
+])?>
+<?php Modal::end(); ?>

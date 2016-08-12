@@ -10,22 +10,24 @@ use app\models\Objetivos;
 /**
  * ObjetivosSearch represents the model behind the search form about `app\models\Objetivos`.
  */
-class ObjetivosSearch extends Objetivos {
-
+class ObjetivosSearch extends Objetivos
+{
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['id'], 'integer'],
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'evidencias'], 'safe'],
+            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,10 +39,9 @@ class ObjetivosSearch extends Objetivos {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search($params)
+    {
         $query = Objetivos::find();
-
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,15 +55,15 @@ class ObjetivosSearch extends Objetivos {
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        if (isset($params['anio']) && !empty($params['anio'])) {
-            $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
-                ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
-        }
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'fecha_inicio' => $this->fecha_inicio,
+            'fecha_fin' => $this->fecha_fin,
+        ]);
+
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-                ->andFilterWhere(['like', 'evidencia', $this->evidencias]);
+            ->andFilterWhere(['like', 'responsables', $this->responsables]);
 
         return $dataProvider;
     }
-
 }

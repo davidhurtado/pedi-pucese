@@ -14,13 +14,10 @@ use kartik\select2\Select2;
 
 <div class="objetivos-form">
 
-    <?php
-    $form = ActiveForm::begin([
-                'id' => 'objetivos-form',
-    ]);
-    ?>
+    <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => true, 'style' => 'resize:none']) ?>
+    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+
     <?php
     $model->responsables = array_map('intval', explode(',', $model->responsables));
     echo $form->field($model, 'responsables')->widget(Select2::className(), [
@@ -33,6 +30,7 @@ use kartik\select2\Select2;
         ],
     ]);
     ?>
+
     <div class="row" style="margin-bottom: 8px">
         <div class="col-sm-12">
             <?=
@@ -50,15 +48,20 @@ use kartik\select2\Select2;
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
                     'startDate' => '2017-01-01',
-                    'disableTouchKeyboard'=>false
+                    'disableTouchKeyboard' => false,
                 ]
             ]);
             ?>
         </div>
     </div>
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Modificar', ['name' => 'crear_objetivo', 'class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+
+
+    <?php if (!Yii::$app->request->isAjax) { ?>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+    <?php } ?>
 
     <?php ActiveForm::end(); ?>
+
 </div>

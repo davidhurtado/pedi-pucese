@@ -7,6 +7,8 @@ use kartik\file\FileInput;
 use yii\helpers\Url;
 use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use app\models\Objetivos;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
 /* @var $form yii\widgets\ActiveForm */
@@ -23,7 +25,7 @@ use yii\helpers\ArrayHelper;
         <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
         <?php
-        $model->responsables = array_map('intval', explode(',', $model->responsables));
+        $model->responsables = array_map('intval',explode(',', $model->responsables));
         echo $form->field($model, 'responsables')->widget(Select2::className(), [
             'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
             'options' => [
@@ -36,28 +38,28 @@ use yii\helpers\ArrayHelper;
         ?>
         <div class="row" style="margin-bottom: 8px">
             <div class="col-sm-12">
-            <?=
-            DatePicker::widget([
-                'language' => 'es',
-                'model' => $model,
-                'attribute' => 'fecha_inicio',
-                'attribute2' => 'fecha_fin',
-                'options' => ['placeholder' => 'Fecha  de inicio ...'],
-                'options2' => ['placeholder' => 'Fecha de fin ...'],
-                'type' => DatePicker::TYPE_RANGE,
-                'form' => $form,
-                'pluginOptions' => [
-                    'autoclose' => true,
-                    'format' => 'yyyy-mm-dd',
-                    'startView' => 2,
-                    'startDate' =>$model->getFechas()->fecha_inicio,
-                    'endDate'=>$model->getFechas()->fecha_fin,
-                ]
-            ]);
-            ?>
+                <?=
+                DatePicker::widget([
+                    'language' => 'es',
+                    'model' => $model,
+                    'attribute' => 'fecha_inicio',
+                    'attribute2' => 'fecha_fin',
+                    'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                    'options2' => ['placeholder' => 'Fecha de fin ...'],
+                    'type' => DatePicker::TYPE_RANGE,
+                    'form' => $form,
+                    'pluginOptions' => [
+                        'autoclose' => true,
+                        'format' => 'yyyy-mm-dd',
+                        'startView' => 2,
+                        'startDate' => $fechas->fecha_inicio,
+                        'endDate' => $fechas->fecha_fin,
+                    ]
+                ]);
+                ?>
+            </div>
         </div>
-        </div>
-    
+
 <?= $form->field($model, 'presupuesto')->textInput() ?>
 
 

@@ -8,11 +8,14 @@ use app\models\ObjetivosSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use \yii\web\Response;
+use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Estrategias;
 use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 use yii\data\Pagination;
+
 /**
  * ObjetivosController implements the CRUD actions for Objetivos model.
  */
@@ -21,14 +24,13 @@ class ObjetivosController extends Controller {
     /**
      * @inheritdoc
      */
-    public $evidencias_array = Array();
-
     public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['post'],
+                    'bulk-delete' => ['post'],
                 ],
             ],
         ];
@@ -42,15 +44,7 @@ class ObjetivosController extends Controller {
         $searchModel = new ObjetivosSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-          // $query = Post::find()->where(['visible' => 1])->orderBy(['fecha' => SORT_DESC]);
-      /*  $countQuery = clone $query;
-        $pages = new Pagination([ 'defaultPageSize' => 2, 'totalCount' => $countQuery->count()]);
-        $query = $query->offset($pages->offset)
-                ->limit($pages->limit)
-                ->all();
-      //  Yii::$app->params['paginas'] = $pages;
-        //Yii::$app->params['modelPost'] = $dataProvider;*/
-         return $this->render('index', [
+        return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
         ]);
@@ -74,72 +68,172 @@ class ObjetivosController extends Controller {
 
     /**
      * Creates a new Objetivos model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * For ajax request will return json object
+     * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate() {
+        $request = Yii::$app->request;
         $model = new Objetivos();
-        if ($model->load(Yii::$app->request->post())) {
-            $model->responsables = implode(",", $model->responsables);
-            if ($model->save()) {
-                return $this->redirect(Yii::$app->request->referrer);
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => "Create new Objetivos",
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post()) && $model->save()) {
+                $model->responsables = implode(",", $model->responsables);
+                return [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Create new Objetivos",
+                    'content' => '<span class="text-success">Create Objetivos success</span>',
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                ];
+            } else {
+                return [
+                    'title' => "Create new Objetivos",
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        } elseif (Yii::$app->request->isAjax) {
-            return $this->renderAjax('create', [
-                        'model' => $model
-            ]);
         } else {
-            return $this->redirect(['index']);
+            /*
+             *   Process for non-ajax request
+             */
+            if ($model->load($request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                            'model' => $model,
+                ]);
+            }
         }
     }
 
     /**
      * Updates an existing Objetivos model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * For ajax request will return json object
+     * and for non-ajax request if update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
      */
-    /* public function actionUpdate($id) {
-      $model = $this->findModel($id);
-
-      if ($model->load(Yii::$app->request->post()) && $model->save()) {
-      return $this->redirect(['view', 'id' => $model->id]);
-      } else {
-      return $this->render('update', [
-      'model' => $model,
-      ]);
-      }
-      } */
     public function actionUpdate($id) {
+        $request = Yii::$app->request;
         $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post())) {
-             $model->responsables = implode(",", $model->responsables);
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-                //return $this->redirect(Yii::$app->request->referrer);
+        $dataProvider = new ActiveDataProvider([
+            'query' => Estrategias::find()->where(['id_objetivo' => $id]),
+        ]);
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => "Update Objetivos #" . $id,
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post())) {
+                $model->responsables = implode(",", $model->responsables);
+                if ($model->save()) {
+
+                    return $this->redirect(Yii::$app->request->referrer);
+                }
+            } else {
+                return [
+                    'title' => "Update Objetivos #" . $id,
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                        'dataProvider' => $dataProvider,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
-        } elseif (Yii::$app->request->isAjax) {
-            return $this->renderAjax('update', [
-                        'model' => $model
-            ]);
         } else {
-            return $this->render('update', [
-                        'model' => $model
-            ]);
-            //return $this->redirect(['index']);
+            /*
+             *   Process for non-ajax request
+             */
+            if ($model->load($request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                            'model' => $model,
+                            'dataProvider' => $dataProvider,
+                ]);
+            }
         }
     }
 
     /**
-     * Deletes an existing Objetivos model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * Delete an existing Objetivos model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id) {
+        $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
+            /*
+             *   Process for non-ajax request
+             */
+            return $this->redirect(['index']);
+        }
+    }
+
+    /**
+     * Delete multiple existing Objetivos model.
+     * For ajax request will return json object
+     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionBulkDelete() {
+        $request = Yii::$app->request;
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
+            $model = $this->findModel($pk);
+            $model->delete();
+        }
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
+            /*
+             *   Process for non-ajax request
+             */
+            return $this->redirect(['index']);
+        }
     }
 
     /**

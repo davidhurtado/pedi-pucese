@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-
+use \yii\db\Query;
 /**
  * This is the model class for table "proyectos".
  *
@@ -90,11 +90,13 @@ class Proyectos extends \yii\db\ActiveRecord {
     }
 
     public function getLevels() {
-
-
-        $query = new \yii\db\Query();
+        $query = new Query();
+        $query_org = new Query();
+        $query_org->select(['id'])
+                ->from('organigrama')->where(['activo' => 1]);
+        $organigrama = $query_org->createCommand()->queryOne();
         $query->select(['niveles.*', 'title', 'nid', 'org_id'])
-                ->from('niveles')//->where(['rid' => 8])
+                ->from('niveles')->where(['org_id' => $organigrama['id']])
                 ->orderBy(['title' => SORT_DESC]);
 
         $cmd = $query->createCommand();

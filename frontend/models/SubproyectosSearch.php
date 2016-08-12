@@ -10,12 +10,13 @@ use app\models\Subproyectos;
 /**
  * SubproyectosSearch represents the model behind the search form about `app\models\Subproyectos`.
  */
-class SubproyectosSearch extends Subproyectos {
-
+class SubproyectosSearch extends Subproyectos
+{
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['id', 'id_proyecto'], 'integer'],
             [['nombre', 'descripcion', 'evidencias', 'fecha_inicio', 'fecha_fin'], 'safe'],
@@ -25,7 +26,8 @@ class SubproyectosSearch extends Subproyectos {
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -37,10 +39,9 @@ class SubproyectosSearch extends Subproyectos {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search($params)
+    {
         $query = Subproyectos::find();
-
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,17 +55,17 @@ class SubproyectosSearch extends Subproyectos {
             return $dataProvider;
         }
 
-        // grid filtering conditions
-        if (isset($params['anio']) && !empty($params['anio'])) {
-            $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
-                    ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
-        }
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'id_proyecto' => $this->id_proyecto,
+            'fecha_inicio' => $this->fecha_inicio,
+            'fecha_fin' => $this->fecha_fin,
+        ]);
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
-                ->andFilterWhere(['like', 'descripcion', $this->descripcion])
-                ->andFilterWhere(['like', 'evidencias', $this->evidencias]);
+            ->andFilterWhere(['like', 'descripcion', $this->descripcion])
+            ->andFilterWhere(['like', 'evidencias', $this->evidencias]);
 
         return $dataProvider;
     }
-
 }

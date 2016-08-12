@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-
+use app\models\Organigrama;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
@@ -16,17 +16,20 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Crear nivel', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?= GridView::widget([
+    <?=
+    GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'nid',
             'title:ntext',
             'rid',
-            'org_id',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
+            ['attribute' => 'org_id',
+                'value' => function($data) {
+                    return Organigrama::findOne(['id' => $data['org_id']])->name;
+                }],
+                    ['class' => 'yii\grid\ActionColumn'],
+                ],
+            ]);
+            ?>
 </div>

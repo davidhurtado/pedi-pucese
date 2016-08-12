@@ -6,7 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use yii\helpers\Url;
 use Yii;
-
+use \yii\db\Query;
 /**
  * This is the model class for table "subproyectos".
  *

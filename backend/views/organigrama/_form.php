@@ -10,10 +10,10 @@ use yii\widgets\ActiveForm;
 
 <div class="organigrama-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id' => 'organigrama-form',]); ?>
 
     <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
-
+    <?= $form->field($model, 'activo')->dropDownList(['0' => 'Desactivado', '1' => 'Activado',]); ?>
     <?php
     //$form->field($model, 'created')->textInput()
     ?>

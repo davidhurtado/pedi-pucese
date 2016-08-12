@@ -2,10 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
-use kartik\file\FileInput;
+use johnitvn\ajaxcrud\CrudAsset;
+use johnitvn\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
@@ -13,13 +14,14 @@ use kartik\file\FileInput;
 $this->title = 'Objetivo ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Objetivos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+CrudAsset::register($this);
 ?>
 <div class="objetivos-view">
 
     <h3><?= $model->descripcion ?></h3>
 
     <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary','role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
         <?=
         Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -45,76 +47,60 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             ])
             ?>
-           
+
         </div>
     </div>
 
     <h3>ESTRATEGIAS</h3>
-    <?=
-    Html::button('Crear Estrategias', [
-        'class' => 'btn btn-success btn-ajax-modal',
-        'value' => Url::to(['/estrategias/create', 'id' => $model->id]),
-        'id' => 'agregar_estrategias',
-        'data-target' => '#modal_add_estrategias',
-    ]);
-    ?>
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            //'id',
-            ['class' => 'yii\grid\SerialColumn'],
-            'descripcion',
-            //'responsables',
-            //'fecha_inicio',
-            //'fecha_fin',
-            // 'evidencias',
-            // 'presupuesto',
-            ['class' => 'yii\grid\ActionColumn',
-                'template' => '{view}{update}{delete}',
-                'buttons' => [
-                    'view' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['estrategias/view', 'id' => $model['id']], [
-                                    'title' => Yii::t('yii', 'Ver'),
-                        ]);
-                    },
-                            'update' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['estrategias/update', 'id' => $model['id']], [
-                                    'title' => Yii::t('yii', 'Modificar'),
-                        ]);
-                    },
-                            'delete' => function ($url, $model) {
-                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', ['estrategias/delete', 'id' => $model['id']], [
-                                    'title' => Yii::t('yii', 'Eliminar'),
-                        ]);
-                    },
-                        ]
+    <div class="estrategias-index">
+        <div id="ajaxCrudDatatable">
+            <?=
+            GridView::widget([
+                'id' => 'crud-datatable',
+                'dataProvider' => $dataProvider,
+                //'filterModel' => $searchModel,
+                'pjax' => true,
+                'columns' => require(__DIR__ . '/../estrategias' . '/_columns.php'),
+                'toolbar' => [
+                    ['content' =>
+                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id'=>$_GET['id']], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
+                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
+                        '{toggleData}' .
+                        '{export}'
                     ],
                 ],
-            ]);
+                'striped' => true,
+                'condensed' => true,
+                'responsive' => true,
+                'panel' => [
+                    'type' => 'primary',
+                    'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias listing',
+                    'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                    'after' => BulkButtonWidget::widget([
+                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All', ["bulk-delete"], [
+                            "class" => "btn btn-danger btn-xs",
+                            'role' => 'modal-remote-bulk',
+                            'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                            'data-request-method' => 'post',
+                            'data-confirm-title' => 'Are you sure?',
+                            'data-confirm-message' => 'Are you sure want to delete this item'
+                        ]),
+                    ]) .
+                    '<div class="clearfix"></div>',
+                ]
+            ])
             ?>
-
-            <?php
-            Modal::begin([
-                'size' => Modal::SIZE_LARGE,
-                'id' => 'modal_add_estrategias',
-                'header' => '<h4>Estrategias</h4>',
-            ]);
-            echo '<div id="modal-content"></div>';
-            Modal::end();
-            ?>
-            <?php
-            $this->registerJs('
-        $(\'.modal-lg\').css(\'width\', \'95%\');
-        $(\'.btn-ajax-modal\').click(function (){
-    var elm = $(this),
-        target = elm.attr(\'data-target\'),
-        ajax_body = elm.attr(\'value\');
-
-    $(target).modal(\'show\')
-        .find(\'.modal-content\')
-        .load(ajax_body);
-});
-    ');
-            ?>
+        </div>
+    </div>
+    <?php
+    Modal::begin([
+        'size' => Modal::SIZE_LARGE,
+        "id" => "ajaxCrudModal",
+        "footer" => "", // always need it for jquery plugin
+    ])
+    ?>
+    <?php Modal::end(); ?>
+    <?php
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'95%\');');
+    ?>
 </div>

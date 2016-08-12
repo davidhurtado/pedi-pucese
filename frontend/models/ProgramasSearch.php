@@ -10,12 +10,13 @@ use app\models\Programas;
 /**
  * ProgramasSearch represents the model behind the search form about `app\models\Programas`.
  */
-class ProgramasSearch extends Programas {
-
+class ProgramasSearch extends Programas
+{
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['id', 'id_estrategia'], 'integer'],
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
@@ -26,7 +27,8 @@ class ProgramasSearch extends Programas {
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -38,10 +40,9 @@ class ProgramasSearch extends Programas {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
+    public function search($params)
+    {
         $query = Programas::find();
-
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -54,19 +55,18 @@ class ProgramasSearch extends Programas {
             // $query->where('0=1');
             return $dataProvider;
         }
-        if (isset($params['anio']) && !empty($params['anio'])) {
-            $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
-                    ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
-        }
-        // grid filtering conditions
+
         $query->andFilterWhere([
+            'id' => $this->id,
+            'id_estrategia' => $this->id_estrategia,
+            'fecha_inicio' => $this->fecha_inicio,
+            'fecha_fin' => $this->fecha_fin,
             'presupuesto' => $this->presupuesto,
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-                ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'responsables', $this->responsables]);
 
         return $dataProvider;
     }
-
 }
