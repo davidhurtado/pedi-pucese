@@ -16,7 +16,6 @@ use frontend\models\ContactForm;
 /**
  * Site controller
  */
-
 class SiteController extends Controller
 {
     /**

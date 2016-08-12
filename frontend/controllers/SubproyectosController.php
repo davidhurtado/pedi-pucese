@@ -12,7 +12,6 @@ use yii\filters\VerbFilter;
 /**
  * SubproyectosController implements the CRUD actions for Subproyectos model.
  */
-
 class SubproyectosController extends Controller
 {
     /**
