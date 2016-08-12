@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */
+
 class EstrategiasController extends Controller
 {
     /**

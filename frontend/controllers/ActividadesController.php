@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * ActividadesController implements the CRUD actions for Actividades model.
  */
+
 class ActividadesController extends Controller
 {
     /**
