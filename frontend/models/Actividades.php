@@ -26,6 +26,7 @@ class Actividades extends \yii\db\ActiveRecord
     {
         return 'actividades';
     }
+
     /**
      * @inheritdoc
      */

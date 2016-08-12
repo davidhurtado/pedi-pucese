@@ -88,7 +88,6 @@ class ActividadesController extends Controller
             /*
             *   Process for ajax request
             */
-            
             Yii::$app->response->format = Response::FORMAT_JSON;
             if($request->isGet){
                 return [

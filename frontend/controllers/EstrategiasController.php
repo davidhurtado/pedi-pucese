@@ -16,7 +16,6 @@ use app\models\Programas;
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */ 
-
 class EstrategiasController extends Controller {
 
     /**

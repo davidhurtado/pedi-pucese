@@ -23,6 +23,7 @@ use \yii\db\Query;
  * @property Programas[] $programas
  */
 class Estrategias extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */

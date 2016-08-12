@@ -14,7 +14,6 @@ use yii\helpers\Html;
 /**
  * ProyectosController implements the CRUD actions for Proyectos model.
  */
-
 class ProyectosController extends Controller
 {
     /**

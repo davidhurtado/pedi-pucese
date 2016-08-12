@@ -56,6 +56,7 @@ CrudAsset::register($this);
         ?>
     </div>
 </div>
+
 <?php
 Modal::begin([
     'size' => Modal::SIZE_LARGE,

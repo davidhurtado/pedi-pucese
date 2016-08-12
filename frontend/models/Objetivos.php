@@ -19,6 +19,7 @@ use \yii\db\Query;
  * @property Estrategias[] $estrategias
  */
 class Objetivos extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */

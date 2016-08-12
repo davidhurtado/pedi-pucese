@@ -11,6 +11,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
+
 $this->title = $model->id;
 CrudAsset::register($this);
 ?>
