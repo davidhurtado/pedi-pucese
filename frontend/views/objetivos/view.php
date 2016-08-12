@@ -21,15 +21,16 @@ CrudAsset::register($this);
     <h3><?= $model->descripcion ?></h3>
 
     <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary','role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
         <?=
         Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ])
+            'role' => 'modal-remote', 'title' => 'Delete',
+            'data-confirm' => false, 'data-method' => false, // for overide yii data api
+            'data-request-method' => 'post',
+            'data-toggle' => 'tooltip',
+            'data-confirm-title' => 'Are you sure?',
+            'data-confirm-message' => 'Are you sure want to delete this item'])
         ?>
     </p>
     <div class="col-sm-12">
@@ -60,11 +61,12 @@ CrudAsset::register($this);
                 'dataProvider' => $dataProvider,
                 //'filterModel' => $searchModel,
                 'pjax' => true,
+                'summary' => '',
                 'columns' => require(__DIR__ . '/../estrategias' . '/_columns.php'),
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id'=>$_GET['id']], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
-                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
+                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id' => $_GET['id']], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
+                        Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                         '{toggleData}' .
                         '{export}'
                     ],
@@ -74,16 +76,16 @@ CrudAsset::register($this);
                 'responsive' => true,
                 'panel' => [
                     'type' => 'primary',
-                    'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias listing',
-                    'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                    'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias ',
+                    //'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                     'after' => BulkButtonWidget::widget([
-                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All', ["bulk-delete"], [
+                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["estrategias/bulk-delete"], [
                             "class" => "btn btn-danger btn-xs",
                             'role' => 'modal-remote-bulk',
                             'data-confirm' => false, 'data-method' => false, // for overide yii data api
                             'data-request-method' => 'post',
-                            'data-confirm-title' => 'Are you sure?',
-                            'data-confirm-message' => 'Are you sure want to delete this item'
+                            'data-confirm-title' => 'Est&aacute;s Seguro?',
+                            'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
                         ]),
                     ]) .
                     '<div class="clearfix"></div>',
@@ -101,6 +103,8 @@ CrudAsset::register($this);
     ?>
     <?php Modal::end(); ?>
     <?php
-    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'95%\');');
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+            . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
+            . '$(function () { $("[data-toggle=\'popover\']").popover();});');
     ?>
 </div>

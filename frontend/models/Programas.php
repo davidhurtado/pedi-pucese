@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use \yii\db\Query;
+
 /**
  * This is the model class for table "programas".
  *
@@ -34,10 +35,11 @@ class Programas extends \yii\db\ActiveRecord {
         return [
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_estrategia'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
+            [['fecha_inicio'], 'verifDate_inicio'],
+            [['fecha_fin'], 'verifDate_fin'],
             [['presupuesto'], 'number'],
-            [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'string', 'max' => 100],
+            [['descripcion'], 'string'],
+            [['responsables'], 'validarResponsables'],
             [['id_estrategia'], 'exist', 'skipOnError' => true, 'targetClass' => Estrategias::className(), 'targetAttribute' => ['id_estrategia' => 'id']],
         ];
     }
@@ -58,12 +60,22 @@ class Programas extends \yii\db\ActiveRecord {
     }
 
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute) {
-        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d h:m:s');
+    public function verifDate_inicio($attribute) {
+        if ($this->$attribute < Estrategias::findOne($this->id_estrategia)->fecha_inicio) {
+            $this->addError($attribute, 'No puede ser menor a la fecha inicial de la estrategia');
+        }
+    }
 
-        if ($this->$attribute <= $currentDate) {
-            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+    public function verifDate_fin($attribute) {
+        if ($this->$attribute > Estrategias::findOne($this->id_estrategia)->fecha_fin) {
+            $this->addError($attribute, 'No puede ser mayor a la fecha final de la estrategia');
+        }
+    }
+
+//  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
+    public function validarResponsables($attribute) {
+        if (empty($this->$attribute)) {
+            $this->addError($attribute, 'No existe ningun responsable');
         }
     }
 
@@ -84,6 +96,11 @@ class Programas extends \yii\db\ActiveRecord {
     public function getFechas() {
         $model_ = Estrategias::findOne($_GET['id']);
         return $model_;
+    }
+
+    public function getEstrategia($id) {
+        $modelEstrategia = Estrategias::findOne($id)->descripcion;
+        return $modelEstrategia;
     }
 
     public function getLevels() {

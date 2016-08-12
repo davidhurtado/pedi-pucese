@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use app\models\Programas;
 /* @var $this yii\web\View */
 /* @var $model app\models\Proyectos */
 ?>
@@ -9,6 +9,7 @@ use yii\helpers\Html;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'fechas'=>  Programas::findOne($model->id_programa),
     ]) ?>
 
 </div>

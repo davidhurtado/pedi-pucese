@@ -1,7 +1,9 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-
+use kartik\date\DatePicker;
+use yii\helpers\ArrayHelper;
+use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\Programas */
 /* @var $form yii\widgets\ActiveForm */
@@ -9,17 +11,47 @@ use yii\widgets\ActiveForm;
 
 <div class="programas-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id'=>'programa']); ?>
 
-    <?= $form->field($model, 'id_estrategia')->textInput() ?>
+     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
-
-    <?= $form->field($model, 'fecha_fin')->textInput() ?>
+    <?php
+    if (Yii::$app->controller->action->id == 'update') {
+            $model->responsables = array_map('intval', explode(',', $model->responsables));
+        }
+     echo $form->field($model, 'responsables')->widget(Select2::className(), [
+            'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
+            'options' => [
+                'id' => 'items',
+                'multiple' => true,
+                'tags' => true,
+                'tokenSeparators' => [',', ' '],
+            ],
+        ]);
+    ?>
+ <div class="row" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+            <?=
+            DatePicker::widget([
+                'language' => 'es',
+                'model' => $model,
+                'attribute' => 'fecha_inicio',
+                'attribute2' => 'fecha_fin',
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'options2' => ['placeholder' => 'Fecha de fin ...'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'startDate' => $fechas->fecha_inicio,
+                    'endDate' => $fechas->fecha_fin,
+                ]
+            ]);
+            ?>
+        </div>
+    </div>
 
     <?= $form->field($model, 'presupuesto')->textInput() ?>
 

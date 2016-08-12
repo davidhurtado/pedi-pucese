@@ -39,7 +39,7 @@ class Proyectos extends \yii\db\ActiveRecord {
             [['presupuesto'], 'number'],
             [['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'string', 'max' => 100],
+            //[['responsables'], 'string', 'max' => 100],
             [['id_programa'], 'exist', 'skipOnError' => true, 'targetClass' => Programas::className(), 'targetAttribute' => ['id_programa' => 'id']],
         ];
     }

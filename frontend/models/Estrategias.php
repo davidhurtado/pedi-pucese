@@ -4,7 +4,6 @@ namespace app\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
-use yii\web\UploadedFile;
 use yii\helpers\Url;
 use \yii\db\Query;
 
@@ -42,11 +41,11 @@ class Estrategias extends \yii\db\ActiveRecord {
         return [
             [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_objetivo'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
+            [['fecha_inicio'], 'verifDate_inicio'],
+            [['fecha_fin'], 'verifDate_fin'],
             [['presupuesto'], 'number'],
-            [['descripcion'], 'string', 'max' => 500],
+            [['descripcion'], 'string'],
             [['responsables'], 'validarResponsables'],
-            //[['evidencias'], 'string', 'max' => 600],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
     }
@@ -68,12 +67,15 @@ class Estrategias extends \yii\db\ActiveRecord {
     }
 
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute) {
-        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d h:m:s');
+    public function verifDate_inicio($attribute) {
+        if ($this->$attribute < Objetivos::findOne($this->id_objetivo)->fecha_inicio) {
+            $this->addError($attribute, 'No puede ser menor a la fecha inicial del objetivo');
+        }
+    }
 
-        if ($this->$attribute <= $currentDate) {
-            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+    public function verifDate_fin($attribute) {
+        if ($this->$attribute > Objetivos::findOne($this->id_objetivo)->fecha_fin) {
+            $this->addError($attribute, 'No puede ser mayor a la fecha final del objetivo');
         }
     }
 

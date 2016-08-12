@@ -10,16 +10,20 @@ use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
 /* @var $form yii\widgets\ActiveForm */
+$time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
+        $currentDate = $time->format('Y-m-d');
 ?>
 
 <div class="objetivos-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => true, 'style' => 'resize:none']) ?>
 
     <?php
-    $model->responsables = array_map('intval', explode(',', $model->responsables));
+    if (Yii::$app->controller->action->id == 'update') {
+            $model->responsables = array_map('intval', explode(',', $model->responsables));
+        }
     echo $form->field($model, 'responsables')->widget(Select2::className(), [
         'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
         'options' => [
@@ -31,7 +35,7 @@ use kartik\select2\Select2;
     ]);
     ?>
 
-    <div class="row" style="margin-bottom: 8px">
+    <div class="row" style="margin-bottom: 15px">
         <div class="col-sm-12">
             <?=
             DatePicker::widget([
@@ -47,8 +51,8 @@ use kartik\select2\Select2;
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
-                    'startDate' => '2017-01-01',
-                    'disableTouchKeyboard' => false,
+                    'startDate' => '2017-01-01'
+                    //'startDate' => date ( 'Y-m-d' , strtotime ( '+1 year' , strtotime ( $currentDate ))),
                 ]
             ]);
             ?>

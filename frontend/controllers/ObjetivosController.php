@@ -12,7 +12,6 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Estrategias;
-use yii\web\UploadedFile;
 use yii\widgets\ActiveForm;
 use yii\data\Pagination;
 
@@ -83,7 +82,7 @@ class ObjetivosController extends Controller {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Create new Objetivos",
+                    'title' => "Crear nuevo Objetivo",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -94,14 +93,14 @@ class ObjetivosController extends Controller {
                 $model->responsables = implode(",", $model->responsables);
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Create new Objetivos",
+                    'title' => "Crear nuevo Objetivo",
                     'content' => '<span class="text-success">Create Objetivos success</span>',
                     'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                 ];
             } else {
                 return [
-                    'title' => "Create new Objetivos",
+                    'title' => "Crear nuevo Objetivo",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
@@ -151,10 +150,21 @@ class ObjetivosController extends Controller {
                     Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post())) {
-                $model->responsables = implode(",", $model->responsables);
+                if($model->validate()){
+                    $model->responsables = implode(",", $model->responsables);
+                }
+                
                 if ($model->save()) {
-
                     return $this->redirect(Yii::$app->request->referrer);
+                }else{
+                    return [
+                    'title' => "Update Estrategias #" . $id,
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
                 }
             } else {
                 return [
