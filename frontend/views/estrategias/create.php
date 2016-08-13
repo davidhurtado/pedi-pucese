@@ -1,21 +1,15 @@
 <?php
 
 use yii\helpers\Html;
-
+use app\models\Objetivos;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
 
-$this->title = 'Create Estrategias';
-$this->params['breadcrumbs'][] = ['label' => 'Estrategias', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="estrategias-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'fechas'=>  Objetivos::findOne($_GET["id"]),
     ]) ?>
-
 </div>

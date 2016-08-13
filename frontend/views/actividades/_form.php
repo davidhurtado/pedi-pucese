@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -18,12 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'codigo_presupuestario')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'presupuesto_actividades')->textInput() ?>
+    <?= $form->field($model, 'presupuesto')->textInput() ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
+
+    <?= $form->field($model, 'fecha_fin')->textInput() ?>
+
+  
+	<?php if (!Yii::$app->request->isAjax){ ?>
+	  	<div class="form-group">
+	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+	    </div>
+	<?php } ?>
 
     <?php ActiveForm::end(); ?>
-
+    
 </div>

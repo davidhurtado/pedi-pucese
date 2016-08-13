@@ -44,10 +44,15 @@ AppAsset::register($this);
                     'label' => 'ADMINISTRACION',
                     'items' => [
                         ['label' => 'OBJETIVOS', 'url' => [ '/objetivos']],
+                        '<li class="divider"></li>',
+                        '<li class="dropdown-header">Consultas</li>',
                         ['label' => 'ESTRATEGIAS', 'url' => [ '/estrategias']],
+                        ['label' => 'PROGRAMAS', 'url' => [ '/programas']],
+                        ['label' => 'PROYECTOS', 'url' => [ '/proyectos']],
+                        ['label' => 'SUBPROYECTOS', 'url' => [ '/subproyectos']],
                         '<li class="divider"></li>',
                         '<li class="dropdown-header">Reportes</li>',
-                        ['label' => 'SEGUIMIENTO', 'url' => [ '/proyectos']],
+                        ['label' => 'ACTIVIDADES', 'url' => [ '/actividades']],
                     ],
                 ];
                 $menuItems[] = '<li>'
@@ -78,7 +83,7 @@ AppAsset::register($this);
 
         <footer class="footer">
             <div class="container">
-                <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+                <p class="pull-left">&copy; PEDI - PUCESE <?= date('Y') ?></p>
 
                 <p class="pull-right"><?= Yii::powered() ?></p>
             </div>
