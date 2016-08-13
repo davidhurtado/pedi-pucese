@@ -18,5 +18,13 @@ return [
         'rbac' => [
             'class' => 'dektrium\rbac\Module',
         ],
+        'gridview' => [
+            'class' => '\kartik\grid\Module'
+        ],
+        [
+            'class' => 'yii\i18n\PhpMessageSource',
+            'basePath' => '@kvgrid/messages',
+            'forceTranslation' => true
+        ]
     ],
 ];

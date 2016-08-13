@@ -7,14 +7,11 @@ $this->title = 'PEDI PUCESE 2016';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
+        <h1>Bienvenido al Sistema PEDI</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">Planifica lo mas que puedas</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <p><a class="btn btn-lg btn-success" href="http://www.pucese.edu.ec">PUCESE</a></p>
     </div>
 
-    <div class="body-content">
-
-    </div>
 </div>

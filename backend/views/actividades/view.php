@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_subproyecto',
             'descripcion',
             'codigo_presupuestario',
-            'presupuesto_actividades',
+            'presupuesto',
         ],
     ]) ?>
 

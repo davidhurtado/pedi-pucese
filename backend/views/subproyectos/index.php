@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id_proyecto',
             'nombre',
             'descripcion',
-            'evidencias_subproyectos',
+            'evidencias',
             // 'fecha_inicio',
             // 'fecha_fin',
 

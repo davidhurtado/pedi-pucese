@@ -33,7 +33,7 @@ class Actividades extends \yii\db\ActiveRecord
         return [
             [['id_subproyecto', 'descripcion', 'codigo_presupuestario'], 'required'],
             [['id_subproyecto'], 'integer'],
-            [['presupuesto_actividades'], 'number'],
+            [['presupuesto'], 'number'],
             [['descripcion'], 'string', 'max' => 500],
             [['codigo_presupuestario'], 'string', 'max' => 10],
             [['id_subproyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Subproyectos::className(), 'targetAttribute' => ['id_subproyecto' => 'id']],
@@ -50,7 +50,7 @@ class Actividades extends \yii\db\ActiveRecord
             'id_subproyecto' => 'Id Subproyecto',
             'descripcion' => 'Descripcion',
             'codigo_presupuestario' => 'Codigo Presupuestario',
-            'presupuesto_actividades' => 'Presupuesto Actividades',
+            'presupuesto' => 'Presupuesto Actividades',
         ];
     }
 

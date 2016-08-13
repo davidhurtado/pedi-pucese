@@ -2,10 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
+use yii\helpers\ArrayHelper;
 use kartik\date\DatePicker;
-use kartik\file\FileInput;
-use yii\helpers\Url;
-
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
@@ -14,37 +13,59 @@ use yii\helpers\Url;
 
 <div class="estrategias-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['id'=>'estrategia']); ?>
 
-    <?= $form->field($model, 'id_objetivo')->dropDownList($model->comboObjetivos) ?>
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
 
-<?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
-    <?=DatePicker::widget([
-        'name' => 'fecha_inicio',
-        'value' => $model->FechaObjetivo->fecha_inicio,
-        'type' => DatePicker::TYPE_RANGE,
-        'name2' => 'fecha_fin',
-        'value2' => $model->FechaObjetivo->fecha_fin,
-        'pluginOptions' => [
-            'autoclose' => false,
-            'format' => 'yyyy-m-dd'
-        ]
+    <?php
+    if (Yii::$app->controller->action->id == 'update') {
+        if ($model->validate()) {
+            $model->responsables = array_map('intval', explode(',', $model->responsables));
+        }
+    }
+
+    echo $form->field($model, 'responsables')->widget(Select2::className(), [
+        'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
+        'options' => [
+            'id' => 'items',
+            'multiple' => true,
+            'tags' => true,
+            'tokenSeparators' => [',', ' '],
+        ],
     ]);
     ?>
-            <?=$form->field($model, 'evidencias')->widget(FileInput::classname(), [
-    'options' => ['multiple' => true],
-    'pluginOptions' => ['previewFileType' => 'any']
-]);
-            ?> 
-
-<?= $form->field($model, 'presupuesto')->textInput() ?>
-
-
-    <div class="form-group">
-<?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Actualizar', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+            <?=
+            DatePicker::widget([
+                'language' => 'es',
+                'model' => $model,
+                'attribute' => 'fecha_inicio',
+                'attribute2' => 'fecha_fin',
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'options2' => ['placeholder' => 'Fecha de fin ...'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'startDate' => $fechas->fecha_inicio,
+                    'endDate' => $fechas->fecha_fin,
+                ]
+            ]);
+            ?>
+        </div>
     </div>
 
-<?php ActiveForm::end(); ?>
+    <?= $form->field($model, 'presupuesto')->textInput() ?>
+
+    <?php if (!Yii::$app->request->isAjax) { ?>
+        <div class="form-group">
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+    <?php } ?>
+
+    <?php ActiveForm::end(); ?>
 
 </div>
