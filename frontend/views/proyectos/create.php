@@ -1,21 +1,15 @@
 <?php
 
 use yii\helpers\Html;
-
+use app\models\Programas;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Proyectos */
 
-$this->title = 'Create Proyectos';
-$this->params['breadcrumbs'][] = ['label' => 'Proyectos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="proyectos-create">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
     <?= $this->render('_form', [
         'model' => $model,
+        'fechas'=>  Programas::findOne($_GET["id"]),
     ]) ?>
-
 </div>
