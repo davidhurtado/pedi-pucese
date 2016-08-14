@@ -50,9 +50,21 @@ AppAsset::register($this);
                         ['label' => 'PROGRAMAS', 'url' => [ '/programas']],
                         ['label' => 'PROYECTOS', 'url' => [ '/proyectos']],
                         ['label' => 'SUBPROYECTOS', 'url' => [ '/subproyectos']],
+                        ['label' => 'ACTIVIDADES', 'url' => [ '/actividades']],
+                    ],
+                ];
+                $menuItems[] = [
+                    'label' => 'REPORTES',
+                    'items' => [
+                        ['label' => 'OBJETIVOS', 'url' => [ '/objetivos/index']],
+                        ['label' => 'ESTRATEGIAS', 'url' => [ '/reportes/objetivos-estrategias']],
+                        ['label' => 'PROGRAMAS', 'url' => [ '/reportes/programas']],
+                        ['label' => 'PROYECTOS', 'url' => [ '/reportes/proyectos']],
+                        ['label' => 'SUBPROYECTOS', 'url' => [ '/reportes/subproyectos']],
+                        ['label' => 'ACTIVIDADES', 'url' => [ '/reportes/actividades']],
                         '<li class="divider"></li>',
                         '<li class="dropdown-header">Reportes</li>',
-                        ['label' => 'ACTIVIDADES', 'url' => [ '/actividades']],
+                        ['label' => 'POA', 'url' => [ '/reportes']],
                     ],
                 ];
                 $menuItems[] = '<li>'

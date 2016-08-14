@@ -41,7 +41,7 @@ class ObjetivosSearch extends Objetivos
      */
     public function search($params)
     {
-        $query = Objetivos::find();
+        $query = Objetivos::find()->orderBy('id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

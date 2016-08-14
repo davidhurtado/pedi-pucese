@@ -61,7 +61,6 @@ class Estrategias extends \yii\db\ActiveRecord {
             'responsables' => 'Responsables',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
-            'evidencias' => 'Evidencias',
             'presupuesto' => 'Presupuesto',
         ];
     }
@@ -106,6 +105,16 @@ class Estrategias extends \yii\db\ActiveRecord {
         return $modelObjetivo;
     }
 
+    public function getNumeracion($id) {
+        $query = new Query();
+        $query->select('*')
+                ->from('numeracion_objetivo')
+                ->where(['id_objetivo' => $id]);
+
+        $cmd = $query->createCommand();
+        return $cmd->queryOne();
+    }
+
     public function getLevels() {
 
         $query = new Query();
@@ -126,7 +135,7 @@ class Estrategias extends \yii\db\ActiveRecord {
     public function getResponsables($resp) {
 
 
-        $query = new \yii\db\Query();
+        $query = new Query();
         $query->select(['niveles.*', 'title', 'org_id'])
                 ->from('niveles')->where(['nid' => $resp]);
 

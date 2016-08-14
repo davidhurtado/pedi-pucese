@@ -42,7 +42,7 @@ class ProgramasSearch extends Programas
      */
     public function search($params)
     {
-        $query = Programas::find();
+        $query = Programas::find()->orderBy('id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

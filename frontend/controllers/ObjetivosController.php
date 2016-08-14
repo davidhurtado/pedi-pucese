@@ -89,25 +89,47 @@ class ObjetivosController extends Controller {
                     'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
-            } else if ($model->load($request->post()) && $model->save()) {
-                $model->responsables = implode(",", $model->responsables);
-                return [
-                    'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Crear nuevo Objetivo",
-                    'content' => '<span class="text-success">Create Objetivos success</span>',
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::a('Create More', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                ];
-            } else {
-                return [
-                    'title' => "Crear nuevo Objetivo",
-                    'content' => $this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
-            }
+            } else
+                if ($model->load(Yii::$app->request->post())) {
+                    if ($model->validate()) {
+                        $model->responsables = implode(",", $model->responsables);
+                        if ($model->save()) {
+                            return [
+                                'forceReload' => '#crud-datatable-pjax',
+                                'title' => "Crear nuevo Objetivo",
+                                'content' => '<span class="text-success">Objetivo creado</span>',
+                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                                Html::a('Crear M&aacute;s', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            ];
+                        }else{
+                            return [
+                                'forceReload' => '#crud-datatable-pjax',
+                                'title' => "Error",
+                                'content' => '<span class="text-success">Error al crear el objetivo, intente de nuevo</span>',
+                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                                Html::a('Crear', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            ];
+                        }
+                    } else {
+                        return [
+                            'title' => "Crear nuevo Objetivo",
+                            'content' => $this->renderAjax('create', [
+                                'model' => $model,
+                            ]),
+                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        ];
+                    }
+                } else {
+                    return [
+                        'title' => "Crear nuevo Objetivo",
+                        'content' => $this->renderAjax('create', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
         } else {
             /*
              *   Process for non-ajax request

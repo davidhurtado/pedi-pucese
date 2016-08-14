@@ -39,7 +39,7 @@ class EstrategiasSearch extends Estrategias {
      * @return ActiveDataProvider
      */
     public function search($params) {
-        $query = Estrategias::find();
+        $query = Estrategias::find()->orderBy('id_objetivo');
 
         // add conditions that should always apply here
 
@@ -58,6 +58,9 @@ class EstrategiasSearch extends Estrategias {
             $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
                     ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
         }
+         $query->andFilterWhere([
+            'id_objetivo' => $this->id_objetivo,
+        ]);
         // grid filtering conditions
         $query->andFilterWhere([
             'presupuesto' => $this->presupuesto,

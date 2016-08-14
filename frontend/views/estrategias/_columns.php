@@ -34,24 +34,23 @@ return [
             }
         },
                 'format' => 'raw',
-            //'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
             ],
-            /* [
+            /*[
               'class'=>'\kartik\grid\DataColumn',
               'attribute'=>'responsables',
               ], */
-            /* [
+             [
               'class'=>'\kartik\grid\DataColumn',
               'attribute'=>'fecha_inicio',
               ],
               [
               'class'=>'\kartik\grid\DataColumn',
               'attribute'=>'fecha_fin',
-              ], */
-            // [
-            // 'class'=>'\kartik\grid\DataColumn',
-            // 'attribute'=>'presupuesto',
-            // ],
+              ], 
+             [
+             'class'=>'\kartik\grid\DataColumn',
+             'attribute'=>'presupuesto',
+             ],
             [
                 'class' => 'kartik\grid\ActionColumn',
                 'dropdown' => false,

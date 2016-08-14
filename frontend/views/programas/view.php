@@ -79,7 +79,7 @@ CrudAsset::register($this);
                     'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
                     //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                     'after' => BulkButtonWidget::widget([
-                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
+                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["proyectos/bulk-delete"], [
                             "class" => "btn btn-danger btn-xs",
                             'role' => 'modal-remote-bulk',
                             'data-confirm' => false, 'data-method' => false, // for overide yii data api

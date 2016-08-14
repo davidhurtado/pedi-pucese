@@ -22,8 +22,10 @@ $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
 
     <?php
     if (Yii::$app->controller->action->id == 'update') {
+        if ($model->validate()) {
             $model->responsables = array_map('intval', explode(',', $model->responsables));
         }
+    }
     echo $form->field($model, 'responsables')->widget(Select2::className(), [
         'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
         'options' => [
