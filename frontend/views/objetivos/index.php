@@ -13,7 +13,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 
 $this->title = 'Objetivos';
 $this->params['breadcrumbs'][] = $this->title;
-
+Yii::$app->params['titulo_exportacion']=$this->title;
 CrudAsset::register($this);
 ?>
 <div class="objetivos-index">

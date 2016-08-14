@@ -8,10 +8,10 @@ return [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
-    [
+   /* [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-    ],
+    ],*/
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'id',
@@ -27,8 +27,8 @@ return [
         'value' => function($data) {
             if (isset($data->id)) {
                 $objetivo=Objetivos::findOne($data->id_objetivo);
-                return Html::tag('strong','[Objetivo] ', ['data-toggle' => 'tooltip', 'title' => $objetivo->descripcion, 'style' => 'cursor:default;'])
-                       .Html::tag('span', substr(strip_tags($data->descripcion),0,90).'....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
+                return Html::tag('strong',$objetivo->getNumero($data->getNumero($data->id)['id_objetivo']), ['data-toggle' => 'tooltip', 'title' => '[OBJETIVO] '.$objetivo->descripcion, 'style' => 'cursor:default;']).'.'
+                       .$data->getNumero($data->id)['numeracion'].': '.Html::tag('span', substr(strip_tags($data->descripcion),0,90).'....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
             } else {
                 return '';
             }

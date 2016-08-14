@@ -8,11 +8,26 @@ use yii\helpers\Url;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
+use app\models\Objetivos;
+use app\models\Estrategias;
+use \yii\db\Query;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Estrategias */
+$query3 = new Query();
+$query3->select('*')->from('numeracion_programas')->where(['id_programa' => $model->id]);
+$numeracionPrograma = $query3->createCommand()->queryOne();
 
-$this->title = $model->id;
+$query2 = new Query();
+$query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id_estrategia]);
+$numeracionEstrategia = $query2->createCommand()->queryOne();
+
+$query = new Query();
+$query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $numeracionEstrategia['id_objetivo']]);
+$numeracionObjetivo = $query->createCommand()->queryOne();
+
+$this->title = 'Programa ' . $numeracionObjetivo['id'] . '.' . $numeracionPrograma['numeracion'] . '.' . $numeracionEstrategia['numeracion'] . ': ' . $model->descripcion;
+$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip','data-placement'=>'bottom', 'title' => '[OBJETIVO] ' . $numeracionObjetivo['id'], 'style' => 'cursor:default;', 'label' => 'Objetivo ' . $numeracionObjetivo['id'], 'url' => ['/objetivos/view', 'id' => $numeracionEstrategia['id_objetivo']]];
+$this->params['breadcrumbs'][] = ['label' => 'Estrategia ' . $numeracionEstrategia['numeracion'], 'url' => ['/estrategias/view', 'id' => $model->id_estrategia]];
+$this->params['breadcrumbs'][] = 'Programa ' . $numeracionPrograma['numeracion'];
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
@@ -64,8 +79,7 @@ CrudAsset::register($this);
                 'columns' => require(__DIR__ . '/../proyectos' . '/_columns.php'),
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['proyectos/create','id'=>$model->id],
-                        ['role'=>'modal-remote','title'=> 'Crear nuevo Proyecto','class'=>'btn btn-default']).
+                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['proyectos/create', 'id' => $model->id], ['role' => 'modal-remote', 'title' => 'Crear nuevo Proyecto', 'class' => 'btn btn-default']) .
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                         //'{toggleData}'.
                         '{export}'
@@ -103,6 +117,8 @@ CrudAsset::register($this);
     ?>
     <?php Modal::end(); ?>
     <?php
-    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'95%\');');
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+            . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
+            . '$(function () { $("[data-toggle=\'popover\']").popover();});');
     ?>
 </div>

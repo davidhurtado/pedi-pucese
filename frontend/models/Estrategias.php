@@ -105,14 +105,11 @@ class Estrategias extends \yii\db\ActiveRecord {
         return $modelObjetivo;
     }
 
-    public function getNumeracion($id) {
+    public function getNumero($id) {
         $query = new Query();
-        $query->select('*')
-                ->from('numeracion_objetivo')
-                ->where(['id_objetivo' => $id]);
-
-        $cmd = $query->createCommand();
-        return $cmd->queryOne();
+        $query->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $id]);
+        $numeracion = $query->createCommand()->queryOne();
+        return $numeracion;
     }
 
     public function getLevels() {

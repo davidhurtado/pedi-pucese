@@ -8,13 +8,21 @@ use yii\helpers\Url;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
+use app\models\Estrategias;
+use \yii\db\Query;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
-
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $model->id_objetivo, 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
-$this->params['breadcrumbs'][] = 'Estrategia ' . $this->title;
+//'OBJETIVO ' . $model->getNumero($model->id);
+$query = new Query();
+$query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
+$numeracionObjetivo = $query->createCommand()->queryOne();
+$query2 = new Query();
+$query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
+$numeracionEstrategia = $query2->createCommand()->queryOne();
+$this->title ='Objetivo '.$numeracionObjetivo['id'].': '. $model->getObjetivo($model->id_objetivo). ' Estrategia '.$numeracionEstrategia['numeracion'].': '.$model->descripcion;
+$this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $numeracionObjetivo['id'], 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
+$this->params['breadcrumbs'][] = 'Estrategia ' . $numeracionEstrategia['numeracion'];
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
@@ -66,8 +74,7 @@ CrudAsset::register($this);
                 'columns' => require(__DIR__ . '/../programas' . '/_columns.php'),
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['programas/create','id'=>$model->id],
-                        ['role'=>'modal-remote','title'=> 'Crear nuevo Programa','class'=>'btn btn-default']).
+                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['programas/create', 'id' => $model->id], ['role' => 'modal-remote', 'title' => 'Crear nuevo Programa', 'class' => 'btn btn-default']) .
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                         //'{toggleData}'.
                         '{export}'

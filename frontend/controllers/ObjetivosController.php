@@ -12,6 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Estrategias;
+use app\models\EstrategiasSearch;
 use yii\widgets\ActiveForm;
 use yii\data\Pagination;
 
@@ -55,10 +56,12 @@ class ObjetivosController extends Controller {
      * @return mixed
      */
     public function actionView($id) {
-
-        $dataProvider = new ActiveDataProvider([
+        $searchModel = new EstrategiasSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
+        
+    /* $dataProvider = new ActiveDataProvider([
             'query' => Estrategias::find()->where(['id_objetivo' => $id]),
-        ]);
+        ]);*/
         return $this->render('view', [
                     'model' => $this->findModel($id),
                     'dataProvider' => $dataProvider,
@@ -90,34 +93,24 @@ class ObjetivosController extends Controller {
                     Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else
-                if ($model->load(Yii::$app->request->post())) {
-                    if ($model->validate()) {
-                        $model->responsables = implode(",", $model->responsables);
-                        if ($model->save()) {
-                            return [
-                                'forceReload' => '#crud-datatable-pjax',
-                                'title' => "Crear nuevo Objetivo",
-                                'content' => '<span class="text-success">Objetivo creado</span>',
-                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear M&aacute;s', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                            ];
-                        }else{
-                            return [
-                                'forceReload' => '#crud-datatable-pjax',
-                                'title' => "Error",
-                                'content' => '<span class="text-success">Error al crear el objetivo, intente de nuevo</span>',
-                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
-                            ];
-                        }
+            if ($model->load(Yii::$app->request->post())) {
+                if ($model->validate()) {
+                    $model->responsables = implode(",", $model->responsables);
+                    if ($model->save()) {
+                        return [
+                            'forceReload' => '#crud-datatable-pjax',
+                            'title' => "Crear nuevo Objetivo",
+                            'content' => '<span class="text-success">Objetivo creado</span>',
+                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::a('Crear M&aacute;s', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                        ];
                     } else {
                         return [
-                            'title' => "Crear nuevo Objetivo",
-                            'content' => $this->renderAjax('create', [
-                                'model' => $model,
-                            ]),
+                            'forceReload' => '#crud-datatable-pjax',
+                            'title' => "Error",
+                            'content' => '<span class="text-success">Error al crear el objetivo, intente de nuevo</span>',
                             'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                            Html::a('Crear', ['create'], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                         ];
                     }
                 } else {
@@ -130,6 +123,16 @@ class ObjetivosController extends Controller {
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                     ];
                 }
+            } else {
+                return [
+                    'title' => "Crear nuevo Objetivo",
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                    ]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            }
         } else {
             /*
              *   Process for non-ajax request
@@ -172,21 +175,21 @@ class ObjetivosController extends Controller {
                     Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post())) {
-                if($model->validate()){
+                if ($model->validate()) {
                     $model->responsables = implode(",", $model->responsables);
                 }
-                
+
                 if ($model->save()) {
                     return $this->redirect(Yii::$app->request->referrer);
-                }else{
+                } else {
                     return [
-                    'title' => "Update Estrategias #" . $id,
-                    'content' => $this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
-                ];
+                        'title' => "Update Estrategias #" . $id,
+                        'content' => $this->renderAjax('update', [
+                            'model' => $model,
+                        ]),
+                        'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
                 }
             } else {
                 return [

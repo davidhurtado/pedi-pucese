@@ -79,6 +79,14 @@ class Objetivos extends \yii\db\ActiveRecord {
         return $this->hasMany(Estrategias::className(), ['id_objetivo' => 'id']);
     }
 
+    public function getNumero($id) {
+        $query = new Query();
+        $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $id]);
+        $numeracion = $query->createCommand()->queryOne();
+        //$numeracion['id'];
+        return $numeracion['id'];
+    }
+
     public function getLevels() {
 
 

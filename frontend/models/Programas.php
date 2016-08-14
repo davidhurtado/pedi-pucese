@@ -103,6 +103,13 @@ class Programas extends \yii\db\ActiveRecord {
         return $modelEstrategia;
     }
 
+    public function getNumero($id) {
+        $query = new Query();
+        $query->select('*')->from('numeracion_programas')->where(['id_programa' => $id]);
+        $numeracion = $query->createCommand()->queryOne();
+        return $numeracion;
+    }
+
     public function getLevels() {
 
         $query = new Query();

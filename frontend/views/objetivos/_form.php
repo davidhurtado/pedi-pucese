@@ -18,7 +18,7 @@ $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => true, 'style' => 'resize:none']) ?>
+    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => false, 'style' => 'resize:none']) ?>
 
     <?php
     if (Yii::$app->controller->action->id == 'update') {

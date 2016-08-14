@@ -8,13 +8,16 @@ use yii\bootstrap\Modal;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
 use app\models\Programas;
-
+use app\models\Estrategias;
+use app\models\Objetivos;
+use \yii\db\Query;
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
 
-$this->title = 'Objetivo ' . $model->id;
+$this->title = 'OBJETIVO ' . $model->getNumero($model->id);
 $this->params['breadcrumbs'][] = ['label' => 'Objetivos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+Yii::$app->params['titulo_exportacion']=$this->title.': '.$model->descripcion;
 CrudAsset::register($this);
 ?>
 <div class="objetivos-view">
@@ -68,13 +71,24 @@ CrudAsset::register($this);
                         'class' => 'kartik\grid\CheckboxColumn',
                         'width' => '20px',
                     ],
-                    [
+                    /*[
                         'class' => 'kartik\grid\SerialColumn',
                         'width' => '30px',
-                    ],
+                    ],*/
                     [
                         'class' => '\kartik\grid\DataColumn',
                         'attribute' => 'descripcion',
+                         'value' => function ($model, $key, $index, $widget) {
+                                $query = new Query();
+                                $query2 = new Query();
+                                $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
+                                $numeracionObjetivo = $query->createCommand()->queryOne();
+                                
+                                $query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
+                                $numeracionEstrategia = $query2->createCommand()->queryOne();
+                                
+                                return $numeracionObjetivo['id'] . '.' . $numeracionEstrategia['numeracion'] . '.: ' . $model->descripcion;
+                            },
                     ],
                     [
                         'class' => '\kartik\grid\DataColumn',

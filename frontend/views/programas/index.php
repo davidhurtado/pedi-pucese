@@ -63,3 +63,8 @@ CrudAsset::register($this);
     "footer"=>"",// always need it for jquery plugin
 ])?>
 <?php Modal::end(); ?>
+<?php
+$this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+        . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
+        . '$(function () { $("[data-toggle=\'popover\']").popover();});');
+?>

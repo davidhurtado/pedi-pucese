@@ -38,11 +38,15 @@ class EstrategiasSearch extends Estrategias {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
-        $query = Estrategias::find()->orderBy('id_objetivo');
+    public function search($params, $id = null) {
 
+        if ($id == null) {
+            $sql = Estrategias::find()->orderBy('id_objetivo, id');
+        } else {
+            $sql = Estrategias::find()->where(['id_objetivo' => $id])->orderBy('id_objetivo, id');
+        }
         // add conditions that should always apply here
-
+        $query = $sql;
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -58,7 +62,7 @@ class EstrategiasSearch extends Estrategias {
             $query->andFilterWhere(['<=', 'Extract(year from fecha_inicio)', $params['anio']])
                     ->andFilterWhere(['>=', 'Extract(year from fecha_fin)', $params['anio']]);
         }
-         $query->andFilterWhere([
+        $query->andFilterWhere([
             'id_objetivo' => $this->id_objetivo,
         ]);
         // grid filtering conditions

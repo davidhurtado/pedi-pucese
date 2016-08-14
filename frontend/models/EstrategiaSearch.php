@@ -42,7 +42,7 @@ class EstrategiaSearch extends Estrategias
      */
     public function search($params)
     {
-        $query = Estrategias::find();
+        $query = Estrategias::find()->orderBy('id_objetivo,id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -33,7 +33,7 @@ CrudAsset::register($this);
             'hover' => true,
             'panel' => ['type' => 'primary', 'heading' => 'Objetivos y Estrategias'],
             'columns' => [
-                ['class' => 'kartik\grid\SerialColumn'],
+                //['class' => 'kartik\grid\SerialColumn'],
                 [
                     'attribute' => 'id',
                     'width' => '310px',
@@ -41,7 +41,6 @@ CrudAsset::register($this);
                         $query = new Query();
                         $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
                         $numeracion = $query->createCommand()->queryOne();
-                        $numeracion['id'];
                         return 'Objetivo ' .$numeracion['id'].': '. Objetivos::findOne($model->id_objetivo)->descripcion;
                     },
                             'group' => true, // enable grouping,
@@ -62,7 +61,7 @@ CrudAsset::register($this);
                                 $query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
                                 $numeracionEstrategia = $query2->createCommand()->queryOne();
                                 
-                                return $numeracionObjetivo['id'] . '.' . $numeracionEstrategia['numeracion'] . '. :' . $model->descripcion;
+                                return $numeracionObjetivo['id'] . '.' . $numeracionEstrategia['numeracion'] . '.: ' . $model->descripcion;
                             },
                                     'filterType' => GridView::FILTER_SELECT2,
                                     'filter' => ArrayHelper::map(Objetivos::find()->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
