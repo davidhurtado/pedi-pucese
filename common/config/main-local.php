@@ -1,16 +1,23 @@
 <?php
 
 return [
-
     'components' => [
-        [
-            'class' => 'yii\log\FileTarget',
-            'prefix' => function ($message) {
-                $user = Yii::$app->has('user', true) ? Yii::$app->get('user') : null;
-                $userID = $user ? $user->getId(false) : '-';
-                return "[$userID]";
-            }
+
+
+               'log' => [
+            'targets' => [
+                [
+                      'class' => 'yii\log\FileTarget',
+    'prefix' => function ($message) {
+        $user = Yii::$app->has('user', true) ? Yii::$app->get('user') : null;
+        $userID = $user ? $user->getId(false) : '-';
+        return "[$userID]";
+    }
+                ],
+  
+            ],
         ],
+
         'db' => [
             'class' => 'yii\db\Connection',
             //'dsn' => 'mysql:host=localhost;dbname=pedi', // MySQL, MariaDB
@@ -22,7 +29,7 @@ return [
             //'dsn' => 'mssql:host=localhost;dbname=mydatabase', // MS SQL Server, mssql driver
             //'dsn' => 'oci:dbname=//localhost:1521/mydatabase', // Oracle
             'username' => 'postgres',
-            'password' => '123456',
+            'password' => '123',
             'charset' => 'utf8',
         ],
         /* 'db' => [
@@ -41,6 +48,4 @@ return [
             'useFileTransport' => true,
         ],
     ],
-    'timeZone' => 'America/Guayaquil',
-    'language' => 'es',
 ];

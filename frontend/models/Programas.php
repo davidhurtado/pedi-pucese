@@ -20,7 +20,6 @@ use \yii\db\Query;
  * @property Proyectos[] $proyectos
  */
 class Programas extends \yii\db\ActiveRecord {
-
     /**
      * @inheritdoc
      */
