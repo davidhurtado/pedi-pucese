@@ -12,14 +12,16 @@ use kartik\date\DatePicker;
 ?>
 
 <div class="estrategias-form">
-
+    <?="<h4>"."OBJETIVO ".$objetivo->numeracion.": ".$objetivo->descripcion."</h4>"?>
     <?php $form = ActiveForm::begin(['id'=>'estrategia']); ?>
-
+    
+    <?= $form->field($model, 'numeracion')->textInput() ?>
     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
 
     <?php
+    $request = Yii::$app->request;
     if (Yii::$app->controller->action->id == 'update') {
-        if ($model->validate()) {
+        if (!$model->load($request->post())) {
             $model->responsables = array_map('intval', explode(',', $model->responsables));
         }
     }
@@ -50,8 +52,8 @@ use kartik\date\DatePicker;
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
-                    'startDate' => $fechas->fecha_inicio,
-                    'endDate' => $fechas->fecha_fin,
+                    'startDate' => $objetivo->fecha_inicio,
+                    'endDate' => $objetivo->fecha_fin,
                 ]
             ]);
             ?>

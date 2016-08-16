@@ -33,7 +33,9 @@ class Programas extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
+            [['numeracion'], 'integer'],
+            [['numeracion'], 'VerifNum'],
             [['id_estrategia'], 'integer'],
             [['fecha_inicio'], 'verifDate_inicio'],
             [['fecha_fin'], 'verifDate_fin'],
@@ -57,6 +59,21 @@ class Programas extends \yii\db\ActiveRecord {
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
         ];
+    }
+
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA NUMERACION   
+    public function verifNum($attribute) {
+        $query = new Query();
+        $query->select('*')->from('programas')->where(['id_estrategia' => $this->id_estrategia])->andWhere(['numeracion' => $this->$attribute]);
+        $cmd = $query->createCommand()->queryOne();
+        $query1 = new Query();
+        $query1->select('*')->from('programas')->where(['id_estrategia' => $this->id_estrategia])->andWhere(['id' => $this->id]);
+        $cmd1 = $query1->createCommand()->queryOne();
+        if (isset($cmd['numeracion'])) {
+            if ($this->$attribute != $cmd1['numeracion']) {
+                $this->addError($attribute, 'Numeracion "' . $this->$attribute . '" ya ha sido utilizado.');
+            }
+        }
     }
 
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
@@ -96,11 +113,6 @@ class Programas extends \yii\db\ActiveRecord {
     public function getFechas() {
         $model_ = Estrategias::findOne($_GET['id']);
         return $model_;
-    }
-
-    public function getEstrategia($id) {
-        $modelEstrategia = Estrategias::findOne($id)->descripcion;
-        return $modelEstrategia;
     }
 
     public function getNumero($id) {

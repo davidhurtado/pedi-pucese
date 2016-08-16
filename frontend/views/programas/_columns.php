@@ -4,33 +4,54 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use app\models\Objetivos;
 use app\models\Estrategias;
+
 return [
     [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
-    /*[
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
-    ],*/
+    /* [
+      'class' => 'kartik\grid\SerialColumn',
+      'width' => '30px',
+      ], */
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'id',
     // ],
-    /* [
-      'class' => '\kartik\grid\DataColumn',
-      'attribute' => 'id_estrategia',
-      ], */
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'id_estrategia',
+        'label' => 'Objetivo',
+        //'filter' => false,
+        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+        'value' => function($data) {
+    $estrategia = Estrategias::findOne($data->id_estrategia);
+    $objetivo = Objetivos::findOne($estrategia->id_objetivo);
+    return Html::tag('strong', $objetivo->numeracion, ['data-toggle' => 'tooltip', 'title' => '[OBJETIVO] ' . $objetivo->descripcion, 'style' => 'cursor:default;']);
+},
+        'format' => 'raw',
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'id_estrategia',
+        'label' => 'Estrategia',
+        //'filter' => false,
+        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+        'value' => function($data) {
+    $estrategia = Estrategias::findOne($data->id_estrategia);
+    return Html::tag('strong', $estrategia->numeracion, ['data-toggle' => 'tooltip', 'title' => '[ESTRATEGIA] ' . $estrategia->descripcion, 'style' => 'cursor:default;']);
+},
+        'format' => 'raw',
+    ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'descripcion',
+         'contentOptions' => ['style' => 'width: 10px;'],
         'value' => function($data) {
             if (isset($data->id)) {
                 $estrategia = Estrategias::findOne($data->id_estrategia);
                 $objetivo = Objetivos::findOne($estrategia->id_objetivo);
-                return Html::tag('strong', $objetivo->getNumero($estrategia['id_objetivo']), ['data-toggle' => 'tooltip', 'title' => '[Objetivo] '.$objetivo->descripcion, 'style' => 'cursor:default;']) . '.'
-                        .Html::tag('strong', $estrategia->getNumero($data->id_estrategia)['numeracion'], ['data-toggle' => 'tooltip', 'title' => '[Estrategia] '.$estrategia->descripcion, 'style' => 'cursor:default;']) . '.'
-                        .$data->getNumero($data->id)['numeracion'] . ': ' . Html::tag('span', substr(strip_tags($data->descripcion), 0, 90) . '....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
+                return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->descripcion), 0, 71) . '....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
             } else {
                 return '';
             }
@@ -44,10 +65,20 @@ return [
             [
                 'class' => '\kartik\grid\DataColumn',
                 'attribute' => 'fecha_inicio',
+                'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+                'label' => 'Año Inicio',
+                'value' => function ($data) {
+            return substr($data->fecha_inicio, 0, strpos($data->fecha_inicio, "-", 1));
+        }
             ],
             [
                 'class' => '\kartik\grid\DataColumn',
                 'attribute' => 'fecha_fin',
+                'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+                'label' => 'Año Fin',
+                'value' => function ($data) {
+            return substr($data->fecha_fin, 0, strpos($data->fecha_inicio, "-", 1));
+        }
             ],
             // [
             // 'class'=>'\kartik\grid\DataColumn',

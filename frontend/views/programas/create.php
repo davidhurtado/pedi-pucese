@@ -10,6 +10,6 @@ use app\models\Estrategias;
 <div class="programas-create">
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Estrategias::findOne($_GET["id"]),
+        'estrategia'=>  Estrategias::findOne($_GET["id"]),
     ]) ?>
 </div>

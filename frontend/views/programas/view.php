@@ -12,38 +12,28 @@ use app\models\Objetivos;
 use app\models\Estrategias;
 use \yii\db\Query;
 
-$query3 = new Query();
-$query3->select('*')->from('numeracion_programas')->where(['id_programa' => $model->id]);
-$numeracionPrograma = $query3->createCommand()->queryOne();
+$estrategia = Estrategias::findOne(['id' => $model->id_estrategia]);
+$objetivo = Objetivos::findOne(['id' => $estrategia->id_objetivo]);
 
-$query2 = new Query();
-$query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id_estrategia]);
-$numeracionEstrategia = $query2->createCommand()->queryOne();
-
-$query = new Query();
-$query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $numeracionEstrategia['id_objetivo']]);
-$numeracionObjetivo = $query->createCommand()->queryOne();
-
-$this->title = 'Programa ' . $numeracionObjetivo['id'] . '.' . $numeracionPrograma['numeracion'] . '.' . $numeracionEstrategia['numeracion'] . ': ' . $model->descripcion;
-$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip','data-placement'=>'bottom', 'title' => '[OBJETIVO] ' . $numeracionObjetivo['id'], 'style' => 'cursor:default;', 'label' => 'Objetivo ' . $numeracionObjetivo['id'], 'url' => ['/objetivos/view', 'id' => $numeracionEstrategia['id_objetivo']]];
-$this->params['breadcrumbs'][] = ['label' => 'Estrategia ' . $numeracionEstrategia['numeracion'], 'url' => ['/estrategias/view', 'id' => $model->id_estrategia]];
-$this->params['breadcrumbs'][] = 'Programa ' . $numeracionPrograma['numeracion'];
+$this->title = 'Programa ' . $objetivo->numeracion . '.' . $estrategia->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
+$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip','data-placement'=>'bottom', 'title' => '[OBJETIVO] ' . $objetivo->descripcion, 'style' => 'cursor:default;', 'label' => 'Objetivo ' . $objetivo->numeracion, 'url' => ['/objetivos/view', 'id' => $objetivo->id]];
+$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip','data-placement'=>'bottom', 'title' => '[ESTRATEGIA] ' . $estrategia->descripcion, 'style' => 'cursor:default;', 'label' => 'Estrategia ' . $estrategia->numeracion, 'url' => ['/estrategias/view', 'id' => $estrategia->id]];
+$this->params['breadcrumbs'][] = 'Programa ' .$model->numeracion;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
 
-    <h3>Estrategia: </h3><p><?= $model->getEstrategia($model->id_estrategia) ?></p>
+    <h3>Estrategia: </h3><p><?= $estrategia->descripcion ?></p>
     <h3>Programa: </h3><p><?= $model->descripcion ?></p>
     <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
+        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote',]) ?>
 
         <?=
-        Html::a('Delete', ['delete', 'id' => $model->id], [
+        Html::a('Eliminar', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
-            'role' => 'modal-remote', 'title' => 'Delete',
+            'role' => 'modal-remote',
             'data-confirm' => false, 'data-method' => false, // for overide yii data api
             'data-request-method' => 'post',
-            'data-toggle' => 'tooltip',
             'data-confirm-title' => 'Are you sure?',
             'data-confirm-message' => 'Are you sure want to delete this item'])
         ?>

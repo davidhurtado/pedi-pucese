@@ -35,7 +35,9 @@ class Objetivos extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['descripcion', 'responsables', 'fecha_inicio','fecha_fin','numeracion'], 'required'],
+            [['numeracion'], 'integer'],
+            [['numeracion'], 'unique'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['descripcion'], 'string', 'max' => 500],
             [['responsables'], 'validarResponsables'],
@@ -52,6 +54,7 @@ class Objetivos extends \yii\db\ActiveRecord {
             'responsables' => 'Responsables',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
+            'numeracion' => 'Numeracion',
         ];
     }
 
@@ -77,14 +80,6 @@ class Objetivos extends \yii\db\ActiveRecord {
      */
     public function getEstrategias() {
         return $this->hasMany(Estrategias::className(), ['id_objetivo' => 'id']);
-    }
-
-    public function getNumero($id) {
-        $query = new Query();
-        $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $id]);
-        $numeracion = $query->createCommand()->queryOne();
-        //$numeracion['id'];
-        return $numeracion['id'];
     }
 
     public function getLevels() {

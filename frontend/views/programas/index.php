@@ -12,7 +12,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 
 $this->title = 'Programas';
 $this->params['breadcrumbs'][] = $this->title;
-
+Yii::$app->params['titulo_exportacion']=$this->title;
 CrudAsset::register($this);
 
 ?>
@@ -26,8 +26,7 @@ CrudAsset::register($this);
             'columns' => require(__DIR__.'/_columns.php'),
             'toolbar'=> [
                 ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
-                    ['role'=>'modal-remote','title'=> 'Create new Programas','class'=>'btn btn-default']).
+                    //Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],['role'=>'modal-remote','title'=> 'Crear nuevo Programa','class'=>'btn btn-default']).
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
                     '{toggleData}'.
@@ -39,8 +38,8 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Programas listing',
-                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Programas',
+                //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                 'after'=>BulkButtonWidget::widget([
                             'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
                                 ["bulk-delete"] ,
@@ -58,10 +57,13 @@ CrudAsset::register($this);
         ])?>
     </div>
 </div>
-<?php Modal::begin([
-    "id"=>"ajaxCrudModal",
-    "footer"=>"",// always need it for jquery plugin
-])?>
+<?php
+Modal::begin([
+    'size' => Modal::SIZE_LARGE,
+    "id" => "ajaxCrudModal",
+    "footer" => "", // always need it for jquery plugin
+])
+?>
 <?php Modal::end(); ?>
 <?php
 $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'

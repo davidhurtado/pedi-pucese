@@ -16,8 +16,12 @@ $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
 
 <div class="objetivos-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-
+    <?php $form = ActiveForm::begin([
+    'id' => 'objetivos-signup',
+    'enableClientValidation'=>true,
+    //'enableAjaxValidation'=>true,
+    ]); ?>
+    <?= $form->field($model, 'numeracion')->textInput() ?>
     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => false, 'style' => 'resize:none']) ?>
 
     <?php

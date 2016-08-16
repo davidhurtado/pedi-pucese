@@ -39,7 +39,9 @@ class Estrategias extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
+            [['numeracion'], 'integer'],
+            [['numeracion'], 'VerifNum'],
             [['id_objetivo'], 'integer'],
             [['fecha_inicio'], 'verifDate_inicio'],
             [['fecha_fin'], 'verifDate_fin'],
@@ -63,6 +65,21 @@ class Estrategias extends \yii\db\ActiveRecord {
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
         ];
+    }
+
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA NUMERACION   
+    public function verifNum($attribute) {
+        $query = new Query();
+        $query->select('*')->from('estrategias')->where(['id_objetivo' => $this->id_objetivo])->andWhere(['numeracion' => $this->$attribute]);
+        $cmd = $query->createCommand()->queryOne();
+        $query1 = new Query();
+        $query1->select('*')->from('estrategias')->where(['id_objetivo' => $this->id_objetivo])->andWhere(['id' => $this->id]);
+        $cmd1 = $query1->createCommand()->queryOne();
+        if (isset($cmd['numeracion'])) {
+            if ($this->$attribute != $cmd1['numeracion']) {
+                $this->addError($attribute, 'Numeracion "'. $this->$attribute . '" ya ha sido utilizado.');
+            }
+        }
     }
 
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
@@ -103,13 +120,6 @@ class Estrategias extends \yii\db\ActiveRecord {
     public function getObjetivo($id) {
         $modelObjetivo = Objetivos::findOne($id)->descripcion;
         return $modelObjetivo;
-    }
-
-    public function getNumero($id) {
-        $query = new Query();
-        $query->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $id]);
-        $numeracion = $query->createCommand()->queryOne();
-        return $numeracion;
     }
 
     public function getLevels() {

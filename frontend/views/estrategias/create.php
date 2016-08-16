@@ -10,6 +10,6 @@ use app\models\Objetivos;
 <div class="estrategias-create">
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Objetivos::findOne($_GET["id"]),
+        'objetivo'=>  Objetivos::findOne($_GET["id"]),
     ]) ?>
 </div>

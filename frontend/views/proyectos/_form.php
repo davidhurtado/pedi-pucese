@@ -10,16 +10,17 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <div class="proyectos-form">
-
+<?="<h4>"."PROGRAMA ".$programa->numeracion.": ".$programa->descripcion."</h4>"?>
     <?php $form = ActiveForm::begin(['id'=>'proyecto']); ?>
-
+    <?= $form->field($model, 'numeracion')->textInput() ?>
      <?= $form->field($model, 'nombre')->textarea(['rows' => 2, 'style' => 'resize:none']) ?>
 
     <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
 
     <?php
+    $request = Yii::$app->request;
     if (Yii::$app->controller->action->id == 'update') {
-        if ($model->validate()) {
+         if (!$model->load($request->post())) {
             $model->responsables = array_map('intval', explode(',', $model->responsables));
         }
     }
@@ -50,8 +51,8 @@ use yii\helpers\ArrayHelper;
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
-                    'startDate' => $fechas->fecha_inicio,
-                    'endDate' => $fechas->fecha_fin,
+                    'startDate' => $programa->fecha_inicio,
+                    'endDate' => $programa->fecha_fin,
                 ]
             ]);
             ?>

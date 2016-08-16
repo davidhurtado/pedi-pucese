@@ -1,4 +1,5 @@
 <?php
+
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -13,23 +14,43 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_subproyecto')->textInput() ?>
 
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none'])  ?>
 
-    <?= $form->field($model, 'codigo_presupuestario')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'codigo_presupuestario')->textInput(['maxlength' => false]) ?>
 
-    <?= $form->field($model, 'presupuesto')->textInput() ?>
+<?= $form->field($model, 'presupuesto')->textInput() ?>
 
-    <?= $form->field($model, 'fecha_inicio')->textInput() ?>
+    <div class="row" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+            <?=
+            DatePicker::widget([
+                'language' => 'es',
+                'model' => $model,
+                'attribute' => 'fecha_inicio',
+                'attribute2' => 'fecha_fin',
+                'options' => ['placeholder' => 'Fecha  de inicio ...'],
+                'options2' => ['placeholder' => 'Fecha de fin ...'],
+                'type' => DatePicker::TYPE_RANGE,
+                'form' => $form,
+                'pluginOptions' => [
+                    'autoclose' => true,
+                    'format' => 'yyyy-mm-dd',
+                    'startView' => 2,
+                    'startDate' => $fechas->fecha_inicio,
+                    'endDate' => $fechas->fecha_fin,
+                ]
+            ]);
+            ?>
+        </div>
+    </div>
 
-    <?= $form->field($model, 'fecha_fin')->textInput() ?>
 
-  
-	<?php if (!Yii::$app->request->isAjax){ ?>
-	  	<div class="form-group">
-	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-	    </div>
-	<?php } ?>
+        <?php if (!Yii::$app->request->isAjax) { ?>
+        <div class="form-group">
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        </div>
+    <?php } ?>
 
-    <?php ActiveForm::end(); ?>
-    
+<?php ActiveForm::end(); ?>
+
 </div>

@@ -10,13 +10,15 @@ use yii\widgets\ActiveForm;
 
 <div class="objetivos-search">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
+    <?php
+    $form = ActiveForm::begin([
+                'action' => ['index'],
+                'method' => 'get',
+    ]);
+    ?>
 
     <?= $form->field($model, 'id') ?>
-
+    <?= $form->field($model, 'numeracion') ?>
     <?= $form->field($model, 'descripcion') ?>
 
     <?= $form->field($model, 'responsables') ?>
@@ -25,13 +27,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'fecha_fin') ?>
 
-    <?php // echo $form->field($model, 'evidencias') ?>
+        <?php // echo $form->field($model, 'evidencias')  ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+<?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
+    <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
 </div>

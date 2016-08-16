@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use app\models\Proyectos;
 /* @var $this yii\web\View */
 /* @var $model app\models\Subproyectos */
 ?>
@@ -9,6 +9,7 @@ use yii\helpers\Html;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'proyecto'=>  Proyectos::findOne($model->id_proyecto),
     ]) ?>
 
 </div>

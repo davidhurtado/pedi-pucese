@@ -89,8 +89,8 @@ class ObjetivosController extends Controller {
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else
             if ($model->load(Yii::$app->request->post())) {
@@ -167,12 +167,12 @@ class ObjetivosController extends Controller {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Update Objetivos #" . $id,
+                    'title' => "Actualizar Objetivo #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post())) {
                 if ($model->validate()) {
@@ -180,26 +180,32 @@ class ObjetivosController extends Controller {
                 }
 
                 if ($model->save()) {
-                    return $this->redirect(Yii::$app->request->referrer);
+                     return [
+                            'forceReload' => '#crud-datatable-pjax',
+                            'title' => "Actualizado",
+                            'content' => '<span class="text-success">Objetivo Actualizado</span>',
+                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                        ];
                 } else {
+                    $model_ = Objetivos::find()->where(['id' => $id])->one();
                     return [
-                        'title' => "Update Estrategias #" . $id,
+                        'title' => "Actualizar Objetivo #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
                         ]),
-                        'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                     ];
                 }
             } else {
                 return [
-                    'title' => "Update Objetivos #" . $id,
+                    'title' => "Actualizar Objetivo #" . $id,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                         'dataProvider' => $dataProvider,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {

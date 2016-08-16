@@ -10,6 +10,6 @@ use app\models\Programas;
 <div class="proyectos-create">
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Programas::findOne($_GET["id"]),
+        'programa'=>  Programas::findOne($_GET["id"]),
     ]) ?>
 </div>

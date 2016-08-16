@@ -33,13 +33,16 @@ class Proyectos extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
+            [['numeracion'], 'integer'],
+            [['numeracion'], 'VerifNum'],
             [['id_programa'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
+            [['fecha_inicio'], 'verifDate_inicio'],
+            [['fecha_fin'], 'verifDate_fin'],
             [['presupuesto'], 'number'],
             [['nombre'], 'string', 'max' => 200],
-            [['descripcion'], 'string', 'max' => 500],
-            //[['responsables'], 'string', 'max' => 100],
+            [['descripcion'], 'string'],
+            [['responsables'], 'validarResponsables'],
             [['id_programa'], 'exist', 'skipOnError' => true, 'targetClass' => Programas::className(), 'targetAttribute' => ['id_programa' => 'id']],
         ];
     }
@@ -59,14 +62,36 @@ class Proyectos extends \yii\db\ActiveRecord {
             'presupuesto' => 'Presupuesto',
         ];
     }
-
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA NUMERACION   
+    public function verifNum($attribute) {
+        $query = new Query();
+        $query->select('*')->from('proyectos')->where(['id_programa' => $this->id_programa])->andWhere(['numeracion' => $this->$attribute]);
+        $cmd = $query->createCommand()->queryOne();
+        $query1 = new Query();
+        $query1->select('*')->from('proyectos')->where(['id_programa' => $this->id_programa])->andWhere(['id' => $this->id]);
+        $cmd1 = $query1->createCommand()->queryOne();
+        if (isset($cmd['numeracion'])) {
+            if ($this->$attribute != $cmd1['numeracion']) {
+                $this->addError($attribute, 'Numeracion "'. $this->$attribute . '" ya ha sido utilizado.');
+            }
+        }
+    }
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute) {
-        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d h:m:s');
+    public function verifDate_inicio($attribute) {
+        if ($this->$attribute < Programas::findOne($this->id_programa)->fecha_inicio) {
+            $this->addError($attribute, 'No puede ser menor a la fecha inicial del objetivo');
+        }
+    }
 
-        if ($this->$attribute <= $currentDate) {
-            $this->addError($attribute, 'No puede ser menor a la fecha actual');
+    public function verifDate_fin($attribute) {
+        if ($this->$attribute > Programas::findOne($this->id_programa)->fecha_fin) {
+            $this->addError($attribute, 'No puede ser mayor a la fecha final del objetivo');
+        }
+    }
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
+    public function validarResponsables($attribute) {
+        if (empty($this->$attribute)) {
+            $this->addError($attribute, 'No existe ningun responsable');
         }
     }
 
@@ -82,11 +107,6 @@ class Proyectos extends \yii\db\ActiveRecord {
      */
     public function getSubproyectos() {
         return $this->hasMany(Subproyectos::className(), ['id_proyecto' => 'id']);
-    }
-
-    public function getFechas() {
-        $model_ = Programas::findOne($_GET['id']);
-        return $model_;
     }
 
     public function getLevels() {

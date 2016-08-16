@@ -8,21 +8,17 @@ use yii\helpers\Url;
 use kartik\grid\GridView;
 use johnitvn\ajaxcrud\CrudAsset;
 use johnitvn\ajaxcrud\BulkButtonWidget;
+use app\models\Objetivos;
 use app\models\Estrategias;
 use \yii\db\Query;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
-//'OBJETIVO ' . $model->getNumero($model->id);
-$query = new Query();
-$query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
-$numeracionObjetivo = $query->createCommand()->queryOne();
-$query2 = new Query();
-$query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
-$numeracionEstrategia = $query2->createCommand()->queryOne();
-$this->title ='Objetivo '.$numeracionObjetivo['id'].': '. $model->getObjetivo($model->id_objetivo). ' Estrategia '.$numeracionEstrategia['numeracion'].': '.$model->descripcion;
-$this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $numeracionObjetivo['id'], 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
-$this->params['breadcrumbs'][] = 'Estrategia ' . $numeracionEstrategia['numeracion'];
+$objetivo = Objetivos::findOne(['id' => $model->id_objetivo]);
+
+$this->title = 'Estrategia ' . $objetivo->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
+$this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $objetivo->numeracion, 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
+$this->params['breadcrumbs'][] = 'Estrategia ' . $model->numeracion;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">

@@ -18,7 +18,7 @@ class ObjetivosSearch extends Objetivos
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id','numeracion'], 'integer'],
             [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
@@ -57,6 +57,7 @@ class ObjetivosSearch extends Objetivos
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'numeracion' => $this->numeracion,
             'fecha_inicio' => $this->fecha_inicio,
             'fecha_fin' => $this->fecha_fin,
         ]);

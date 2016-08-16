@@ -99,7 +99,7 @@ class ProgramasController extends Controller {
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                                 Html::a('Crear M&aacute;s', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
-                        }else{
+                        } else {
                             return [
                                 'forceReload' => '#crud-datatable-pjax',
                                 'title' => "Error",
@@ -153,7 +153,7 @@ class ProgramasController extends Controller {
     public function actionUpdate($id) {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-
+        $model_ = Programas::find()->where(['id' => $id])->one();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -161,7 +161,7 @@ class ProgramasController extends Controller {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Actualizar Programa #" . $id,
+                    'title' => "Actualizar Programa #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -174,10 +174,15 @@ class ProgramasController extends Controller {
                 }
 
                 if ($model->save()) {
-                    return $this->redirect(Yii::$app->request->referrer);
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Actualizado",
+                        'content' => '<span class="text-success">Programa Actualizado</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
                 } else {
                     return [
-                        'title' => "Actualizar Programa #" . $id,
+                        'title' => "Actualizar Programa #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
                         ]),
@@ -187,7 +192,7 @@ class ProgramasController extends Controller {
                 }
             } else {
                 return [
-                    'title' => "Actualizar Programa #" . $id,
+                    'title' => "Actualizar Programa #" . $model_->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),

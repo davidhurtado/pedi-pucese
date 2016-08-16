@@ -13,7 +13,7 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 
 $this->title = 'Estrategias';
 $this->params['breadcrumbs'][] = $this->title;
-
+Yii::$app->params['titulo_exportacion']=$this->title;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-index">
@@ -39,16 +39,16 @@ CrudAsset::register($this);
             'responsive' => true,
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias listing',
-                'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias',
+                //'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                 'after' => BulkButtonWidget::widget([
-                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All', ["bulk-delete"], [
+                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
                         "class" => "btn btn-danger btn-xs",
                         'role' => 'modal-remote-bulk',
                         'data-confirm' => false, 'data-method' => false, // for overide yii data api
                         'data-request-method' => 'post',
-                        'data-confirm-title' => 'Are you sure?',
-                        'data-confirm-message' => 'Are you sure want to delete this item'
+                        'data-confirm-title' => 'Est&aacute;s Seguro?',
+                        'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
                     ]),
                 ]) .
                 '<div class="clearfix"></div>',

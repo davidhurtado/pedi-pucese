@@ -41,9 +41,9 @@ class EstrategiasSearch extends Estrategias {
     public function search($params, $id = null) {
 
         if ($id == null) {
-            $sql = Estrategias::find()->orderBy('id_objetivo, id');
+            $sql = Estrategias::find()->orderBy('id_objetivo, numeracion');
         } else {
-            $sql = Estrategias::find()->where(['id_objetivo' => $id])->orderBy('id_objetivo, id');
+            $sql = Estrategias::find()->where(['id_objetivo' => $id])->orderBy('id_objetivo, numeracion');
         }
         // add conditions that should always apply here
         $query = $sql;

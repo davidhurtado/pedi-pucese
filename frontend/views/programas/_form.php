@@ -10,15 +10,18 @@ use kartik\select2\Select2;
 ?>
 
 <div class="programas-form">
-
+<?="<h4>"."ESTRATEGIA ".$estrategia->numeracion.": ".$estrategia->descripcion."</h4>"?>
     <?php $form = ActiveForm::begin(['id'=>'programa']); ?>
-
+    <?= $form->field($model, 'numeracion')->textInput() ?>
      <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
 
     <?php
+    $request = Yii::$app->request;
     if (Yii::$app->controller->action->id == 'update') {
+        if (!$model->load($request->post())) {
             $model->responsables = array_map('intval', explode(',', $model->responsables));
         }
+    }
      echo $form->field($model, 'responsables')->widget(Select2::className(), [
             'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
             'options' => [
@@ -45,8 +48,8 @@ use kartik\select2\Select2;
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
-                    'startDate' => $fechas->fecha_inicio,
-                    'endDate' => $fechas->fecha_fin,
+                    'startDate' => $estrategia->fecha_inicio,
+                    'endDate' => $estrategia->fecha_fin,
                 ]
             ]);
             ?>

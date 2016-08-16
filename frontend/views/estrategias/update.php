@@ -9,7 +9,7 @@ use app\models\Objetivos;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Objetivos::findOne($model->id_objetivo),
+        'objetivo'=>  Objetivos::findOne($model->id_objetivo),
     ]) ?>
 
 </div>

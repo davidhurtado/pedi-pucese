@@ -7,14 +7,16 @@ return [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
+    /* [
+      'class' => 'kartik\grid\SerialColumn',
+      'width' => '30px',
+      ], */
     [
-        'class' => 'kartik\grid\SerialColumn',
-        'width' => '30px',
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'numeracion',
+        'label' => 'Nro',
+        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
     ],
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'id',
-    // ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'descripcion',
@@ -26,10 +28,20 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'fecha_inicio',
+        'contentOptions' => ['style' => 'width: 85px; text-align:center'],
+        'label'=>'Año Inicial',
+        'value'=> function ($data){
+        return substr($data->fecha_inicio,0,strpos($data->fecha_inicio, "-",1));
+        }
     ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'fecha_fin',
+        'contentOptions' => ['style' => 'width: 80px; text-align:center'],
+        'label'=>'Año Final',
+        'value'=> function ($data){
+        return substr($data->fecha_fin,0,strpos($data->fecha_inicio, "-",1));
+        }
     ],
     [
         'class' => 'kartik\grid\ActionColumn',

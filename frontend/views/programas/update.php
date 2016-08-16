@@ -9,7 +9,7 @@ use app\models\Estrategias;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Estrategias::findOne($model->id_estrategia),
+        'estrategia'=>  Estrategias::findOne($model->id_estrategia),
     ]) ?>
 
 </div>

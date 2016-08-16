@@ -12,10 +12,11 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Programas;
+use app\models\Objetivos;
 
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
- */ 
+ */
 class EstrategiasController extends Controller {
 
     /**
@@ -99,7 +100,7 @@ class EstrategiasController extends Controller {
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                                 Html::a('Crear M&aacute;s', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
-                        }else{
+                        } else {
                             return [
                                 'forceReload' => '#crud-datatable-pjax',
                                 'title' => "Error",
@@ -153,7 +154,7 @@ class EstrategiasController extends Controller {
     public function actionUpdate($id) {
         $request = Yii::$app->request;
         $model = $this->findModel($id);
-
+        $model_ = Estrategias::find()->where(['id' => $id])->one();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -161,7 +162,7 @@ class EstrategiasController extends Controller {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Actualizar Estrategia #" . $id,
+                    'title' => "Actualizar Estrategia #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
@@ -174,10 +175,15 @@ class EstrategiasController extends Controller {
                 }
 
                 if ($model->save()) {
-                    return $this->redirect(Yii::$app->request->referrer);
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Actualizado",
+                        'content' => '<span class="text-success">Estrategia Actualizada</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
                 } else {
                     return [
-                        'title' => "Actualizar Estrategia #" . $id,
+                        'title' => "Actualizar Estrategia #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
                         ]),
@@ -187,7 +193,7 @@ class EstrategiasController extends Controller {
                 }
             } else {
                 return [
-                    'title' => "Actualizar Estrategias #" . $id,
+                    'title' => "Actualizar Estrategias #" . $model_->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),

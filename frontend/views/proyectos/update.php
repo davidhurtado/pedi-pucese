@@ -9,7 +9,7 @@ use app\models\Programas;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'fechas'=>  Programas::findOne($model->id_programa),
+        'programa'=>  Programas::findOne($model->id_programa),
     ]) ?>
 
 </div>

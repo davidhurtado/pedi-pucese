@@ -1,24 +1,38 @@
 <?php
 
 use yii\helpers\Url;
-
+use app\models\Proyectos;
+use app\models\Programas;
+use yii\helpers\Html;
 return [
     [
         'class' => 'kartik\grid\CheckboxColumn',
         'width' => '20px',
     ],
-    [
+    /*[
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
-    ],
+    ],*/
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'id',
     // ],
-    /*[
+    /* [
+      'class' => '\kartik\grid\DataColumn',
+      'attribute' => 'id_programa',
+      ], */
+    [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'id_programa',
-    ],*/
+        'attribute' => 'numeracion',
+        'label' => 'Programa',
+        //'filter' => false,
+        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+        'value' => function($data) {
+    $programa = Programas::findOne($data->id_programa);
+    return Html::tag('strong', $programa->numeracion, ['data-toggle' => 'tooltip', 'title' => '[PROGRAMA] ' . $programa->descripcion, 'style' => 'cursor:default;']);
+},
+        'format' => 'raw',
+    ],
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'nombre',
@@ -27,14 +41,14 @@ return [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'descripcion',
     ],
-    /*[
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'responsables',
-    ],*/
-    /*[
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'fecha_inicio',
-    ],*/
+    /* [
+      'class' => '\kartik\grid\DataColumn',
+      'attribute' => 'responsables',
+      ], */
+    /* [
+      'class' => '\kartik\grid\DataColumn',
+      'attribute' => 'fecha_inicio',
+      ], */
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'fecha_fin',

@@ -11,13 +11,14 @@ use app\models\Programas;
 use app\models\Estrategias;
 use app\models\Objetivos;
 use \yii\db\Query;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Objetivos */
 
-$this->title = 'OBJETIVO ' . $model->getNumero($model->id);
+$this->title = 'OBJETIVO ' . $model->numeracion;
 $this->params['breadcrumbs'][] = ['label' => 'Objetivos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-Yii::$app->params['titulo_exportacion']=$this->title.': '.$model->descripcion;
+Yii::$app->params['titulo_exportacion'] = $this->title . ': ' . $model->descripcion;
 CrudAsset::register($this);
 ?>
 <div class="objetivos-view">
@@ -71,32 +72,42 @@ CrudAsset::register($this);
                         'class' => 'kartik\grid\CheckboxColumn',
                         'width' => '20px',
                     ],
-                    /*[
-                        'class' => 'kartik\grid\SerialColumn',
-                        'width' => '30px',
-                    ],*/
+                    /* [
+                      'class' => 'kartik\grid\SerialColumn',
+                      'width' => '30px',
+                      ], */
                     [
                         'class' => '\kartik\grid\DataColumn',
                         'attribute' => 'descripcion',
-                         'value' => function ($model, $key, $index, $widget) {
-                                $query = new Query();
-                                $query2 = new Query();
-                                $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
-                                $numeracionObjetivo = $query->createCommand()->queryOne();
-                                
-                                $query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
-                                $numeracionEstrategia = $query2->createCommand()->queryOne();
-                                
-                                return $numeracionObjetivo['id'] . '.' . $numeracionEstrategia['numeracion'] . '.: ' . $model->descripcion;
-                            },
+                        'value' => function ($model, $key, $index, $widget) {
+//                                $query = new Query();
+//                                $query2 = new Query();
+//                                $query->select('*')->from('numeracion_objetivo')->where(['id_objetivo' => $model->id_objetivo]);
+//                                $numeracionObjetivo = $query->createCommand()->queryOne();
+//                                
+//                                $query2->select('*')->from('numeracion_estrategias')->where(['id_estrategia' => $model->id]);
+//                                $numeracionEstrategia = $query2->createCommand()->queryOne();
+                            $objetivo = Objetivos::findOne($model->id_objetivo);
+                            return $objetivo->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
+                        },
                     ],
                     [
                         'class' => '\kartik\grid\DataColumn',
                         'attribute' => 'fecha_inicio',
+                        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+                        'label' => 'Año Inicial',
+                        'value' => function ($data) {
+                    return substr($data->fecha_inicio, 0, strpos($data->fecha_inicio, "-", 1));
+                }
                     ],
                     [
                         'class' => '\kartik\grid\DataColumn',
                         'attribute' => 'fecha_fin',
+                        'contentOptions' => ['style' => 'width: 10px; text-align:center'],
+                        'label' => 'Año Final',
+                        'value' => function ($data) {
+                    return substr($data->fecha_fin, 0, strpos($data->fecha_inicio, "-", 1));
+                }
                     ],
                     [
                         'class' => '\kartik\grid\DataColumn',
