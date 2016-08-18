@@ -133,7 +133,7 @@ CrudAsset::register($this);
                         ],
                         'toolbar' => [
                             ['content' =>
-                                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id' => $_GET['id']], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
+                                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id' => $_GET['id'],'controlador'=>'objetivos'], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
                                 Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                                 '{toggleData}' .
                                 '{export}'

@@ -68,7 +68,47 @@ class ProgramasController extends Controller {
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
+    public function actionCreateIndex() {
+        $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // if ($request->isGet) {
+        // $objetivo = $request->get('id');
+        $model = new Programas();
+        if ($request->post('estrategia')) {
+            $estrategia = $request->post('estrategia');
+            $model->id_estrategia = $estrategia;
+            return [
+                'title' => "Crear nuevo Programa",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'estrategias',
+                    'id' => $estrategia,
+                    'accion' => 'create'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            return [
+                'title' => "Seleccione Estrategia",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'programas',
+                    'accion' => 'create'
+                        //'accion' => 'obj'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Continuar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionCreate($id) {
         $request = Yii::$app->request;
         $model = new Programas();
 
@@ -82,13 +122,16 @@ class ProgramasController extends Controller {
                     'title' => "Crear nuevo Programa",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
+                        'controlador' => 'estrategias',
+                        'id' => $id,
+                        'accion' => 'create'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else {
-                $model->id_estrategia = $_GET['id'];
                 if ($model->load(Yii::$app->request->post())) {
+                    $model->id_estrategia = $id;
                     if ($model->validate()) {
                         $model->responsables = implode(",", $model->responsables);
                         if ($model->save()) {
@@ -97,7 +140,7 @@ class ProgramasController extends Controller {
                                 'title' => "Crear nuevo Programa",
                                 'content' => '<span class="text-success">Programa creado</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear M&aacute;s', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear M&aacute;s', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         } else {
                             return [
@@ -105,7 +148,7 @@ class ProgramasController extends Controller {
                                 'title' => "Error",
                                 'content' => '<span class="text-success">Error al crear el programa, intente de nuevo</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         }
                     } else {
@@ -113,33 +156,20 @@ class ProgramasController extends Controller {
                             'title' => "Crear nuevo Programa",
                             'content' => $this->renderAjax('create', [
                                 'model' => $model,
+                                'controlador' => 'estrategias',
+                                'id' => $id, //-->>
+                                'accion' => 'create'
                             ]),
                             'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                             Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                         ];
                     }
                 } else {
-                    return [
-                        'title' => "Crear nuevo Programa",
-                        'content' => $this->renderAjax('create', [
-                            'model' => $model,
-                        ]),
-                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                    ];
+                    return $this->redirect(['index']);
                 }
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 
@@ -164,6 +194,8 @@ class ProgramasController extends Controller {
                     'title' => "Actualizar Programa #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'estrategias',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -185,6 +217,8 @@ class ProgramasController extends Controller {
                         'title' => "Actualizar Programa #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
+                            'controlador' => 'estrategias',
+                            'accion' => 'update'
                         ]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -195,22 +229,15 @@ class ProgramasController extends Controller {
                     'title' => "Actualizar Programa #" . $model_->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'estrategias',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 

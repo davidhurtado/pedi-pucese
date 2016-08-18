@@ -8,8 +8,23 @@ use app\models\Programas;
 
 ?>
 <div class="proyectos-create">
-    <?= $this->render('_form', [
-        'model' => $model,
-        'programa'=>  Programas::findOne($_GET["id"]),
-    ]) ?>
+     <?php
+    if ($controlador == 'programas') {
+        $programa = Programas::findOne($id);
+        echo $this->render('_form', [
+            'model' => $model,
+            'programa' => $programa,
+            'controlador'=>$controlador,
+            'accion' => $accion,
+            'id' => $id
+        ]);
+    } else {
+        $programa = Programas::find()->orderBy('id')->asArray()->all();
+        echo $this->render('_form', [
+            'model' => $programa,
+            'controlador'=>$controlador,
+            'accion' => $accion
+        ]);
+    }
+    ?>
 </div>

@@ -10,6 +10,8 @@ use app\models\Programas;
     <?= $this->render('_form', [
         'model' => $model,
         'programa'=>  Programas::findOne($model->id_programa),
+        'controlador' => $controlador,
+        'accion' => $accion
     ]) ?>
 
 </div>

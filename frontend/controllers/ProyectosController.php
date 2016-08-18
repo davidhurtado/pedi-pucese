@@ -12,6 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Subproyectos;
+
 /**
  * ProyectosController implements the CRUD actions for Proyectos model.
  */
@@ -67,7 +68,47 @@ class ProyectosController extends Controller {
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
+    public function actionCreateIndex() {
+        $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // if ($request->isGet) {
+        // $objetivo = $request->get('id');
+        $model = new Proyectos();
+        if ($request->post('programa')) {
+            $estrategia = $request->post('programa');
+            $model->id_programa = $estrategia;
+            return [
+                'title' => "Crear nuevo Proyecto",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'programas',
+                    'id' => $estrategia,
+                    'accion' => 'create'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            return [
+                'title' => "Seleccione Programa",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'proyectos',
+                    'accion' => 'create'
+                        //'accion' => 'obj'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Continuar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionCreate($id) {
         $request = Yii::$app->request;
         $model = new Proyectos();
 
@@ -81,13 +122,17 @@ class ProyectosController extends Controller {
                     'title' => "Crear nuevo Proyecto",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
+                        'controlador' => 'programas',
+                        'id' => $id,
+                        'accion' => 'create'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else {
-                $model->id_programa = $_GET['id'];
+
                 if ($model->load(Yii::$app->request->post())) {
+                    $model->id_programa = $id;
                     if ($model->validate()) {
                         $model->responsables = implode(",", $model->responsables);
                         if ($model->save()) {
@@ -96,7 +141,7 @@ class ProyectosController extends Controller {
                                 'title' => "Crear nuevo Proyecto",
                                 'content' => '<span class="text-success">Proyecto creado</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear M&aacute;s', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear M&aacute;s', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         } else {
                             return [
@@ -104,7 +149,7 @@ class ProyectosController extends Controller {
                                 'title' => "Error",
                                 'content' => '<span class="text-success">Error al crear el programa, intente de nuevo</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         }
                     } else {
@@ -112,33 +157,20 @@ class ProyectosController extends Controller {
                             'title' => "Crear nuevo Proyecto",
                             'content' => $this->renderAjax('create', [
                                 'model' => $model,
+                                'controlador' => 'programas',
+                                'id' => $id, //-->>
+                                'accion' => 'create'
                             ]),
                             'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                             Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                         ];
                     }
                 } else {
-                    return [
-                        'title' => "Crear nuevo Proyecto",
-                        'content' => $this->renderAjax('create', [
-                            'model' => $model,
-                        ]),
-                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
-                    ];
+                    return $this->redirect(['index']);
                 }
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 
@@ -163,6 +195,8 @@ class ProyectosController extends Controller {
                     'title' => "Actualizar Proyecto #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'programas',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -184,6 +218,8 @@ class ProyectosController extends Controller {
                         'title' => "Actualizar Proyecto #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
+                            'controlador' => 'programas',
+                            'accion' => 'update'
                         ]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -194,22 +230,15 @@ class ProyectosController extends Controller {
                     'title' => "Actualizar Proyecto #" . $model_->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'programas',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 

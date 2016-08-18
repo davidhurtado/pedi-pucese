@@ -10,6 +10,8 @@ use app\models\Objetivos;
     <?= $this->render('_form', [
         'model' => $model,
         'objetivo'=>  Objetivos::findOne($model->id_objetivo),
+        'controlador'=>$controlador,
+        'accion' => $accion
     ]) ?>
 
 </div>

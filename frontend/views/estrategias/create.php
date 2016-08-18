@@ -5,11 +5,25 @@ use app\models\Objetivos;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
-
 ?>
 <div class="estrategias-create">
-    <?= $this->render('_form', [
-        'model' => $model,
-        'objetivo'=>  Objetivos::findOne($_GET["id"]),
-    ]) ?>
+    <?php
+    if ($controlador == 'objetivos') {
+        $objetivo = Objetivos::findOne($id);
+        echo $this->render('_form', [
+            'model' => $model,
+            'objetivo' => $objetivo,
+            'controlador' => $controlador,
+            'accion' => $accion,
+            'id' => $id
+        ]);
+    } else {
+        $objetivo = Objetivos::find()->orderBy('id')->asArray()->all();
+        echo $this->render('_form', [
+            'model' => $objetivo,
+            'controlador' => $controlador,
+            'accion' => $accion
+        ]);
+    }
+    ?>
 </div>

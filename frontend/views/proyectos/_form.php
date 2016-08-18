@@ -10,8 +10,15 @@ use yii\helpers\ArrayHelper;
 ?>
 
 <div class="proyectos-form">
-<?="<h4>"."PROGRAMA ".$programa->numeracion.": ".$programa->descripcion."</h4>"?>
-    <?php $form = ActiveForm::begin(['id'=>'proyecto']); ?>
+    <?php
+    if ($controlador == 'programas') {
+        echo "<h4>" . "PROGRAMA " . $programa->numeracion . ": " . $programa->descripcion . "</h4>";
+        if ($accion == 'create') {
+            $form = ActiveForm::begin(['action' => ['proyectos/create', 'id' => $id], 'id' => 'proyecto']);
+        } else {
+            $form = ActiveForm::begin(['id' => 'proyecto']);
+        }
+        ?>
     <?= $form->field($model, 'numeracion')->textInput() ?>
      <?= $form->field($model, 'nombre')->textarea(['rows' => 2, 'style' => 'resize:none']) ?>
 
@@ -69,6 +76,23 @@ use yii\helpers\ArrayHelper;
 	    </div>
 	<?php } ?>
 
-    <?php ActiveForm::end(); ?>
+         <?php
+        ActiveForm::end();
+    } else {
+        if ($controlador == 'proyectos') {
+            ActiveForm::begin(['id' => 'proyecto',]);
+            echo Select2::widget([
+                'name' => 'programa',
+                'language' => 'es',
+                'data' => ArrayHelper::map($model, 'id', 'descripcion'),
+                'options' => ['placeholder' => 'Seleccione un Programa ...'],
+                'pluginOptions' => [
+                    'allowClear' => true
+                ],
+            ]);
+            ActiveForm::end();
+        }
+    }
+    ?>
     
 </div>

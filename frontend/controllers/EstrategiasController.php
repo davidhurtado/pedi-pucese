@@ -12,7 +12,6 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Programas;
-use app\models\Objetivos;
 
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
@@ -69,27 +68,71 @@ class EstrategiasController extends Controller {
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate() {
+    public function actionCreateIndex() {
         $request = Yii::$app->request;
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // if ($request->isGet) {
+        // $objetivo = $request->get('id');
         $model = new Estrategias();
+        if ($request->post('objetivo')) {
+            $objetivo = $request->post('objetivo');
+            $model = new Estrategias();
+            $model->id_objetivo = $objetivo;
+            return [
+                'title' => "Crear nueva Estrategia",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'objetivos',
+                    'id' => $objetivo,
+                    'accion' => 'create'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
 
         if ($request->isAjax) {
             /*
              *   Process for ajax request
              */
+            return [
+                'title' => "Seleccione Objetivo",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'estrategias',
+                    'accion' => 'create'
+                        //'accion' => 'obj'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Continuar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionCreate($id) {
+        $request = Yii::$app->request;
+        $model = new Estrategias();
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
                     'title' => "Crear nueva Estrategia",
                     'content' => $this->renderAjax('create', [
                         'model' => $model,
+                        'controlador' => 'objetivos',
+                        'id' => $id,
+                        'accion' => 'create'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else {
-                $model->id_objetivo = $_GET['id'];
                 if ($model->load(Yii::$app->request->post())) {
+                    $model->id_objetivo = $id;
                     if ($model->validate()) {
                         $model->responsables = implode(",", $model->responsables);
                         if ($model->save()) {
@@ -98,7 +141,7 @@ class EstrategiasController extends Controller {
                                 'title' => "Crear nueva Estrategia",
                                 'content' => '<span class="text-success">Estrategia creada</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear M&aacute;s', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear M&aacute;s', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         } else {
                             return [
@@ -106,7 +149,7 @@ class EstrategiasController extends Controller {
                                 'title' => "Error",
                                 'content' => '<span class="text-success">Error al crear la estrategia, intente de nuevo</span>',
                                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                                Html::a('Crear', ['create', 'id' => $_GET['id']], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                                Html::a('Crear', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                             ];
                         }
                     } else {
@@ -114,6 +157,9 @@ class EstrategiasController extends Controller {
                             'title' => "Crear nueva Estrategia",
                             'content' => $this->renderAjax('create', [
                                 'model' => $model,
+                                'controlador' => 'objetivos',
+                                'id' => $id, //-->>
+                                'accion' => 'create'
                             ]),
                             'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                             Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -124,6 +170,9 @@ class EstrategiasController extends Controller {
                         'title' => "Crear nueva Estrategia",
                         'content' => $this->renderAjax('create', [
                             'model' => $model,
+                            'controlador' => 'objetivos',
+                            'id' => $id,
+                            'accion' => 'create'
                         ]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -131,16 +180,7 @@ class EstrategiasController extends Controller {
                 }
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 
@@ -165,6 +205,8 @@ class EstrategiasController extends Controller {
                     'title' => "Actualizar Estrategia #" . $model->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'objetivos',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -186,6 +228,8 @@ class EstrategiasController extends Controller {
                         'title' => "Actualizar Estrategia #" . $model_->numeracion,
                         'content' => $this->renderAjax('update', [
                             'model' => $model,
+                            'controlador' => 'objetivos',
+                            'accion' => 'update'
                         ]),
                         'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                         Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
@@ -196,22 +240,15 @@ class EstrategiasController extends Controller {
                     'title' => "Actualizar Estrategias #" . $model_->numeracion,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'objetivos',
+                        'accion' => 'update'
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 

@@ -27,7 +27,7 @@ CrudAsset::register($this);
             'columns' => require(__DIR__ . '/_columns.php'),
             'toolbar' => [
                 ['content' =>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], ['role' => 'modal-remote', 'title' => 'Create new Proyectos', 'class' => 'btn btn-default']) .
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create-index'], ['role' => 'modal-remote', 'title' => 'Create new Proyectos', 'class' => 'btn btn-default']) .
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                     //'{toggleData}' .
                     '{export}'
@@ -41,8 +41,7 @@ CrudAsset::register($this);
                 'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
                 //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                 'after' => BulkButtonWidget::widget([
-                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo',
-                            ["bulk-delete"], [
+                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
                         "class" => "btn btn-danger btn-xs",
                         'role' => 'modal-remote-bulk',
                         'data-confirm' => false, 'data-method' => false, // for overide yii data api
@@ -59,8 +58,18 @@ CrudAsset::register($this);
 </div>
 <?php
 Modal::begin([
+    'size' => Modal::SIZE_LARGE,
     "id" => "ajaxCrudModal",
     "footer" => "", // always need it for jquery plugin
+    'options' => [
+        'tabindex' => false // important for Select2 to work properly
+    ],
+    'toggleButton' => ['label' => 'Show Modal', 'class' => 'btn btn-lg btn-primary'],
 ])
 ?>
 <?php Modal::end(); ?>
+<?php
+$this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+        . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
+        . '$(function () { $("[data-toggle=\'popover\']").popover();});');
+?>

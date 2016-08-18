@@ -27,8 +27,7 @@ CrudAsset::register($this);
             'columns' => require(__DIR__ . '/_columns.php'),
             'toolbar' => [
                 ['content' =>
-                    //Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
-                    //['role'=>'modal-remote','title'=> 'Create new Estrategias','class'=>'btn btn-default']).
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create-index'],['role'=>'modal-remote','title'=> 'Crear nueva Estrategia','class'=>'btn btn-default']).
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                     '{toggleData}'.
                     '{export}'
@@ -62,6 +61,10 @@ Modal::begin([
     'size' => Modal::SIZE_LARGE,
     "id" => "ajaxCrudModal",
     "footer" => "", // always need it for jquery plugin
+    'options' => [
+        'tabindex' => false // important for Select2 to work properly
+    ],
+    'toggleButton' => ['label' => 'Show Modal', 'class' => 'btn btn-lg btn-primary'],
 ])
 ?>
 <?php Modal::end(); ?>

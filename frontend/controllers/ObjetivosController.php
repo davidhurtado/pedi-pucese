@@ -15,7 +15,7 @@ use app\models\Estrategias;
 use app\models\EstrategiasSearch;
 use yii\widgets\ActiveForm;
 use yii\data\Pagination;
-
+use yii\filters\AccessControl;
 /**
  * ObjetivosController implements the CRUD actions for Objetivos model.
  */
@@ -26,6 +26,21 @@ class ObjetivosController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','CREAR_PROGRAMAS'],
+                    ],
+                    [
+                        'actions' => ['update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -134,16 +149,7 @@ class ObjetivosController extends Controller {
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->redirect(['index']);
         }
     }
 
@@ -209,17 +215,7 @@ class ObjetivosController extends Controller {
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                            'model' => $model,
-                            'dataProvider' => $dataProvider,
-                ]);
-            }
+             return $this->redirect(['index']);
         }
     }
 

@@ -79,13 +79,13 @@ class Proyectos extends \yii\db\ActiveRecord {
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
     public function verifDate_inicio($attribute) {
         if ($this->$attribute < Programas::findOne($this->id_programa)->fecha_inicio) {
-            $this->addError($attribute, 'No puede ser menor a la fecha inicial del objetivo');
+            $this->addError($attribute, 'No puede ser menor a la fecha inicial del programa');
         }
     }
 
     public function verifDate_fin($attribute) {
         if ($this->$attribute > Programas::findOne($this->id_programa)->fecha_fin) {
-            $this->addError($attribute, 'No puede ser mayor a la fecha final del objetivo');
+            $this->addError($attribute, 'No puede ser mayor a la fecha final del programa');
         }
     }
     //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   

@@ -120,16 +120,7 @@ class SubproyectosController extends Controller
                 ];         
             }
         }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+             return $this->redirect(['index']);
         }
        
     }
@@ -181,16 +172,7 @@ class SubproyectosController extends Controller
                 ];        
             }
         }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
+             return $this->redirect(['index']);
         }
     }
 
