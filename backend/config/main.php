@@ -43,7 +43,7 @@ return [
             'as backend' => 'dektrium\user\filters\BackendFilter',
             'controllers' => [!'profile', !'recovery', !'settings', !'admin'],
             'admins' => ['superadmin', 'marc'],
-            'enableRegistration' => true,
+            'enableRegistration' => false,
         ],
         'rbac' => [
             'class' => 'dektrium\rbac\Module',

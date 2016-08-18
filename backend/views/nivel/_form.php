@@ -1,10 +1,16 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use kartik\select2\Select2;
 use yii\helpers\ArrayHelper;
+use \yii\db\Query;
 
-
+$query = new Query();
+$query->select('*')->from('niveles');
+$cmd = $query->createCommand()->queryAll();
+$query_org = new Query();
+$query_org->select('*')->from('organigrama');
+$organigrama = $query_org->createCommand()->queryAll();
 /* @var $this yii\web\View */
 /* @var $model app\models\Niveles */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,30 +20,31 @@ use yii\helpers\ArrayHelper;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'title')->textarea(['rows' => 3,'style' => 'resize:none']) ?>
 
-    <?php
-    //$form->field($model, 'rid')->textInput()
-    ?>
+    <?=$form->field($model, 'rid')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($cmd, 'nid', 'title'),
+    'options' => ['placeholder' => 'Seleccione nivel superior'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]) ?>
 
-    <?php
-    echo $form->field($model, 'rid')->dropDownList(ArrayHelper::map($model->getAllLevels(),'nid','title'),
-        ['prompt' => ' -- Sin nivel padre --']);
-    ?>
+   <?=$form->field($model, 'org_id')->widget(Select2::classname(), [
+    'data' => ArrayHelper::map($organigrama, 'id', 'name'),
+    'options' => ['placeholder' => 'Seleccione organigrama'],
+    'pluginOptions' => [
+        'allowClear' => true
+    ],
+]) ?>
 
-    <?php
-    //$form->field($model, 'org_id')->textInput()
-    ?>
-
-    <?php
-    echo $form->field($model, 'org_id')->dropDownList(ArrayHelper::map($model->getOrgChart(),'id','name'),
-        ['prompt' => ' -- Seleccione organigrama --']);
-    ?>
-
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Guardar Cambios', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+  
+	<?php if (!Yii::$app->request->isAjax){ ?>
+	  	<div class="form-group">
+	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+	    </div>
+	<?php } ?>
 
     <?php ActiveForm::end(); ?>
-
+    
 </div>

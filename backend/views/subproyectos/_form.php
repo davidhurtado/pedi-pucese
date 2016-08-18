@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -14,20 +13,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_proyecto')->textInput() ?>
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'evidencias')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'evidencias')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'fecha_inicio')->textInput() ?>
 
     <?= $form->field($model, 'fecha_fin')->textInput() ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+  
+	<?php if (!Yii::$app->request->isAjax){ ?>
+	  	<div class="form-group">
+	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+	    </div>
+	<?php } ?>
 
     <?php ActiveForm::end(); ?>
-
+    
 </div>

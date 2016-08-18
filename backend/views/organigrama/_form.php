@@ -1,5 +1,4 @@
 <?php
-
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -10,18 +9,21 @@ use yii\widgets\ActiveForm;
 
 <div class="organigrama-form">
 
-    <?php $form = ActiveForm::begin(['id' => 'organigrama-form',]); ?>
+    <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'name')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'name')->textarea(['rows' => 3,'style' => 'resize:none']) ?>
+
+    <?= $form->field($model, 'created')->textInput(['disabled'=>true]) ?>
+
     <?= $form->field($model, 'activo')->dropDownList(['0' => 'Desactivado', '1' => 'Activado',]); ?>
-    <?php
-    //$form->field($model, 'created')->textInput()
-    ?>
 
-    <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Crear' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-    </div>
+  
+	<?php if (!Yii::$app->request->isAjax){ ?>
+	  	<div class="form-group">
+	        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+	    </div>
+	<?php } ?>
 
     <?php ActiveForm::end(); ?>
-
+    
 </div>

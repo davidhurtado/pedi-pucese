@@ -1,35 +1,69 @@
 <?php
-
+use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\grid\GridView;
-use app\models\Organigrama;
+use yii\bootstrap\Modal;
+use kartik\grid\GridView;
+use johnitvn\ajaxcrud\CrudAsset; 
+use johnitvn\ajaxcrud\BulkButtonWidget;
+
 /* @var $this yii\web\View */
+/* @var $searchModel app\models\NivelesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Niveles';
 $this->params['breadcrumbs'][] = $this->title;
+
+CrudAsset::register($this);
+
 ?>
 <div class="niveles-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Crear nivel', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-    <?=
-    GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'nid',
-            'title:ntext',
-            'rid',
-            ['attribute' => 'org_id',
-                'value' => function($data) {
-                    return Organigrama::findOne(['id' => $data['org_id']])->name;
-                }],
-                    ['class' => 'yii\grid\ActionColumn'],
+    <div id="ajaxCrudDatatable">
+        <?=GridView::widget([
+            'id'=>'crud-datatable',
+            'dataProvider' => $dataProvider,
+            'filterModel' => $searchModel,
+            'pjax'=>true,
+            'columns' => require(__DIR__.'/_columns.php'),
+            'toolbar'=> [
+                ['content'=>
+                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
+                    ['role'=>'modal-remote','title'=> 'Create new Niveles','class'=>'btn btn-default']).
+                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
+                    ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
+                    '{toggleData}'.
+                    '{export}'
                 ],
-            ]);
-            ?>
+            ],          
+            'striped' => true,
+            'condensed' => true,
+            'responsive' => true,          
+            'panel' => [
+                'type' => 'primary', 
+                'heading' => '<i class="glyphicon glyphicon-list"></i> Niveles listing',
+                'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'after'=>BulkButtonWidget::widget([
+                            'buttons'=>Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Delete All',
+                                ["bulk-delete"] ,
+                                [
+                                    "class"=>"btn btn-danger btn-xs",
+                                    'role'=>'modal-remote-bulk',
+                                    'data-confirm'=>false, 'data-method'=>false,// for overide yii data api
+                                    'data-request-method'=>'post',
+                                    'data-confirm-title'=>'Are you sure?',
+                                    'data-confirm-message'=>'Are you sure want to delete this item'
+                                ]),
+                        ]).                        
+                        '<div class="clearfix"></div>',
+            ]
+        ])?>
+    </div>
 </div>
+<?php Modal::begin([
+    "id"=>"ajaxCrudModal",
+    "footer"=>"",// always need it for jquery plugin
+    'options' => [
+        'tabindex' => false // important for Select2 to work properly
+    ],
+    'toggleButton' => ['label' => 'Show Modal', 'class' => 'btn btn-lg btn-primary'],
+])?>
+<?php Modal::end(); ?>

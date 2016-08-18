@@ -20,14 +20,6 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'nombre',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'descripcion',
-    ],
-    [
-        'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'evidencias',
     ],
     [

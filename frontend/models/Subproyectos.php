@@ -38,11 +38,9 @@ class Subproyectos extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_proyecto', 'nombre', 'descripcion', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_proyecto', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_proyecto'], 'integer'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
-            [['nombre'], 'string', 'max' => 200],
-            [['descripcion'], 'string', 'max' => 500],
             //[['evidencias'], 'string', 'max' => 300],
             [['id_proyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Proyectos::className(), 'targetAttribute' => ['id_proyecto' => 'id']],
         ];
@@ -55,22 +53,10 @@ class Subproyectos extends \yii\db\ActiveRecord {
         return [
             'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
-            'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
             'evidencias' => 'Evidencias Subproyectos',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
         ];
-    }
-
-    //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute) {
-        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d h:m:s');
-
-        if ($this->$attribute <= $currentDate) {
-            $this->addError($attribute, 'No puede ser menor a la fecha actual');
-        }
     }
 
     /**
@@ -188,8 +174,6 @@ class Subproyectos extends \yii\db\ActiveRecord {
         }
         $subproyecto = new Subproyectos();
         $subproyecto->id_proyecto = $this->id_proyecto;
-        $subproyecto->nombre = $this->nombre;
-        $subproyecto->descripcion = $this->descripcion;
         $subproyecto->evidencias = $this->evidencias;
         $subproyecto->fecha_inicio = $this->fecha_inicio;
         $subproyecto->fecha_fin = $this->fecha_fin;

@@ -19,7 +19,7 @@ class SubproyectosSearch extends Subproyectos
     {
         return [
             [['id', 'id_proyecto'], 'integer'],
-            [['nombre', 'descripcion', 'evidencias', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['evidencias', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 
@@ -62,9 +62,7 @@ class SubproyectosSearch extends Subproyectos
             'fecha_fin' => $this->fecha_fin,
         ]);
 
-        $query->andFilterWhere(['like', 'nombre', $this->nombre])
-            ->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'evidencias', $this->evidencias]);
+        $query->andFilterWhere(['like', 'evidencias', $this->evidencias]);
 
         return $dataProvider;
     }

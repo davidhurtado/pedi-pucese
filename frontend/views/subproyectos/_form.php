@@ -15,10 +15,6 @@ use yii\helpers\ArrayHelper;
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'numeracion')->textInput() ?>
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => false]) ?>
-
-<?= $form->field($model, 'descripcion')->textInput(['maxlength' => false]) ?>
-
     <div class="row" style="margin-bottom: 15px">
         <div class="col-sm-12">
             <?=
