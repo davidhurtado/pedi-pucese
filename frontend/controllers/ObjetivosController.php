@@ -30,9 +30,9 @@ class ObjetivosController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'index', 'view'],
+                        'actions' => ['create', 'update', 'index', 'view','create-index'],
                         'allow' => true,
-                        'roles' => ['admin','CREAR_PROGRAMAS'],
+                        'roles' => ['admin','crear-objetivo','actualizar-objetivo'],
                     ],
                     [
                         'actions' => ['update', 'index', 'view'],

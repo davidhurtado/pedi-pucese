@@ -12,7 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Subproyectos;
-
+use yii\filters\AccessControl;
 /**
  * ProyectosController implements the CRUD actions for Proyectos model.
  */
@@ -23,6 +23,21 @@ class ProyectosController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view','create-index'],
+                        'allow' => true,
+                        'roles' => ['admin','crear-proyecto','actualizar-proyecto'],
+                    ],
+                    [
+                        'actions' => ['update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

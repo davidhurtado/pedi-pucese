@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
-
+use yii\filters\AccessControl;
 /**
  * SubproyectosController implements the CRUD actions for Subproyectos model.
  */
@@ -22,6 +22,21 @@ class SubproyectosController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view','create-index'],
+                        'allow' => true,
+                        'roles' => ['admin','crear-proyecto','actualizar-proyecto'],
+                    ],
+                    [
+                        'actions' => ['update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

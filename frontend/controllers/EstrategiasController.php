@@ -12,7 +12,7 @@ use \yii\web\Response;
 use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Programas;
-
+use yii\filters\AccessControl;
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */
@@ -23,6 +23,21 @@ class EstrategiasController extends Controller {
      */
     public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view','create-index'],
+                        'allow' => true,
+                        'roles' => ['admin','crear-estrategia','actualizar-estrategia'],
+                    ],
+                    [
+                        'actions' => ['update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
