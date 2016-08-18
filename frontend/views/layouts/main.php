@@ -56,7 +56,7 @@ AppAsset::register($this);
                 $menuItems[] = [
                     'label' => 'REPORTES',
                     'items' => [
-                        ['label' => 'OBJETIVOS', 'url' => [ '/objetivos/index']],
+                        ['label' => 'OBJETIVOS', 'url' => [ '/reportes/objetivos']],
                         ['label' => 'ESTRATEGIAS', 'url' => [ '/reportes/objetivos-estrategias']],
                         ['label' => 'PROGRAMAS', 'url' => [ '/reportes/programas']],
                         ['label' => 'PROYECTOS', 'url' => [ '/reportes/proyectos']],

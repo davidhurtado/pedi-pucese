@@ -74,4 +74,14 @@ class ReportesController extends Controller {
         ]);
     }
 
+    public function actionObjetivos() {
+        $search = new objetivosSearch();
+        $dataProvider = $search->search(Yii::$app->request->queryParams);
+
+        return $this->render('objetivos', [
+                    'search' => $search,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
 }

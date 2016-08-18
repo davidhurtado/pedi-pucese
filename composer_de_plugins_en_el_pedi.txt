@@ -35,3 +35,8 @@ PARA HACER USO DE REPORTES
 
 PARA TOOLTIP
 	composer require --prefer-dist pavlinter/yii2-disposable-tooltip "dev-master"
+
+THEME ADMIN-LTE
+http://www.yiiframework.com/extension/yii2-adminlte-asset/
+https://github.com/dmstr/yii2-adminlte-asset
+	composer require dmstr/yii2-adminlte-asset "*"

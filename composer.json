@@ -30,7 +30,8 @@
         "philippfrenzel/yii2fullcalendar": "*",
         "kartik-v/yii2-mpdf": "*",
         "kartik-v/yii2-grid": "@dev",
-        "johnitvn/yii2-ajaxcrud": "*" 
+        "johnitvn/yii2-ajaxcrud": "*",
+        "dmstr/yii2-adminlte-asset": "*" 
     },
     "require-dev": {
         "yiisoft/yii2-debug": "*",

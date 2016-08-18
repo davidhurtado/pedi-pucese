@@ -6,6 +6,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'PEDI',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
@@ -41,7 +42,7 @@ return [
             // following line will restrict access to admin controller from frontend application
             'as frontend' => 'dektrium\user\filters\FrontendFilter',
             'controllers' => [!'profile', !'recovery', !'settings', !'admin', 'register'],
-            'enableRegistration' => true,
+            'enableRegistration' => false,
         ],
     ],
 ];

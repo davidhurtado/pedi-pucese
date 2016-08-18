@@ -27,7 +27,7 @@ class ProgramasController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'index', 'view','create-index'],
+                        'actions' => ['create', 'update', 'index', 'view','create-index','delete','bulk-delete'],
                         'allow' => true,
                         'roles' => ['admin','crear-programa','actualizar-programa'],
                     ],

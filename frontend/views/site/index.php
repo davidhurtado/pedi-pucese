@@ -11,7 +11,7 @@ $this->title = 'PEDI PUCESE 2016';
 
         <p class="lead">Planifica lo mas que puedas</p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.pucese.edu.ec">PUCESE</a></p>
+        <p><a class="btn btn-lg btn-primary" href="http://www.pucese.edu.ec">PUCESE</a></p>
     </div>
 
 </div>
