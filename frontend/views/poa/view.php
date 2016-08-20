@@ -3,18 +3,18 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Subproyectos */
+/* @var $model frontend\models\Poa */
 ?>
-<div class="subproyectos-view">
+<div class="poa-view">
  
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'id_proyecto',
-            'evidencias:ntext',
-            'fecha_inicio',
+            'fecha_creacion',
+            'fecha_ejecucion',
             'fecha_fin',
+            'estado',
         ],
     ]) ?>
 

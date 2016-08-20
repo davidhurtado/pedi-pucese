@@ -64,7 +64,6 @@ Modal::begin([
     'options' => [
         'tabindex' => false // important for Select2 to work properly
     ],
-    'toggleButton' => ['label' => 'Show Modal', 'class' => 'btn btn-lg btn-primary'],
 ])
 ?>
 <?php Modal::end(); ?>
