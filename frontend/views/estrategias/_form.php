@@ -15,25 +15,28 @@ use app\models\Objetivos;
 <div class="estrategias-form">
     <?php
     if ($controlador == 'objetivos') {
-        echo "<h4>" . "OBJETIVO " . $objetivo->numeracion . ": " . $objetivo->descripcion . "</h4>";
+        echo "<div class='descripcion-padre'><h4>" . "OBJETIVO " . $objetivo->numeracion . ": " . $objetivo->descripcion . "</h4></div>";
         if ($accion == 'create') {
             $form = ActiveForm::begin(['action' => ['estrategias/create','id'=>$id], 'id' => 'estrategia']);
         } else {
             $form = ActiveForm::begin(['id' => 'estrategia']);
         }
         ?>
-        <?= $form->field($model, 'numeracion')->textInput() ?>
-        <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'style' => 'resize:none']) ?>
-
+    <div class="form-group field-estrategias-numeracion col-md-2 col-xs-12 col-sm-4 required">
+                  <?= $form->field($model, 'numeracion')->textInput() ?>
+                </div>
+                <div class="form-group field-estrategias-descripcion col-md-10 col-xs-12 col-sm-8 required">
+                  <?= $form->field($model, 'descripcion')->textarea(['rows' => 4, 'maxlength' => false, 'style' => 'resize:none']) ?>
+                </div>
         <?php
         $request = Yii::$app->request;
         if (Yii::$app->controller->action->id == 'update') {
             if (!$model->load($request->post())) {
-                $model->responsables = array_map('intval', explode(',', $model->responsables));
+                $model->colaboradores = array_map('intval', explode(',', $model->colaboradores));
             }
         }
 
-        echo $form->field($model, 'responsables')->widget(Select2::className(), [
+        echo $form->field($model, 'colaboradores')->widget(Select2::className(), [
             'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
             'options' => [
                 'id' => 'items',

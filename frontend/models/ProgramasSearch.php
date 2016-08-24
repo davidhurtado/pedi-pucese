@@ -19,7 +19,7 @@ class ProgramasSearch extends Programas
     {
         return [
             [['id', 'id_estrategia'], 'integer'],
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
         ];
     }
@@ -65,7 +65,7 @@ class ProgramasSearch extends Programas
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

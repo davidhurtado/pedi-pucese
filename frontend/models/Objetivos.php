@@ -12,7 +12,7 @@ use \yii\db\Query;
  *
  * @property integer $id
  * @property string $descripcion
- * @property string $responsables
+ * @property string $colaboradores
  * @property string $fecha_inicio
  * @property string $fecha_fin
  *
@@ -35,12 +35,12 @@ class Objetivos extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['descripcion', 'responsables', 'fecha_inicio','fecha_fin','numeracion'], 'required'],
+            [['descripcion', 'colaboradores', 'fecha_inicio','fecha_fin','numeracion'], 'required'],
             [['numeracion'], 'integer'],
             [['numeracion'], 'unique'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'validarResponsables'],
+            [['colaboradores'], 'validarColaboradores'],
         ];
     }
 
@@ -50,11 +50,11 @@ class Objetivos extends \yii\db\ActiveRecord {
     public function attributeLabels() {
         return [
             'id' => 'ID',
-            'descripcion' => 'Descripcion',
-            'responsables' => 'Responsables',
+            'descripcion' => 'Descripción',
+            'colaboradores' => 'Colaboradores',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
-            'numeracion' => 'Numeracion',
+            'numeracion' => 'Numeración',
         ];
     }
 
@@ -69,7 +69,7 @@ class Objetivos extends \yii\db\ActiveRecord {
     }
 
 //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
-    public function validarResponsables($attribute) {
+    public function validarColaboradores($attribute) {
         if (empty($this->$attribute)) {
             $this->addError($attribute, 'No existe ningun responsable');
         }
@@ -99,8 +99,7 @@ class Objetivos extends \yii\db\ActiveRecord {
 
         return $levels;
     }
-
-    public function getResponsables($resp) {
+    public function getColaboradores($resp) {
 
 
         $query = new \yii\db\Query();
@@ -123,7 +122,7 @@ class Objetivos extends \yii\db\ActiveRecord {
         }
         $objetivo = new Objetivos();
         $objetivo->descripcion = $this->descripcion;
-        $objetivo->responsables = $this->responsables;
+        $objetivo->colaboradores = $this->colaboradores;
         $objetivo->fecha_inicio = $this->fecha_inicio;
         $objetivo->fecha_fin = $this->fecha_fin;
         return $objetivo->save() ? $objetivo : null;

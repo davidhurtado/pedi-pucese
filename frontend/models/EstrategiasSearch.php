@@ -18,7 +18,7 @@ class EstrategiasSearch extends Estrategias {
     public function rules() {
         return [
             [['id', 'id_objetivo'], 'integer'],
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
         ];
     }
@@ -71,7 +71,7 @@ class EstrategiasSearch extends Estrategias {
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-                ->andFilterWhere(['like', 'responsables', $this->responsables]);
+                ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

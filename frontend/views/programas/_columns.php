@@ -51,7 +51,7 @@ return [
             if (isset($data->id)) {
                 $estrategia = Estrategias::findOne($data->id_estrategia);
                 $objetivo = Objetivos::findOne($estrategia->id_objetivo);
-                return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->descripcion), 0, 71) . '....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
+                return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->descripcion), 0, 90) . '....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
             } else {
                 return '';
             }
@@ -60,7 +60,7 @@ return [
             ],
             /* [
               'class' => '\kartik\grid\DataColumn',
-              'attribute' => 'responsables',
+              'attribute' => 'colaboradores',
               ], */
             [
                 'class' => '\kartik\grid\DataColumn',

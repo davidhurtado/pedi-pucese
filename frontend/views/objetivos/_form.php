@@ -11,26 +11,32 @@ use kartik\select2\Select2;
 /* @var $model app\models\Objetivos */
 /* @var $form yii\widgets\ActiveForm */
 $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d');
+$currentDate = $time->format('Y-m-d');
 ?>
 
 <div class="objetivos-form">
 
-    <?php $form = ActiveForm::begin([
-    'id' => 'objetivos-signup',
-    'enableClientValidation'=>true,
-    //'enableAjaxValidation'=>true,
-    ]); ?>
-    <?= $form->field($model, 'numeracion')->textInput() ?>
-    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6, 'maxlength' => false, 'style' => 'resize:none']) ?>
+    <?php
+    $form = ActiveForm::begin([
+                'id' => 'objetivos-signup',
+                'enableClientValidation' => true,
+                    //'enableAjaxValidation'=>true,
+    ]);
+    ?>
+    <div class="form-group field-objetivos-numeracion col-md-2 col-xs-12 col-sm-4 required">
+        <?= $form->field($model, 'numeracion')->textInput() ?>
+    </div>
+    <div class="form-group field-objetivos-descripcion col-md-10 col-xs-12 col-sm-8 required">
+        <?= $form->field($model, 'descripcion')->textarea(['rows' => 4, 'maxlength' => false, 'style' => 'resize:none']) ?>
+    </div>
 
     <?php
     if (Yii::$app->controller->action->id == 'update') {
         if ($model->validate()) {
-            $model->responsables = array_map('intval', explode(',', $model->responsables));
+            $model->colaboradores = array_map('intval', explode(',', $model->colaboradores));
         }
     }
-    echo $form->field($model, 'responsables')->widget(Select2::className(), [
+    echo $form->field($model, 'colaboradores')->widget(Select2::className(), [
         'data' => ArrayHelper::map($model->getLevels(), 'nid', 'title'),
         'options' => [
             'id' => 'items',
@@ -58,7 +64,7 @@ $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
                     'startDate' => '2017-01-01'
-                    //'startDate' => date ( 'Y-m-d' , strtotime ( '+1 year' , strtotime ( $currentDate ))),
+                //'startDate' => date ( 'Y-m-d' , strtotime ( '+1 year' , strtotime ( $currentDate ))),
                 ]
             ]);
             ?>
@@ -66,12 +72,12 @@ $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
     </div>
 
 
-    <?php if (!Yii::$app->request->isAjax) { ?>
+        <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group">
-            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
     <?php } ?>
 
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
 </div>

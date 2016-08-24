@@ -110,7 +110,8 @@ class ObjetivosController extends Controller {
             } else
             if ($model->load(Yii::$app->request->post())) {
                 if ($model->validate()) {
-                    $model->responsables = implode(",", $model->responsables);
+                    $model->responsable=Yii::$app->user->identity->id;
+                    $model->colaboradores = implode(",", $model->colaboradores);
                     if ($model->save()) {
                         return [
                             'forceReload' => '#crud-datatable-pjax',
@@ -182,7 +183,7 @@ class ObjetivosController extends Controller {
                 ];
             } else if ($model->load($request->post())) {
                 if ($model->validate()) {
-                    $model->responsables = implode(",", $model->responsables);
+                    $model->colaboradores = implode(",", $model->colaboradores);
                 }
 
                 if ($model->save()) {

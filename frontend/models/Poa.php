@@ -33,6 +33,7 @@ class Poa extends \yii\db\ActiveRecord
     {
         return [
             [['fecha_creacion', 'fecha_ejecucion', 'fecha_fin'], 'safe'],
+            [['fecha_ejecucion'], 'unique'],
             [['estado'], 'integer'],
         ];
     }

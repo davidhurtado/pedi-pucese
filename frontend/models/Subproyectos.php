@@ -40,7 +40,6 @@ class Subproyectos extends \yii\db\ActiveRecord {
         return [
             [['id_proyecto', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_proyecto'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'verifDate'],
             //[['evidencias'], 'string', 'max' => 300],
             [['id_proyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Proyectos::className(), 'targetAttribute' => ['id_proyecto' => 'id']],
         ];
@@ -53,7 +52,7 @@ class Subproyectos extends \yii\db\ActiveRecord {
         return [
             'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
-            'evidencias' => 'Evidencias Subproyectos',
+            'evidencias' => 'Evidencias',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
         ];

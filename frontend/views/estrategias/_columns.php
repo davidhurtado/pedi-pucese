@@ -42,7 +42,7 @@ return [
     ],
     /* [
       'class'=>'\kartik\grid\DataColumn',
-      'attribute'=>'responsables',
+      'attribute'=>'colaboradores',
       ], */
     [
         'class' => '\kartik\grid\DataColumn',

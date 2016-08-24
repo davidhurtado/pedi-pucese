@@ -11,6 +11,8 @@ use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
 use app\models\ProyectosSearch;
+use app\models\Proyectos;
+
 /**
  * PoaController implements the CRUD actions for Poa model.
  */
@@ -55,9 +57,10 @@ class PoaController extends Controller {
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "Poa #" . $id,
+                'title' => "POA #" . $id,
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
+                    'estado' => 'ver'
                 ]),
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                 Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
@@ -69,9 +72,112 @@ class PoaController extends Controller {
         }
     }
 
+    public function actionAntesDeAprobar($id) {
+        $request = Yii::$app->request;
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Poa #" . $id,
+                'content' => $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+                    'estado' => 'aprobar'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::a('Aceptar', ['aprobar', 'id' => $id], ['class' => 'btn btn-success', 'role' => 'modal-remote'])
+            ];
+        } else {
+            return $this->render('view', [
+                        'model' => $this->findModel($id),
+            ]);
+        }
+    }
+
+    public function actionAprobar($id) {
+        $request = Yii::$app->request;
+        $model = $this->findModel($id);
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $connection = Yii::$app->db;
+            $command = $connection->createCommand("UPDATE poa SET estado=1 WHERE id=" . $model->id);
+            $command->execute();
+            return [
+                'forceReload' => '#crud-datatable-pjax',
+                'title' => "POA en ejecución",
+                'content' => '<span class="text-success">POA #' . $model->id . ' en ejecución</span>',
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+            ];
+        }
+
+        return $this->renderAjax('view', [
+                    'model' => $this->findModel($id),
+        ]);
+    }
+
+    public function actionViewProyecto($id) {
+        $request = Yii::$app->request;
+        $model = Proyectos::findOne($id);
+        if ($request->isAjax) {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return [
+                'title' => "Proyecto #" . $model->numeracion,
+                'content' => $this->renderAjax('view_proyecto', [
+                    'model' => $model,
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        } else {
+            return $this->goHome();
+        }
+    }
+
+    public function actionUpdateProyecto($id) {
+        $request = Yii::$app->request;
+        $model = Proyectos::findOne($id);
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            $model->validate();
+            if ($request->isGet) {
+                return [
+                    'title' => "Actualizar Proyecto #" . $model->numeracion,
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                        'controlador' => 'programas',
+                        'accion' => 'update'
+                    ]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post())) {
+                $model->estado = $request->post()['Proyectos']['estado'];
+                if ($model->save()) {
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Actualizado",
+                        'content' => '<span class="text-success">Proyecto Actualizado</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                }
+            } else {
+                return [
+                    'forceReload' => '#crud-datatable-pjax',
+                    'title' => "Actualizado",
+                    'content' => '<span class="text-success">Proyecto Actualizado</span>',
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                ];
+            }
+        } else {
+            return $this->redirect(['index']);
+        }
+    }
+
     public function actionValidar($id) {
         $searchModel = new PoaSearch();
-        $dataProvider = $searchModel->searchProyectos(Yii::$app->request->queryParams,$id);
+        $dataProvider = $searchModel->searchProyectos(Yii::$app->request->queryParams, $id);
 
         return $this->render('validar', [
                     'searchModel' => $searchModel,

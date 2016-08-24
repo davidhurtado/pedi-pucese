@@ -10,7 +10,6 @@ use app\models\Proyectos;
 use app\models\Estrategias;
 use app\models\Objetivos;
 use app\models\Programas;
-
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProyectosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -19,6 +18,10 @@ $this->title = 'Aprobar Proyectos';
 $this->params['breadcrumbs'][] = $this->title;
 //var_dump($dataProvider);
 //die();
+$estado_poa=frontend\models\Poa::findOne(['id'=>$_GET['id']])->estado!=1?
+        Html::a('<i class="glyphicon glyphicon-check"></i> APROBAR', ['antes-de-aprobar', 'id' => $_GET['id'],'estado' => 'ejecutar'], ['role' => 'modal-remote', 'title' => 'Aprobar POA', 'class' => 'btn btn-success']).
+        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create-index'], ['role' => 'modal-remote', 'title' => 'Create new Proyectos', 'class' => 'btn btn-default']) 
+        :'';
 CrudAsset::register($this);
 ?>
 <div class="proyectos-index">
@@ -70,92 +73,122 @@ CrudAsset::register($this);
                 [
                     'class' => '\kartik\grid\DataColumn',
                     'attribute' => 'nombre',
-                    'contentOptions' => ['style' => 'width: 10px;'],
                     'value' => function($data) {
-                return $data['numeracion'] . ': ' . Html::tag('span', substr(strip_tags($data['nombre']), 0, 71) . '....', ['data-toggle' => 'tooltip', 'title' => $data['nombre'], 'style' => 'cursor:default;']);
-            },
-                    'format' => 'raw',
-                ],
-                [
-                    'class' => '\kartik\grid\DataColumn',
-                    'attribute' => 'descripcion',
-                ],
-                [
-                    'class' => 'kartik\grid\BooleanColumn',
-                    'attribute' => 'estado',
-                    'vAlign' => 'middle'
-                ],
-                [
-                    'class' => 'kartik\grid\ActionColumn',
-                    'dropdown' => false,
-                    'vAlign' => 'middle',
-                    'urlCreator' => function($action, $model, $key, $index) {
-                        return Url::to([$action, 'id' => $key]);
+                        return $data['numeracion'] . ': ' . Html::tag('span', substr(strip_tags($data['nombre']), 0, 110) . '....', ['data-toggle' => 'tooltip', 'title' => $data['nombre'], 'style' => 'cursor:default;']);
                     },
-                            'template' => '{view}{projects}{update}{delete}',
-                            'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
-                            'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
-                            'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Delete',
-                                'data-confirm' => false, 'data-method' => false, // for overide yii data api
-                                'data-request-method' => 'post',
-                                'data-toggle' => 'tooltip',
-                                'data-confirm-title' => 'Are you sure?',
-                                'data-confirm-message' => 'Are you sure want to delete this item'],
-                            'buttons' => [
-                                'projects' => function ($url, $model) {
-                                    return Html::a('<span class="glyphicon glyphicon-folder-open"></span>', ['poa/validar', 'id' => $model['id']], [
-                                                'title' => 'Proyectos',
-                                                'data-toggle' => 'tooltip'
-                                                    ]
-                                    );
-                                },
-                                    ],
-                                ],
-                            ],
-                            'toolbar' => [
-                                ['content' =>
-                                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create-index'], ['role' => 'modal-remote', 'title' => 'Create new Proyectos', 'class' => 'btn btn-default']) .
-                                    Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
-                                    //'{toggleData}' .
-                                    '{export}'
-                                ],
-                            ],
-                            'striped' => true,
-                            'condensed' => true,
-                            'responsive' => true,
-                            'panel' => [
-                                'type' => 'primary',
-                                'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
-                                //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
-                                'after' => BulkButtonWidget::widget([
-                                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
-                                        "class" => "btn btn-danger btn-xs",
-                                        'role' => 'modal-remote-bulk',
+                            'format' => 'raw',
+                        ],
+                        [
+                            'class' => 'kartik\grid\DataColumn',
+                            'attribute' => 'estado',
+                            'contentOptions' => ['style' => 'width: 10px;'],
+                            'value' => function($data) {
+                        $estado = '';
+                        switch ($data['estado']) {
+                            case 1:
+                                $estado = 'borrador';
+                                break;
+                            case 2:
+                                $estado = 'ok';
+                                break;
+                            case 3:
+                                $estado = 'ejecucion';
+                                break;
+                            case 4:
+                                $estado = 'terminado';
+                                break;
+                        }
+                        return $estado;
+                    },
+                        ],
+                        [
+                            'class' => 'kartik\grid\ActionColumn',
+                            'dropdown' => false,
+                            'vAlign' => 'middle',
+                            'urlCreator' => function($action, $model, $key, $index) {
+                                return Url::to(['/' . $action, 'id' => $key,]);
+                            },
+                                    'template' => '{view}   {projects}   {update}   {delete}',
+                                    'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
+                                    'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
+                                    'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Delete',
                                         'data-confirm' => false, 'data-method' => false, // for overide yii data api
                                         'data-request-method' => 'post',
-                                        'data-confirm-title' => 'Est&aacute;s Seguro?',
-                                        'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
-                                    ]),
-                                ]) .
-                                '<div class="clearfix"></div>',
-                            ]
+                                        'data-toggle' => 'tooltip',
+                                        'data-confirm-title' => 'Are you sure?',
+                                        'data-confirm-message' => 'Are you sure want to delete this item'],
+                                    'buttons' => [
+                                        'projects' => function ($url, $model) {
+                                            return Html::a('<span class="glyphicon glyphicon-folder-open"></span>', ['poa/validar', 'id' => $model['id']], [
+                                                        'title' => 'Proyectos',
+                                                        'data-toggle' => 'tooltip'
+                                                            ]
+                                            );
+                                        },
+                                                'view' => function ($url, $model) {
+                                            return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', ['poa/view-proyecto', 'id' => $model['id']], [
+                                                        'title' => 'Proyectos',
+                                                        'data-toggle' => 'tooltip',
+                                                        'role' => 'modal-remote',
+                                                            ]
+                                            );
+                                        },
+                                                'update' => function ($url, $model) {
+                                            return Html::a('<span class="glyphicon glyphicon-pencil"></span>', ['proyectos/update', 'id' => $model['id']], [
+                                                        'title' => 'Actualizar',
+                                                        'data-toggle' => 'tooltip',
+                                                        'role' => 'modal-remote',
+                                                            ]
+                                            );
+                                        },
+                                            ],
+                                        ],
+                                    ],
+                                    'toolbar' => [
+                                        ['content' =>
+                                           $estado_poa.
+                                            
+                                            Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
+                                            //'{toggleData}' .
+                                            '{export}'
+                                        ],
+                                    ],
+                                    'striped' => true,
+                                    'condensed' => true,
+                                    'responsive' => true,
+                                    'panel' => [
+                                        'type' => 'primary',
+                                        'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
+                                        //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                                        'after' => BulkButtonWidget::widget([
+                                            'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
+                                                "class" => "btn btn-danger btn-xs",
+                                                'role' => 'modal-remote-bulk',
+                                                'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                                                'data-request-method' => 'post',
+                                                'data-confirm-title' => 'Est&aacute;s Seguro?',
+                                                'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
+                                            ]),
+                                        ]) .
+                                        '<div class="clearfix"></div>',
+                                    ]
+                                ])
+                                ?>
+                            </div>
+                        </div>
+                        <?php
+                        Modal::begin([
+                            'size' => Modal::SIZE_LARGE,
+                            "id" => "ajaxCrudModal",
+                            "footer" => "", // always need it for jquery plugin
+                            'options' => [
+                                'tabindex' => false // important for Select2 to work properly
+                            ],
                         ])
                         ?>
-                    </div>
-                </div>
-                <?php
-                Modal::begin([
-                    'size' => Modal::SIZE_LARGE,
-                    "id" => "ajaxCrudModal",
-                    "footer" => "", // always need it for jquery plugin
-                    'options' => [
-                        'tabindex' => false // important for Select2 to work properly
-                    ],
-                ])
-                ?>
-                <?php Modal::end(); ?>
-                <?php
-                $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
-                        . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
-                        . '$(function () { $("[data-toggle=\'popover\']").popover();});');
-                ?>
+                        <?php Modal::end(); ?>
+                        <?php
+                        $this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');'
+                                . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
+                                . '$(function () { $("[data-toggle=\'popover\']").popover();});');
+                        ?>

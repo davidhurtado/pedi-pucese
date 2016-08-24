@@ -19,7 +19,7 @@ class ObjetivosSearch extends Objetivos
     {
         return [
             [['id','numeracion'], 'integer'],
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 
@@ -63,7 +63,7 @@ class ObjetivosSearch extends Objetivos
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

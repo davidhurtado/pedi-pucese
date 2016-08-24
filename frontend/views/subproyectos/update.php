@@ -10,6 +10,8 @@ use app\models\Proyectos;
     <?= $this->render('_form', [
         'model' => $model,
         'proyecto'=>  Proyectos::findOne($model->id_proyecto),
+        'evidencias_preview' => $model->getEvidencias_preview(),
+        'evidencias' => $model->getEvidencias(),
     ]) ?>
 
 </div>

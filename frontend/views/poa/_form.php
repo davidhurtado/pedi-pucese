@@ -3,7 +3,6 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
-
 /* @var $this yii\web\View */
 /* @var $model frontend\models\Poa */
 /* @var $form yii\widgets\ActiveForm */
@@ -11,7 +10,9 @@ use kartik\date\DatePicker;
 
 <div class="poa-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php
+    $form = ActiveForm::begin();
+    ?>
 
     <?=
     DatePicker::widget([
@@ -24,8 +25,9 @@ use kartik\date\DatePicker;
             'autoclose' => true,
             'format' => 'yyyy-mm-dd',
             'startView' => 2,
-            'minViewMode' => 1,
-            'startDate' => (date('Y') + 1) . '-01-01',
+            'minViewMode' => 2,
+            'startDate' => (date('Y')+1) . '-01-01',
+            'endDate' => (date('Y') + 1) . '-01-01',
         ]
     ]);
     ?>
@@ -37,12 +39,12 @@ use kartik\date\DatePicker;
     ?>
 
 
-        <?php if (!Yii::$app->request->isAjax) { ?>
+    <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
     <?php } ?>
 
-<?php ActiveForm::end(); ?>
+    <?php ActiveForm::end(); ?>
 
 </div>

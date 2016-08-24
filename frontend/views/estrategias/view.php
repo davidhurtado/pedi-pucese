@@ -17,8 +17,6 @@ use \yii\db\Query;
 $objetivo = Objetivos::findOne(['id' => $model->id_objetivo]);
 
 $this->title = 'Estrategia ' . $objetivo->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
-$this->params['breadcrumbs'][] = ['label' => 'Objetivo ' . $objetivo->numeracion, 'url' => ['/objetivos/view', 'id' => $model->id_objetivo]];
-$this->params['breadcrumbs'][] = 'Estrategia ' . $model->numeracion;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
@@ -46,8 +44,12 @@ CrudAsset::register($this);
                 'model' => $model,
                 'attributes' => [
                     [
-                        'attribute' => 'responsables',
-                        'value' => $model->getResponsables(array_map('intval', explode(',', $model->responsables))),
+                        'attribute' => 'responsable',
+                        'value' => dektrium\user\models\User::findOne(['id'=> $model->responsable])->username,
+                    ],
+                    [
+                        'attribute' => 'colaboradores',
+                        'value' => $model->getColaboradores(array_map('intval', explode(',', $model->colaboradores))),
                     ],
                     'fecha_inicio',
                     'fecha_fin',

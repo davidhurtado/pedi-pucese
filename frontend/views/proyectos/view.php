@@ -20,9 +20,7 @@ $estrategia = Estrategias::findOne(['id' => $programa->id_estrategia]);
 $objetivo = Objetivos::findOne(['id' => $estrategia->id_objetivo]);
 
 $this->title = 'Proyecto ' . $objetivo->numeracion . '.' . $estrategia->numeracion . '.' . $programa->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
-$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => '[OBJETIVO] ' . $objetivo->descripcion, 'style' => 'cursor:default;', 'label' => 'Objetivo ' . $objetivo->numeracion, 'url' => ['/objetivos/view', 'id' => $objetivo->id]];
-$this->params['breadcrumbs'][] = ['data-toggle' => 'tooltip', 'data-placement' => 'bottom', 'title' => '[ESTRATEGIA] ' . $estrategia->descripcion, 'style' => 'cursor:default;', 'label' => 'Estrategia ' . $estrategia->numeracion, 'url' => ['/estrategias/view', 'id' => $estrategia->id]];
-$this->params['breadcrumbs'][] = 'Programa ' . $model->numeracion;
+Yii::$app->params['titulo_exportacion'] = $this->title;
 CrudAsset::register($this);
 ?>
 <div class="proyectos-view">
@@ -48,8 +46,12 @@ CrudAsset::register($this);
                 'model' => $model,
                 'attributes' => [
                     [
-                        'attribute' => 'responsables',
-                        'value' => $model->getResponsables(array_map('intval', explode(',', $model->responsables))),
+                        'attribute' => 'responsable',
+                        'value' => dektrium\user\models\User::findOne(['id' => $model->responsable])->username,
+                    ],
+                    [
+                        'attribute' => 'colaboradores',
+                        'value' => $model->getColaboradores(array_map('intval', explode(',', $model->colaboradores))),
                     ],
                     'fecha_inicio',
                     'fecha_fin',
@@ -110,8 +112,9 @@ CrudAsset::register($this);
     ?>
     <?php Modal::end(); ?>
     <?php
-    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');'
             . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
             . '$(function () { $("[data-toggle=\'popover\']").popover();});');
     ?>
+
 </div>

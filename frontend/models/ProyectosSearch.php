@@ -19,7 +19,7 @@ class ProyectosSearch extends Proyectos
     {
         return [
             [['id', 'id_programa'], 'integer'],
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['nombre', 'descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
         ];
     }
@@ -66,7 +66,7 @@ class ProyectosSearch extends Proyectos
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

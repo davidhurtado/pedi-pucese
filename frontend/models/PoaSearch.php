@@ -39,9 +39,9 @@ class PoaSearch extends Poa {
         $query1 = new \yii\db\Query;
         $query1->select('*')->from('poa_proyectos');
         $query1->join('LEFT JOIN', 'proyectos', 'proyectos.id = poa_proyectos.id_proyecto');
-        $command=$query1->andWhere(['proyectos.estado' => 1]);
+        //$command=$query1->andWhere(['proyectos.estado' => 1]);
         $dataProvider = new ActiveDataProvider([
-            'query' => $command,
+            'query' => $query1,
         ]);
 
         $this->load($params);

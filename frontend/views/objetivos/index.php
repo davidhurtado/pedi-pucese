@@ -12,7 +12,6 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Objetivos';
-$this->params['breadcrumbs'][] = $this->title;
 Yii::$app->params['titulo_exportacion']=$this->title;
 CrudAsset::register($this);
 ?>
@@ -38,8 +37,8 @@ CrudAsset::register($this);
             'responsive' => true,
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Objetivos',
-                //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> OBJETIVOS',
+                'before'=>'<h4>INGRESE SUS OBJETIVOS.</h4>',
                 'after' => BulkButtonWidget::widget([
                     'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
                         "class" => "btn btn-danger btn-xs",
@@ -66,5 +65,5 @@ Modal::begin([
 ?>
 <?php Modal::end(); ?>
 <?php
-$this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');');
+$this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');');
 ?>

@@ -33,16 +33,17 @@ class Proyectos extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
-            [['numeracion'], 'integer'],
+            [['nombre', 'descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
+            [['numeracion', 'estado'], 'integer'],
             [['numeracion'], 'VerifNum'],
+            [['estado'], 'VerifCheck'],
             [['id_programa'], 'integer'],
             [['fecha_inicio'], 'verifDate_inicio'],
             [['fecha_fin'], 'verifDate_fin'],
             [['presupuesto'], 'number'],
-            [['nombre'], 'string', 'max' => 200],
+            //[['nombre'], 'string', 'max' => 200],
             [['descripcion'], 'string'],
-            [['responsables'], 'validarResponsables'],
+            [['colaboradores'], 'validarColaboradores'],
             [['id_programa'], 'exist', 'skipOnError' => true, 'targetClass' => Programas::className(), 'targetAttribute' => ['id_programa' => 'id']],
         ];
     }
@@ -55,11 +56,12 @@ class Proyectos extends \yii\db\ActiveRecord {
             'id' => 'ID',
             'id_programa' => 'Id Programa',
             'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
-            'responsables' => 'Responsable',
+            'descripcion' => 'Descripción',
+            'colaboradores' => 'Responsable',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
+            'numeracion' => 'Numeración'
         ];
     }
     //  -----> CREAR REGLAS DE VALIDACIONES PARA NUMERACION   
@@ -76,6 +78,13 @@ class Proyectos extends \yii\db\ActiveRecord {
             }
         }
     }
+    //  -----> CREAR REGLAS DE VALIDACIONES PARA NUMERACION   
+    public function verifCheck($attribute) {
+        
+            if ($this->$attribute <0 and $this->$attribute >4) {
+                $this->addError($attribute, 'No existe ese estado');
+            }
+    }
     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
     public function verifDate_inicio($attribute) {
         if ($this->$attribute < Programas::findOne($this->id_programa)->fecha_inicio) {
@@ -89,7 +98,7 @@ class Proyectos extends \yii\db\ActiveRecord {
         }
     }
     //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
-    public function validarResponsables($attribute) {
+    public function validarColaboradores($attribute) {
         if (empty($this->$attribute)) {
             $this->addError($attribute, 'No existe ningun responsable');
         }
@@ -125,7 +134,7 @@ class Proyectos extends \yii\db\ActiveRecord {
         return $levels;
     }
 
-    public function getResponsables($resp) {
+    public function getColaboradores($resp) {
 
 
         $query = new \yii\db\Query();
@@ -150,7 +159,7 @@ class Proyectos extends \yii\db\ActiveRecord {
         $proyecto->id_programa = $this->id_programa;
         $proyecto->nombre = $this->nombre;
         $proyecto->descripcion = $this->descripcion;
-        $proyecto->responsables = $this->responsables;
+        $proyecto->colaboradores = $this->colaboradores;
         $proyecto->fecha_inicio = $this->fecha_inicio;
         $proyecto->fecha_fin = $this->fecha_fin;
         $proyecto->presupuesto = $this->presupuesto;

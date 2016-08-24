@@ -149,7 +149,8 @@ class ProyectosController extends Controller {
                 if ($model->load(Yii::$app->request->post())) {
                     $model->id_programa = $id;
                     if ($model->validate()) {
-                        $model->responsables = implode(",", $model->responsables);
+                        $model->responsable=Yii::$app->user->identity->id;
+                        $model->colaboradores = implode(",", $model->colaboradores);
                         if ($model->save()) {
                             return [
                                 'forceReload' => '#crud-datatable-pjax',
@@ -218,7 +219,7 @@ class ProyectosController extends Controller {
                 ];
             } else if ($model->load($request->post())) {
                 if ($model->validate()) {
-                    $model->responsables = implode(",", $model->responsables);
+                    $model->colaboradores = implode(",", $model->colaboradores);
                 }
 
                 if ($model->save()) {

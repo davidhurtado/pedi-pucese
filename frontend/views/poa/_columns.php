@@ -37,7 +37,7 @@ return [
         'dropdown' => false,
         'vAlign' => 'middle',
         'urlCreator' => function($action, $model, $key, $index) {
-            return Url::to([$action, 'id' => $key]);
+            return Url::to([$action, 'id' => $key,'estado' => 'ver']);
         },
                 'template' => '{view}{projects}{update}{delete}',
                 'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],

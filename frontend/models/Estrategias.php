@@ -13,7 +13,7 @@ use \yii\db\Query;
  * @property integer $id
  * @property integer $id_objetivo
  * @property string $descripcion
- * @property string $responsables
+ * @property string $colaboradores
  * @property string $fecha_inicio
  * @property string $fecha_fin
  * @property string $evidencias
@@ -39,7 +39,7 @@ class Estrategias extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['id_objetivo', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
+            [['id_objetivo', 'descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin', 'numeracion'], 'required'],
             [['numeracion'], 'integer'],
             [['numeracion'], 'VerifNum'],
             [['id_objetivo'], 'integer'],
@@ -47,7 +47,7 @@ class Estrategias extends \yii\db\ActiveRecord {
             [['fecha_fin'], 'verifDate_fin'],
             [['presupuesto'], 'number'],
             [['descripcion'], 'string'],
-            [['responsables'], 'validarResponsables'],
+            [['colaboradores'], 'validarColaboradores'],
             [['id_objetivo'], 'exist', 'skipOnError' => true, 'targetClass' => Objetivos::className(), 'targetAttribute' => ['id_objetivo' => 'id']],
         ];
     }
@@ -59,11 +59,12 @@ class Estrategias extends \yii\db\ActiveRecord {
         return [
             'id' => 'ID',
             'id_objetivo' => 'Id Objetivo',
-            'descripcion' => 'Descripcion',
-            'responsables' => 'Responsables',
+            'descripcion' => 'Descripción',
+            'colaboradores' => 'Colaboradores',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',
+            'numeracion' => 'Numeración'
         ];
     }
 
@@ -96,7 +97,7 @@ class Estrategias extends \yii\db\ActiveRecord {
     }
 
     //  -----> CREAR REGLAS DE VALIDACIONES PARA RESPONSABLES   
-    public function validarResponsables($attribute) {
+    public function validarColaboradores($attribute) {
         if (empty($this->$attribute)) {
             $this->addError($attribute, 'No existe ningun responsable');
         }
@@ -139,7 +140,7 @@ class Estrategias extends \yii\db\ActiveRecord {
         return $levels;
     }
 
-    public function getResponsables($resp) {
+    public function getColaboradores($resp) {
 
 
         $query = new Query();
@@ -163,7 +164,7 @@ class Estrategias extends \yii\db\ActiveRecord {
         $estrategia = new Estrategias();
         $estrategia->id_objetivo = $this->id_objetivo;
         $estrategia->descripcion = $this->descripcion;
-        $estrategia->responsables = $this->responsables;
+        $estrategia->colaboradores = $this->colaboradores;
         $estrategia->fecha_inicio = $this->fecha_inicio;
         $estrategia->fecha_fin = $this->fecha_fin;
         $estrategia->presupuesto = $this->presupuesto;

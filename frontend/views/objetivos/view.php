@@ -16,8 +16,6 @@ use \yii\db\Query;
 /* @var $model app\models\Objetivos */
 
 $this->title = 'OBJETIVO ' . $model->numeracion;
-$this->params['breadcrumbs'][] = ['label' => 'Objetivos', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
 Yii::$app->params['titulo_exportacion'] = $this->title . ': ' . $model->descripcion;
 CrudAsset::register($this);
 ?>
@@ -44,12 +42,16 @@ CrudAsset::register($this);
             DetailView::widget([
                 'model' => $model,
                 'attributes' => [
+                    [
+                        'attribute' => 'responsable',
+                        'value' => dektrium\user\models\User::findOne(['id'=> $model->responsable])->username,
+                    ],
+                    [
+                        'attribute' => 'colaboradores',
+                        'value' => $model->getColaboradores(array_map('intval', explode(',', $model->colaboradores))),
+                    ],
                     'fecha_inicio',
                     'fecha_fin',
-                    [
-                        'attribute' => 'responsables',
-                        'value' => $model->getResponsables(array_map('intval', explode(',', $model->responsables))),
-                    ],
                 ],
             ])
             ?>
@@ -133,7 +135,7 @@ CrudAsset::register($this);
                         ],
                         'toolbar' => [
                             ['content' =>
-                                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id' => $_GET['id'],'controlador'=>'objetivos'], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
+                                Html::a('<i class="glyphicon glyphicon-plus"></i>', ['estrategias/create', 'id' => $_GET['id'], 'controlador' => 'objetivos'], ['role' => 'modal-remote', 'title' => 'Create new Estrategias', 'class' => 'btn btn-default']) .
                                 Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                                 '{toggleData}' .
                                 '{export}'

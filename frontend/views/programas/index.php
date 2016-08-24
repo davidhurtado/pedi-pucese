@@ -12,7 +12,6 @@ use johnitvn\ajaxcrud\BulkButtonWidget;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Programas';
-$this->params['breadcrumbs'][] = $this->title;
 Yii::$app->params['titulo_exportacion'] = $this->title;
 CrudAsset::register($this);
 ?>
@@ -68,7 +67,7 @@ Modal::begin([
 ?>
 <?php Modal::end(); ?>
 <?php
-$this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+$this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');'
         . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
         . '$(function () { $("[data-toggle=\'popover\']").popover();});');
 ?>
