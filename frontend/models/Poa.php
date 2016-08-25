@@ -32,7 +32,8 @@ class Poa extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['fecha_creacion', 'fecha_ejecucion', 'fecha_fin'], 'safe'],
+            [['fecha_ejecucion'], 'required'],
+            [['fecha_creacion', 'fecha_ejecucion'], 'safe'],
             [['fecha_ejecucion'], 'unique'],
             [['estado'], 'integer'],
         ];
@@ -47,7 +48,6 @@ class Poa extends \yii\db\ActiveRecord
             'id' => 'ID',
             'fecha_creacion' => 'Fecha Creacion',
             'fecha_ejecucion' => 'Fecha Ejecucion',
-            'fecha_fin' => 'Fecha Fin',
             'estado' => 'Estado',
         ];
     }

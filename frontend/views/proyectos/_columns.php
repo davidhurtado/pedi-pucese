@@ -60,11 +60,11 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'nombre',
-         'contentOptions' => ['style' => 'width: 10px;'],
+        'contentOptions' => ['style' => 'width: 10px;'],
         'value' => function($data) {
-                return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->nombre), 0, 71) . '....', ['data-toggle' => 'tooltip', 'title' => $data->nombre, 'style' => 'cursor:default;']);
-        },
-                'format' => 'raw',
+    return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->nombre), 0, 71) . '....', ['data-toggle' => 'tooltip', 'title' => $data->nombre, 'style' => 'cursor:default;']);
+},
+        'format' => 'raw',
     ],
     [
         'class' => '\kartik\grid\DataColumn',
@@ -74,14 +74,47 @@ return [
       'class' => '\kartik\grid\DataColumn',
       'attribute' => 'colaboradores',
       ], */
-    /* [
-      'class' => '\kartik\grid\DataColumn',
-      'attribute' => 'fecha_inicio',
-      ], */
-    // [
-    // 'class'=>'\kartik\grid\DataColumn',
-    // 'attribute'=>'fecha_fin',
-    // ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'fecha_inicio',
+        'contentOptions' => ['style' => 'width: 85px; text-align:center'],
+        'label' => 'Año Inicial',
+        'value' => function ($data) {
+    return substr($data->fecha_inicio, 0, strpos($data->fecha_inicio, "-", 1));
+}
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'fecha_fin',
+        'contentOptions' => ['style' => 'width: 80px; text-align:center'],
+        'label' => 'Año Final',
+        'value' => function ($data) {
+    return substr($data->fecha_fin, 0, strpos($data->fecha_inicio, "-", 1));
+}
+    ],
+    [
+        'class' => 'kartik\grid\DataColumn',
+        'attribute' => 'estado',
+        'contentOptions' => ['style' => 'width: 10px;'],
+        'value' => function($data) {
+    $estado = '';
+    switch ($data['estado']) {
+        case 1:
+            $estado = 'borrador';
+            break;
+        case 2:
+            $estado = 'ok';
+            break;
+        case 3:
+            $estado = 'ejecucion';
+            break;
+        case 4:
+            $estado = 'terminado';
+            break;
+    }
+    return $estado;
+},
+    ],
     // [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'presupuesto',

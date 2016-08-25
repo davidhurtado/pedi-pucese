@@ -39,8 +39,8 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> LISTA DE POA POR VALIDAR',
-                'before'=>'<h4><i class="glyphicon glyphicon-duplicate"></i>&nbsp;&nbsp;&nbsp;&nbsp;ESTADO BORRADOR</h4>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> LISTA DE POA TERMINADOS',
+                //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
             ]
         ])?>
     </div>

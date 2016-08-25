@@ -34,7 +34,7 @@ use kartik\date\DatePicker;
 
     <?php
     if (Yii::$app->controller->action->id == 'update') {
-        echo $form->field($model, 'estado')->dropDownList(['0' => 'Borrador', '1' => 'Ejecucion', '2' => 'Terminado']);
+        echo $form->field($model, 'estado')->dropDownList(['1' => 'Borrador', '2' => 'Ejecucion', '3' => 'Terminado']);
     }
     ?>
 

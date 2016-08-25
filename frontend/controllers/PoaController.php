@@ -39,8 +39,7 @@ class PoaController extends Controller {
      */
     public function actionIndex() {
         $searchModel = new PoaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $dataProvider = $searchModel->searchPoaPorValidar(Yii::$app->request->queryParams);
         return $this->render('index', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
@@ -54,6 +53,8 @@ class PoaController extends Controller {
      */
     public function actionView($id) {
         $request = Yii::$app->request;
+        //$boton = $this->findModel($id)->estado == 0 ? Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote']) : '';
+        $boton = Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote']);
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
@@ -63,7 +64,7 @@ class PoaController extends Controller {
                     'estado' => 'ver'
                 ]),
                 'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                $boton
             ];
         } else {
             return $this->render('view', [
@@ -77,7 +78,7 @@ class PoaController extends Controller {
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "Poa #" . $id,
+                'title' => "Poa para " . $this->findModel($id)->fecha_ejecucion,
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
                     'estado' => 'aprobar'
@@ -98,7 +99,7 @@ class PoaController extends Controller {
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
             $connection = Yii::$app->db;
-            $command = $connection->createCommand("UPDATE poa SET estado=1 WHERE id=" . $model->id);
+            $command = $connection->createCommand("UPDATE poa SET estado=2 WHERE id=" . $model->id);
             $command->execute();
             return [
                 'forceReload' => '#crud-datatable-pjax',
@@ -129,6 +130,16 @@ class PoaController extends Controller {
         } else {
             return $this->goHome();
         }
+    }
+
+    public function actionProyectosValidados($id) {
+        $searchModel = new PoaSearch();
+        $dataProvider = $searchModel->searchProyectosValidados(Yii::$app->request->queryParams, $id);
+
+        return $this->render('proyectos-validados', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
     }
 
     public function actionUpdateProyecto($id) {
@@ -175,14 +186,47 @@ class PoaController extends Controller {
         }
     }
 
-    public function actionValidar($id) {
+    public function actionProyectos($id, $accion) {
         $searchModel = new PoaSearch();
-        $dataProvider = $searchModel->searchProyectos(Yii::$app->request->queryParams, $id);
-
-        return $this->render('validar', [
+        if ($accion == 'index') {
+            $dataProvider = $searchModel->searchProyectosPorValidar(Yii::$app->request->queryParams, $id);
+        } elseif ($accion == 'validados') {
+            $dataProvider = $searchModel->searchProyectosValidados(Yii::$app->request->queryParams, $id);
+        }elseif ($accion == 'terminados') {
+            $dataProvider = $searchModel->searchProyectosTerminados(Yii::$app->request->queryParams, $id);
+        }else{
+            return $this->redirect(['index']);
+        }
+        $model=  Poa::findOne(['id'=>$id]);
+        if(!isset($model)){
+           return $this->redirect(['index']); 
+        }
+        
+        return $this->render('proyectos', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
-                    'id' => $id
+                    'id' => $id,
+                    'accion'=>$accion
+        ]);
+    }
+
+    public function actionValidados() {
+        $searchModel = new PoaSearch();
+        $dataProvider = $searchModel->searchPoaValidados(Yii::$app->request->queryParams);
+
+        return $this->render('validados', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionTerminados() {
+        $searchModel = new PoaSearch();
+        $dataProvider = $searchModel->searchPoaTerminados(Yii::$app->request->queryParams);
+
+        return $this->render('terminados', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -273,6 +317,7 @@ class PoaController extends Controller {
                     'title' => "Poa #" . $id,
                     'content' => $this->renderAjax('view', [
                         'model' => $model,
+                        'estado' => ''
                     ]),
                     'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
@@ -288,16 +333,7 @@ class PoaController extends Controller {
                 ];
             }
         } else {
-            /*
-             *   Process for non-ajax request
-             */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                            'model' => $model,
-                ]);
-            }
+            return $this->goHome();
         }
     }
 

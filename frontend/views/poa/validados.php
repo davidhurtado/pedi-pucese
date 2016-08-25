@@ -26,8 +26,6 @@ CrudAsset::register($this);
             'columns' => require(__DIR__.'/_columns.php'),
             'toolbar'=> [
                 ['content'=>
-                    Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'],
-                    ['role'=>'modal-remote','title'=> 'Create new Poas','class'=>'btn btn-default']).
                     Html::a('<i class="glyphicon glyphicon-repeat"></i>', [''],
                     ['data-pjax'=>1, 'class'=>'btn btn-default', 'title'=>'Reset Grid']).
                     '{toggleData}'.
@@ -39,7 +37,7 @@ CrudAsset::register($this);
             'responsive' => true,          
             'panel' => [
                 'type' => 'primary', 
-                'heading' => '<i class="glyphicon glyphicon-list"></i> LISTA DE POA POR VALIDAR',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> LISTA DE POA VALIDADOS',
                 'before'=>'<h4><i class="glyphicon glyphicon-duplicate"></i>&nbsp;&nbsp;&nbsp;&nbsp;ESTADO BORRADOR</h4>',
             ]
         ])?>

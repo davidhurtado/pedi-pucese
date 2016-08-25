@@ -24,23 +24,26 @@ Yii::$app->params['titulo_exportacion'] = $this->title;
 CrudAsset::register($this);
 ?>
 <div class="proyectos-view">
-    <h3>Programa: </h3><p><?= $programa->descripcion ?></p>
-    <h3>Proyecto: </h3><p><?= $model->descripcion ?></p>
-    <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote',]) ?>
+    <div class="container-fluid">
+        <div class="col-md-7">
+            <h3>Programa: </h3><p class="padre"><?= $programa->descripcion ?></p>
+            <h3>Proyecto: </h3><p class="descripcion"><?= $model->descripcion ?></p>
+            <p>
+                <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote',]) ?>
 
-        <?=
-        Html::a('Eliminar', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'role' => 'modal-remote',
-            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-            'data-request-method' => 'post',
-            'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'])
-        ?>
-    </p>
-    <div class="col-sm-12">
-        <div class="row">
+                <?=
+                Html::a('Eliminar', ['delete', 'id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'role' => 'modal-remote',
+                    'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                    'data-request-method' => 'post',
+                    'data-confirm-title' => 'Are you sure?',
+                    'data-confirm-message' => 'Are you sure want to delete this item'])
+                ?>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <br>
             <?=
             DetailView::widget([
                 'model' => $model,
@@ -61,8 +64,7 @@ CrudAsset::register($this);
             ?>
         </div>
     </div>
-
-    <h3>SUBPROYECTOS</h3>
+    <br><br>
     <div class="proyectos-index">
         <div id="ajaxCrudDatatable">
             <?=
@@ -83,21 +85,11 @@ CrudAsset::register($this);
                 'striped' => true,
                 'condensed' => true,
                 'responsive' => true,
+                'summary'=>'',
                 'panel' => [
                     'type' => 'primary',
-                    'heading' => '<i class="glyphicon glyphicon-list"></i> Subproyectos',
-                    //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
-                    'after' => BulkButtonWidget::widget([
-                        'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["proyectos/bulk-delete"], [
-                            "class" => "btn btn-danger btn-xs",
-                            'role' => 'modal-remote-bulk',
-                            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-                            'data-request-method' => 'post',
-                            'data-confirm-title' => 'Est&aacute;s Seguro?',
-                            'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
-                        ]),
-                    ]) .
-                    '<div class="clearfix"></div>',
+                    //'heading' => '<i class="glyphicon glyphicon-list"></i> SUBPROYECTOS',
+                    'before' => '<h4>SUBPROYECTOS</h4>',
                 ]
             ])
             ?>

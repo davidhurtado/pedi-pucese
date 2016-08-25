@@ -37,8 +37,8 @@ CrudAsset::register($this);
             'responsive' => true,
             'panel' => [
                 'type' => 'primary',
-                'heading' => '<i class="glyphicon glyphicon-list"></i> Estrategias',
-                //'before' => '<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
+                'heading' => '<i class="glyphicon glyphicon-list"></i> ESTRATEGIAS',
+                'before'=>'<h4>INGRESE SUS ESTRATEGIAS.</h4>',
                 'after' => BulkButtonWidget::widget([
                     'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
                         "class" => "btn btn-danger btn-xs",

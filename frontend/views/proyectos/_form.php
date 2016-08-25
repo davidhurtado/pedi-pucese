@@ -21,17 +21,17 @@ use yii\helpers\ArrayHelper;
             $form = ActiveForm::begin(['id' => 'proyecto']);
         }
         ?>
-            <div class="form-group field-proyectos-numeracion col-md-2 col-xs-12 col-sm-4 required">
-                <?= $form->field($model, 'numeracion')->textInput() ?>
+        <div class="form-group field-proyectos-numeracion col-md-2 col-xs-12 col-sm-4 required">
+            <?= $form->field($model, 'numeracion')->textInput() ?>
+        </div>
+        <div class="col-md-10 col-xs-12 col-sm-8">
+            <div class="form-group field-proyectos-nombre col-md-12 col-xs-12 col-sm-12 required">
+                <?= $form->field($model, 'nombre')->textarea(['rows' => 2, 'maxlength' => false, 'style' => 'resize:none']) ?>
             </div>
-            <div class="col-md-10 col-xs-12 col-sm-8">
-                <div class="form-group field-proyectos-nombre col-md-12 col-xs-12 col-sm-12 required">
-                    <?= $form->field($model, 'nombre')->textarea(['rows' => 2, 'maxlength' => false, 'style' => 'resize:none']) ?>
-                </div>
-                <div class="form-group field-proyectos-descripcion col-md-12 col-xs-12 col-sm-12 required">
-                    <?= $form->field($model, 'descripcion')->textarea(['rows' => 4, 'maxlength' => false, 'style' => 'resize:none']) ?>
-                </div>
+            <div class="form-group field-proyectos-descripcion col-md-12 col-xs-12 col-sm-12 required">
+                <?= $form->field($model, 'descripcion')->textarea(['rows' => 4, 'maxlength' => false, 'style' => 'resize:none']) ?>
             </div>
+        </div>
         <?php
         $request = Yii::$app->request;
         if (Yii::$app->controller->action->id == 'update') {
@@ -73,11 +73,12 @@ use yii\helpers\ArrayHelper;
                 ?>
             </div>
         </div>
-
-        <?= $form->field($model, 'presupuesto')->textInput() ?>
-
-
-
+        <div class="form-group field-proyectos-presupuesto col-md-6 col-xs-12 col-sm-6 required">
+            <?= $form->field($model, 'presupuesto')->textInput() ?>
+        </div>
+        <div class="form-group field-proyectos-estado col-md-6 col-xs-12 col-sm-6 required">
+            <?= $form->field($model, 'estado')->dropDownList(['1' => 'Borrador', '2' => 'Ok', '3' => 'Ejecucion','4' => 'Terminado']); ?>
+        </div>
         <?php if (!Yii::$app->request->isAjax) { ?>
             <div class="form-group">
                 <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

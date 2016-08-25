@@ -3,10 +3,10 @@
 use yii\helpers\Url;
 
 return [
-    [
-        'class' => 'kartik\grid\CheckboxColumn',
-        'width' => '20px',
-    ],
+    /* [
+      'class' => 'kartik\grid\CheckboxColumn',
+      'width' => '20px',
+      ], */
     [
         'class' => 'kartik\grid\SerialColumn',
         'width' => '30px',
@@ -15,17 +15,40 @@ return [
     // 'class'=>'\kartik\grid\DataColumn',
     // 'attribute'=>'id',
     // ],
-    [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'id_proyecto',
-    ],
-    [
-        'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'evidencias',
-    ],
+    /* [
+      'class' => '\kartik\grid\DataColumn',
+      'attribute' => 'id_proyecto',
+      ], */
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'fecha_inicio',
+    ],
+    [
+        'class' => '\kartik\grid\DataColumn',
+        'attribute' => 'fecha_fin',
+    ],
+    [
+        'class' => 'kartik\grid\DataColumn',
+        'attribute' => 'estado',
+        'contentOptions' => ['style' => 'width: 10px;'],
+        'value' => function($data) {
+    $estado = '';
+    switch ($data['estado']) {
+        case 1:
+            $estado = 'borrador';
+            break;
+        case 2:
+            $estado = 'ok';
+            break;
+        case 3:
+            $estado = 'ejecucion';
+            break;
+        case 4:
+            $estado = 'terminado';
+            break;
+    }
+    return $estado;
+},
     ],
     // [
     // 'class'=>'\kartik\grid\DataColumn',
@@ -34,6 +57,7 @@ return [
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
+        'template' => '{view}&nbsp;&nbsp;{update}',
         'vAlign' => 'middle',
         'urlCreator' => function($action, $model, $key, $index) {
             $modelo = str_replace("app\\models\\", "", get_class($model));
@@ -41,12 +65,6 @@ return [
         },
                 'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
                 'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
-                'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Delete',
-                    'data-confirm' => false, 'data-method' => false, // for overide yii data api
-                    'data-request-method' => 'post',
-                    'data-toggle' => 'tooltip',
-                    'data-confirm-title' => 'Are you sure?',
-                    'data-confirm-message' => 'Are you sure want to delete this item'],
             ],
         ];
         

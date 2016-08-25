@@ -20,31 +20,33 @@ Yii::$app->params['titulo_exportacion'] = $this->title;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
+    <div class="container-fluid">
+        <div class="col-md-7">
+            <h3>Estrategia: </h3><p class="padre"><?= $estrategia->descripcion ?></p>
+            <h3>Programa: </h3><p class="descripcion"><?= $model->descripcion ?></p>
+            <p>
+                <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote',]) ?>
 
-    <h3>Estrategia: </h3><p><?= $estrategia->descripcion ?></p>
-    <h3>Programa: </h3><p><?= $model->descripcion ?></p>
-    <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote',]) ?>
-
-        <?=
-        Html::a('Eliminar', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'role' => 'modal-remote',
-            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-            'data-request-method' => 'post',
-            'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'])
-        ?>
-    </p>
-    <div class="col-sm-12">
-        <div class="row">
+                <?=
+                Html::a('Eliminar', ['delete', 'id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'role' => 'modal-remote',
+                    'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                    'data-request-method' => 'post',
+                    'data-confirm-title' => 'Are you sure?',
+                    'data-confirm-message' => 'Are you sure want to delete this item'])
+                ?>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <br>
             <?=
             DetailView::widget([
                 'model' => $model,
                 'attributes' => [
                     [
                         'attribute' => 'responsable',
-                        'value' => dektrium\user\models\User::findOne(['id'=> $model->responsable])->username,
+                        'value' => dektrium\user\models\User::findOne(['id' => $model->responsable])->username,
                     ],
                     [
                         'attribute' => 'colaboradores',
@@ -58,8 +60,7 @@ CrudAsset::register($this);
             ?>
         </div>
     </div>
-
-    <h3>PROYECTOS</h3>
+    <br><br>
     <div class="proyectos-index">
         <div id="ajaxCrudDatatable">
             <?=
@@ -82,7 +83,7 @@ CrudAsset::register($this);
                 'responsive' => true,
                 'panel' => [
                     'type' => 'primary',
-                    'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
+                    'heading' => '<i class="glyphicon glyphicon-list"></i> PROYECTOS',
                     //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                     'after' => BulkButtonWidget::widget([
                         'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["proyectos/bulk-delete"], [
@@ -109,7 +110,7 @@ CrudAsset::register($this);
     ?>
     <?php Modal::end(); ?>
     <?php
-    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');'
             . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
             . '$(function () { $("[data-toggle=\'popover\']").popover();});');
     ?>

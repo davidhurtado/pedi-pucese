@@ -10,6 +10,7 @@ use app\models\Proyectos;
 use app\models\Estrategias;
 use app\models\Objetivos;
 use app\models\Programas;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProyectosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -18,10 +19,14 @@ $this->title = 'Aprobar Proyectos';
 $this->params['breadcrumbs'][] = $this->title;
 //var_dump($dataProvider);
 //die();
-$estado_poa=frontend\models\Poa::findOne(['id'=>$_GET['id']])->estado!=1?
-        Html::a('<i class="glyphicon glyphicon-check"></i> APROBAR', ['antes-de-aprobar', 'id' => $_GET['id'],'estado' => 'ejecutar'], ['role' => 'modal-remote', 'title' => 'Aprobar POA', 'class' => 'btn btn-success']).
-        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create-index'], ['role' => 'modal-remote', 'title' => 'Create new Proyectos', 'class' => 'btn btn-default']) 
-        :'';
+
+$estado_poa = frontend\models\Poa::findOne(['id' => $_GET['id']])->estado == 0 ? false : true;
+$template = '{view}';
+$boton_aprobar='';
+if ($estado_poa == false) {
+    $boton_aprobar = Html::a('<i class="glyphicon glyphicon-check"></i> APROBAR', ['antes-de-aprobar', 'id' => $_GET['id'], 'estado' => 'ejecutar'], ['role' => 'modal-remote', 'title' => 'Aprobar POA', 'class' => 'btn btn-success']);
+    $template = '{view}&nbsp;&nbsp;{update}';
+}
 CrudAsset::register($this);
 ?>
 <div class="proyectos-index">
@@ -108,15 +113,10 @@ CrudAsset::register($this);
                             'urlCreator' => function($action, $model, $key, $index) {
                                 return Url::to(['/' . $action, 'id' => $key,]);
                             },
-                                    'template' => '{view}   {projects}   {update}   {delete}',
+                                    'template'=>$template,
                                     'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
                                     'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
-                                    'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Delete',
-                                        'data-confirm' => false, 'data-method' => false, // for overide yii data api
-                                        'data-request-method' => 'post',
-                                        'data-toggle' => 'tooltip',
-                                        'data-confirm-title' => 'Are you sure?',
-                                        'data-confirm-message' => 'Are you sure want to delete this item'],
+          
                                     'buttons' => [
                                         'projects' => function ($url, $model) {
                                             return Html::a('<span class="glyphicon glyphicon-folder-open"></span>', ['poa/validar', 'id' => $model['id']], [
@@ -146,8 +146,7 @@ CrudAsset::register($this);
                                     ],
                                     'toolbar' => [
                                         ['content' =>
-                                           $estado_poa.
-                                            
+                                            $boton_aprobar .
                                             Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                                             //'{toggleData}' .
                                             '{export}'
@@ -158,7 +157,8 @@ CrudAsset::register($this);
                                     'responsive' => true,
                                     'panel' => [
                                         'type' => 'primary',
-                                        'heading' => '<i class="glyphicon glyphicon-list"></i> Proyectos',
+                                        'heading' => '<i class="glyphicon glyphicon-list"></i> REVISIÓN DE PROYECTOS',
+                                        'before' => '<h4>PROYECTOS A EJECUTAR</h4>',
                                         //'before'=>'<em>* Resize table columns just like a spreadsheet by dragging the column edges.</em>',
                                         'after' => BulkButtonWidget::widget([
                                             'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [

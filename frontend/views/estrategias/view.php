@@ -20,47 +20,51 @@ $this->title = 'Estrategia ' . $objetivo->numeracion . '.' . $model->numeracion 
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">
+    <div class="container-fluid">
 
-    <h3>Objetivo: </h3> <p><?= $model->getObjetivo($model->id_objetivo) ?></p>
-    <h3>Estrategia: </h3><p><?= $model->descripcion ?></p>
-    <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
+            <div class="col-md-7">
+                <h3>Objetivo: </h3> <p class="padre"><?= $model->getObjetivo($model->id_objetivo) ?></p>
+                <h3>Estrategia: </h3><p class="descripcion"><?= $model->descripcion ?></p>
+                <p>
+                    <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
 
-        <?=
-        Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'role' => 'modal-remote', 'title' => 'Delete',
-            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-            'data-request-method' => 'post',
-            'data-toggle' => 'tooltip',
-            'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'])
-        ?>
-    </p>
-    <div class="col-sm-12">
-        <div class="row">
-            <?=
-            DetailView::widget([
-                'model' => $model,
-                'attributes' => [
-                    [
-                        'attribute' => 'responsable',
-                        'value' => dektrium\user\models\User::findOne(['id'=> $model->responsable])->username,
+                    <?=
+                    Html::a('Eliminar', ['delete', 'id' => $model->id], [
+                        'class' => 'btn btn-danger',
+                        'role' => 'modal-remote', 'title' => 'Delete',
+                        'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                        'data-request-method' => 'post',
+                        'data-toggle' => 'tooltip',
+                        'data-confirm-title' => 'Est&aacute;s Seguro?',
+                        'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'])
+                    ?>
+                </p>
+            </div>
+            <div class="col-md-5">
+                <br>
+                <?=
+                DetailView::widget([
+                    'model' => $model,
+                    'class' => 'table table-striped table-bordered detail-view',
+                    'attributes' => [
+                        [
+                            'attribute' => 'responsable',
+                            'value' => dektrium\user\models\User::findOne(['id' => $model->responsable])->username,
+                        ],
+                        [
+                            'attribute' => 'colaboradores',
+                            'value' => $model->getColaboradores(array_map('intval', explode(',', $model->colaboradores))),
+                        ],
+                        'fecha_inicio',
+                        'fecha_fin',
+                        'presupuesto',
                     ],
-                    [
-                        'attribute' => 'colaboradores',
-                        'value' => $model->getColaboradores(array_map('intval', explode(',', $model->colaboradores))),
-                    ],
-                    'fecha_inicio',
-                    'fecha_fin',
-                    'presupuesto',
-                ],
-            ])
-            ?>
-        </div>
+                ])
+                ?>
+            </div>
+
     </div>
-
-    <h3>PROGRAMAS</h3>
+    <br><br>
     <div class="programas-index">
         <div id="ajaxCrudDatatable">
             <?=
@@ -110,6 +114,6 @@ CrudAsset::register($this);
     ?>
     <?php Modal::end(); ?>
     <?php
-    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'95%\');');
+    $this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');');
     ?>
 </div>

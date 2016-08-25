@@ -14,8 +14,6 @@ use yii\widgets\ActiveForm;
             //'id',
             'fecha_creacion',
             'fecha_ejecucion',
-            'fecha_fin',
-            'estado',
         ],
     ])
     ?>

@@ -20,31 +20,34 @@ Yii::$app->params['titulo_exportacion'] = $this->title . ': ' . $model->descripc
 CrudAsset::register($this);
 ?>
 <div class="objetivos-view">
+    <div class="container-fluid">
+        <div class="col-md-7">
+            <h3><?= 'OBJETIVO '.$model->numeracion.': '.$model->descripcion ?></h3>
 
-    <h3><?= $model->descripcion ?></h3>
-
-    <p>
-        <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
-        <?=
-        Html::a('Eliminar', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'role' => 'modal-remote', 'title' => 'Delete',
-            'data-confirm' => false, 'data-method' => false, // for overide yii data api
-            'data-request-method' => 'post',
-            'data-toggle' => 'tooltip',
-            'data-confirm-title' => 'Are you sure?',
-            'data-confirm-message' => 'Are you sure want to delete this item'])
-        ?>
-    </p>
-    <div class="col-sm-12">
-        <div class="row">
+            <p>
+                <?= Html::a('Actualizar', ['update', 'id' => $model->id,], ['class' => 'btn btn-primary', 'role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip']) ?>
+                <?=
+                Html::a('Eliminar', ['delete', 'id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'role' => 'modal-remote', 'title' => 'Delete',
+                    'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                    'data-request-method' => 'post',
+                    'data-toggle' => 'tooltip',
+                    'data-confirm-title' => 'Are you sure?',
+                    'data-confirm-message' => 'Are you sure want to delete this item'])
+                ?>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <br>
             <?=
             DetailView::widget([
                 'model' => $model,
+                
                 'attributes' => [
                     [
                         'attribute' => 'responsable',
-                        'value' => dektrium\user\models\User::findOne(['id'=> $model->responsable])->username,
+                        'value' => dektrium\user\models\User::findOne(['id' => $model->responsable])->username,
                     ],
                     [
                         'attribute' => 'colaboradores',
@@ -58,8 +61,7 @@ CrudAsset::register($this);
 
         </div>
     </div>
-
-    <h3>ESTRATEGIAS</h3>
+    <br><br>
     <div class="estrategias-index">
         <div id="ajaxCrudDatatable">
             <?=
@@ -173,7 +175,7 @@ CrudAsset::register($this);
             ?>
             <?php Modal::end(); ?>
             <?php
-            $this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');'
+            $this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');'
                     . '$(function () { $("[data-toggle=\'tooltip\']").tooltip(); });'
                     . '$(function () { $("[data-toggle=\'popover\']").popover();});');
             ?>

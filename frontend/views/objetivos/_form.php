@@ -63,7 +63,7 @@ $currentDate = $time->format('Y-m-d');
                     'autoclose' => true,
                     'format' => 'yyyy-mm-dd',
                     'startView' => 2,
-                    'startDate' => '2017-01-01'
+                   'startDate' => (date ('Y')+1).'-01-01',
                 //'startDate' => date ( 'Y-m-d' , strtotime ( '+1 year' , strtotime ( $currentDate ))),
                 ]
             ]);
