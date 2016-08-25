@@ -3,6 +3,9 @@
 use yii\helpers\Url;
 use yii\helpers\Html;
 use app\models\Objetivos;
+use app\models\Estrategias;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 return [
     [
@@ -35,10 +38,15 @@ return [
         'attribute' => 'descripcion',
         'contentOptions' => ['style' => 'width: 10px;'],
         'value' => function($data) {
-    $objetivo = Objetivos::findOne($data->id_objetivo);
-    return $data->numeracion . ': ' . Html::tag('span', substr(strip_tags($data->descripcion), 0, 90) . '....', ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
+    return $data->numeracion . ': ' . Html::tag('span', $data->descripcion, ['data-toggle' => 'tooltip', 'title' => $data->descripcion, 'style' => 'cursor:default;']);
 },
         'format' => 'raw',
+        'filterType' => GridView::FILTER_SELECT2,
+        'filter' => ArrayHelper::map(Estrategias::find()->orderBy('id')->asArray()->all(), 'descripcion', 'descripcion'),
+        'filterWidgetOptions' => [
+            'pluginOptions' => ['allowClear' => true],
+        ],
+        'filterInputOptions' => ['placeholder' => 'Seleccionar Estrategias'],
     ],
     /* [
       'class'=>'\kartik\grid\DataColumn',

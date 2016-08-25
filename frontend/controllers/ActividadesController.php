@@ -186,8 +186,17 @@ class ActividadesController extends Controller
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $model = new \yii\db\Query();
+        $model->createCommand()->update('actividades', [
+            'validacion' => 0,
+                ], 'id=' . $id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'actividades',
+            'id_objeto' => $id])->execute();
         if($request->isAjax){
             /*
             *   Process for ajax request
@@ -215,9 +224,19 @@ class ActividadesController extends Controller
     {        
         $request = Yii::$app->request;
         $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
-            $model = $this->findModel($pk);
-            $model->delete();
+        foreach ( $pks as $id ) {
+            //$model = $this->findModel($id);
+            //$model->delete();
+            $model = new \yii\db\Query();
+        $model->createCommand()->update('actividades', [
+            'validacion' => 0,
+                ], 'id=' . $id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'actividades',
+            'id_objeto' => $id])->execute();
         }
 
         if($request->isAjax){

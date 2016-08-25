@@ -42,7 +42,8 @@ class ProgramasSearch extends Programas
      */
     public function search($params)
     {
-        $query = Programas::find()->orderBy('id_estrategia,numeracion,id');
+        
+        $query = Programas::find()->where(['validacion'=>1])->orderBy('id_estrategia,numeracion,id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,11 +60,14 @@ class ProgramasSearch extends Programas
         $query->andFilterWhere([
             'id' => $this->id,
             'id_estrategia' => $this->id_estrategia,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
             'presupuesto' => $this->presupuesto,
         ]);
-
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
             ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 

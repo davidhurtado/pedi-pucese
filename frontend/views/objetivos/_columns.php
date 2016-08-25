@@ -1,6 +1,10 @@
 <?php
 
 use yii\helpers\Url;
+use yii\helpers\Html;
+use app\models\Objetivos;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 
 return [
     [
@@ -20,6 +24,12 @@ return [
     [
         'class' => '\kartik\grid\DataColumn',
         'attribute' => 'descripcion',
+        'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map(Objetivos::find()->orderBy('id')->asArray()->all(), 'descripcion', 'descripcion'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => 'Seleccionar Objetivo'],
     ],
     /* [
       'class'=>'\kartik\grid\DataColumn',
@@ -51,13 +61,13 @@ return [
             return Url::to([$action, 'id' => $key]);
         },
                 'viewOptions' => ['title' => 'Ver',],
-                'updateOptions' => ['role' => 'modal-remote', 'title' => 'Actualizar', 'data-toggle' => 'tooltip'],
+                'updateOptions' => ['role' => 'modal-remote', 'title' => 'Actualizar',],
                 'deleteOptions' => ['role' => 'modal-remote', 'title' => 'Eliminar',
-                    'data-confirm' => false, 'data-method' => false, // for overide yii data api
+                    'data-confirm' => true, 'data-method' => false, // for overide yii data api
                     'data-request-method' => 'post',
-                    'data-toggle' => 'tooltip',
                     'data-confirm-title' => 'Est&aacute;s Seguro?',
                     'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'],
+                
             ],
         ];
         

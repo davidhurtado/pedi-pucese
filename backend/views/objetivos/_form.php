@@ -13,11 +13,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'descripcion')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'responsables')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'colaboradores')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'fecha_inicio')->textInput() ?>
 
     <?= $form->field($model, 'fecha_fin')->textInput() ?>
+
+    <?= $form->field($model, 'numeracion')->textInput() ?>
+
+    <?= $form->field($model, 'responsable')->textInput() ?>
 
   
 	<?php if (!Yii::$app->request->isAjax){ ?>

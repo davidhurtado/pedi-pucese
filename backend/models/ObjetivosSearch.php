@@ -18,8 +18,8 @@ class ObjetivosSearch extends Objetivos
     public function rules()
     {
         return [
-            [['id', 'numeracion'], 'integer'],
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['id', 'numeracion', 'responsable'], 'integer'],
+            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 
@@ -60,10 +60,11 @@ class ObjetivosSearch extends Objetivos
             'fecha_inicio' => $this->fecha_inicio,
             'fecha_fin' => $this->fecha_fin,
             'numeracion' => $this->numeracion,
+            'responsable' => $this->responsable,
         ]);
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

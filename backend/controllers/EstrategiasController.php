@@ -4,24 +4,40 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Estrategias;
-use app\models\EstrategiaSearch;
+use app\models\EstrategiasSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use \yii\web\Response;
 use yii\helpers\Html;
-
+use yii\data\ActiveDataProvider;
+use app\models\Programas;
+use yii\filters\AccessControl;
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */
-class EstrategiasController extends Controller
-{
+class EstrategiasController extends Controller {
+
     /**
      * @inheritdoc
      */
-    public function behaviors()
-    {
+    public function behaviors() {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view','create-index','delete','bulk-delete'],
+                        'allow' => true,
+                        'roles' => ['admin','crear-estrategia','actualizar-estrategia'],
+                    ],
+                    [
+                        'actions' => ['update', 'index', 'view'],
+                        'allow' => true,
+                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -36,41 +52,29 @@ class EstrategiasController extends Controller
      * Lists all Estrategias models.
      * @return mixed
      */
-    public function actionIndex()
-    {    
-        $searchModel = new EstrategiaSearch();
+    public function actionIndex() {
+        $searchModel = new EstrategiasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
-
 
     /**
      * Displays a single Estrategias model.
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {   
-        $request = Yii::$app->request;
-        if($request->isAjax){
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return [
-                    'title'=> "Estrategias #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $this->findModel($id),
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-        }else{
-            return $this->render('view', [
-                'model' => $this->findModel($id),
-            ]);
-        }
+    public function actionView($id) {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Programas::find()->where(['id_estrategia' => $id]),
+        ]);
+        return $this->render('view', [
+                    'model' => $this->findModel($id),
+                    'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -79,59 +83,121 @@ class EstrategiasController extends Controller
      * and for non-ajax request if creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreateIndex() {
         $request = Yii::$app->request;
-        $model = new Estrategias();  
-
-        if($request->isAjax){
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
-                return [
-                    'title'=> "Create new Estrategias",
-                    'content'=>$this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Create new Estrategias",
-                    'content'=>'<span class="text-success">Create Estrategias success</span>',
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Create More',['create'],['class'=>'btn btn-primary','role'=>'modal-remote'])
-        
-                ];         
-            }else{           
-                return [
-                    'title'=> "Create new Estrategias",
-                    'content'=>$this->renderAjax('create', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-        
-                ];         
-            }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        // if ($request->isGet) {
+        // $objetivo = $request->get('id');
+        $model = new Estrategias();
+        if ($request->post('objetivo')) {
+            $objetivo = $request->post('objetivo');
+            $model = new Estrategias();
+            $model->id_objetivo = $objetivo;
+            return [
+                'title' => "Crear nueva Estrategia",
+                'content' => $this->renderAjax('create', [
                     'model' => $model,
-                ]);
-            }
+                    'controlador' => 'objetivos',
+                    'id' => $objetivo,
+                    'accion' => 'create'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
         }
-       
+
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+            return [
+                'title' => "Seleccione Objetivo",
+                'content' => $this->renderAjax('create', [
+                    'model' => $model,
+                    'controlador' => 'estrategias',
+                    'accion' => 'create'
+                        //'accion' => 'obj'
+                ]),
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::button('Continuar', ['class' => 'btn btn-primary', 'type' => "submit"])
+            ];
+        }
+    }
+
+    public function actionCreate($id) {
+        $request = Yii::$app->request;
+        $model = new Estrategias();
+        if ($request->isAjax) {
+            /*
+             *   Process for ajax request
+             */
+
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            if ($request->isGet) {
+                return [
+                    'title' => "Crear nueva Estrategia",
+                    'content' => $this->renderAjax('create', [
+                        'model' => $model,
+                        'controlador' => 'objetivos',
+                        'id' => $id,
+                        'accion' => 'create'
+                    ]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else {
+                if ($model->load(Yii::$app->request->post())) {
+                    $model->id_objetivo = $id;
+                    if ($model->validate()) {
+                        $model->responsable=Yii::$app->user->identity->id;
+                        $model->colaboradores = implode(",", $model->colaboradores);
+                        if ($model->save()) {
+                            return [
+                                'forceReload' => '#crud-datatable-pjax',
+                                'title' => "Crear nueva Estrategia",
+                                'content' => '<span class="text-success">Estrategia creada</span>',
+                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                                Html::a('Crear M&aacute;s', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            ];
+                        } else {
+                            return [
+                                'forceReload' => '#crud-datatable-pjax',
+                                'title' => "Error",
+                                'content' => '<span class="text-success">Error al crear la estrategia, intente de nuevo</span>',
+                                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                                Html::a('Crear', ['create', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                            ];
+                        }
+                    } else {
+                        return [
+                            'title' => "Crear nueva Estrategia",
+                            'content' => $this->renderAjax('create', [
+                                'model' => $model,
+                                'controlador' => 'objetivos',
+                                'id' => $id, //-->>
+                                'accion' => 'create'
+                            ]),
+                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                            Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                        ];
+                    }
+                } else {
+                    return [
+                        'title' => "Crear nueva Estrategia",
+                        'content' => $this->renderAjax('create', [
+                            'model' => $model,
+                            'controlador' => 'objetivos',
+                            'id' => $id,
+                            'accion' => 'create'
+                        ]),
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
+            }
+        } else {
+            return $this->redirect(['index']);
+        }
     }
 
     /**
@@ -141,56 +207,64 @@ class EstrategiasController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $request = Yii::$app->request;
-        $model = $this->findModel($id);       
-
-        if($request->isAjax){
+        $model = $this->findModel($id);
+        $model_ = Estrategias::find()->where(['id' => $id])->one();
+        if ($request->isAjax) {
             /*
-            *   Process for ajax request
-            */
+             *   Process for ajax request
+             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            if($request->isGet){
+            if ($request->isGet) {
                 return [
-                    'title'=> "Update Estrategias #".$id,
-                    'content'=>$this->renderAjax('update', [
+                    'title' => "Actualizar Estrategia #" . $model->numeracion,
+                    'content' => $this->renderAjax('update', [
                         'model' => $model,
+                        'controlador' => 'objetivos',
+                        'accion' => 'update'
                     ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];         
-            }else if($model->load($request->post()) && $model->save()){
-                return [
-                    'forceReload'=>'#crud-datatable-pjax',
-                    'title'=> "Estrategias #".$id,
-                    'content'=>$this->renderAjax('view', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                            Html::a('Edit',['update','id'=>$id],['class'=>'btn btn-primary','role'=>'modal-remote'])
-                ];    
-            }else{
-                 return [
-                    'title'=> "Update Estrategias #".$id,
-                    'content'=>$this->renderAjax('update', [
-                        'model' => $model,
-                    ]),
-                    'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
-                                Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
-                ];        
-            }
-        }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
+            } else if ($model->load($request->post())) {
+                if ($model->validate()) {
+                    $model->colaboradores = implode(",", $model->colaboradores);
+                }
+
+                if ($model->save()) {
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Actualizado",
+                        'content' => '<span class="text-success">Estrategia Actualizada</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
+                } else {
+                    return [
+                        'title' => "Actualizar Estrategia #" . $model_->numeracion,
+                        'content' => $this->renderAjax('update', [
+                            'model' => $model,
+                            'controlador' => 'objetivos',
+                            'accion' => 'update'
+                        ]),
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                        Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    ];
+                }
             } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
+                return [
+                    'title' => "Actualizar Estrategias #" . $model_->numeracion,
+                    'content' => $this->renderAjax('update', [
+                        'model' => $model,
+                        'controlador' => 'objetivos',
+                        'accion' => 'update'
+                    ]),
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
+                ];
             }
+        } else {
+            return $this->redirect(['index']);
         }
     }
 
@@ -201,56 +275,51 @@ class EstrategiasController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $request = Yii::$app->request;
         $this->findModel($id)->delete();
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
-            *   Process for ajax request
-            */
+             *   Process for ajax request
+             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
-            *   Process for non-ajax request
-            */
+             *   Process for non-ajax request
+             */
             return $this->redirect(['index']);
         }
-
-
     }
 
-     /**
+    /**
      * Delete multiple existing Estrategias model.
      * For ajax request will return json object
      * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
-    public function actionBulkDelete()
-    {        
+    public function actionBulkDelete() {
         $request = Yii::$app->request;
-        $pks = explode(',', $request->post( 'pks' )); // Array or selected records primary keys
-        foreach ( $pks as $pk ) {
+        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
+        foreach ($pks as $pk) {
             $model = $this->findModel($pk);
             $model->delete();
         }
 
-        if($request->isAjax){
+        if ($request->isAjax) {
             /*
-            *   Process for ajax request
-            */
+             *   Process for ajax request
+             */
             Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
-        }else{
+            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
+        } else {
             /*
-            *   Process for non-ajax request
-            */
+             *   Process for non-ajax request
+             */
             return $this->redirect(['index']);
         }
-       
     }
 
     /**
@@ -260,12 +329,12 @@ class EstrategiasController extends Controller
      * @return Estrategias the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Estrategias::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }

@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 Yii::$app->params['titulo_exportacion'] = $this->title;
 CrudAsset::register($this);
 ?>
-<div class="objetivos-index">
+<div class="programas-index">
     <div id="ajaxCrudDatatable">
         <?php //var_dump($dataProvider->query->one()->getObjetivos()->all()[0]->descripcion) ?>
         <?=
@@ -29,8 +29,7 @@ CrudAsset::register($this);
             'id' => 'crud-datatable',
             'dataProvider' => $dataProvider,
             'filterModel' => $search,
-            'pjax' => true,
-            'panel' => ['type' => 'primary', 'heading' => 'Objetivos y Estrategias'],
+            'pjax' => true,            
             'columns' => [
                 //['class' => 'kartik\grid\SerialColumn'],
                 [
@@ -39,7 +38,7 @@ CrudAsset::register($this);
                     'value' => function ($model, $key, $index, $widget) {
                         $estrategia = Estrategias::findOne($model->id_estrategia);
                         $objetivo = Objetivos::findOne($estrategia->id_objetivo);
-                        return 'Objetivo ' . $objetivo->numeracion .': ' . $objetivo->descripcion;
+                        return 'Objetivo ' . $objetivo->numeracion . ': ' . $objetivo->descripcion;
                     },
                     'group' => true, // enable grouping,
                     'subGroupOf' => 0, // supplier column index is the parent group
@@ -62,7 +61,7 @@ CrudAsset::register($this);
                     'groupEvenCssClass' => 'kv-grouped-row', // configure even group cell css class
                 ],
                 [
-                    'attribute' => 'id_programa',
+                    'attribute' => 'id_estrategia',
                     'label' => '',
                     'width' => '250px',
                     'value' => function ($model, $key, $index, $widget) {
@@ -70,6 +69,12 @@ CrudAsset::register($this);
                         $objetivo = Objetivos::findOne($estrategia->id_objetivo);
                         return $objetivo->numeracion . '.' . $estrategia->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
                     },
+                    'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map(Estrategias::find()->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => 'Seleccionar Estrategia'],
                     'group' => true, // enable grouping
                     'subGroupOf' => 2 // supplier column index is the parent group
                 ],
@@ -86,18 +91,9 @@ CrudAsset::register($this);
             'condensed' => true,
             'responsive' => true,
             'panel' => [
-                'type' => 'primary',
-                'after' => BulkButtonWidget::widget([
-                    'buttons' => Html::a('<i class="glyphicon glyphicon-trash"></i>&nbsp; Eliminar todo', ["bulk-delete"], [
-                        "class" => "btn btn-danger btn-xs",
-                        'role' => 'modal-remote-bulk',
-                        'data-confirm' => false, 'data-method' => false, // for overide yii data api
-                        'data-request-method' => 'post',
-                        'data-confirm-title' => 'Est&aacute;s Seguro?',
-                        'data-confirm-message' => 'Est&aacute;s seguro de eliminar esto?'
-                    ]),
-                ]) .
-                '<div class="clearfix"></div>',
+                'type' => 'primary', 
+                'heading' => '<i class="glyphicon glyphicon-list"></i> PROGRAMAS',
+                'before' => '<h4>VISTA GENERAL DE PROGRAMAS.</h4>',
             ]
         ])
         ?>
@@ -113,5 +109,5 @@ Modal::begin([
 ?>
 <?php Modal::end(); ?>
 <?php
-$this->registerJs('$(\'.modal-lg\').css(\'width\', \'90%\');');
+$this->registerJs('$(\'.modal-lg\').css(\'width\', \'60%\');');
 ?>

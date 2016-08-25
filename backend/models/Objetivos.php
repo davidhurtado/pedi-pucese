@@ -9,10 +9,11 @@ use Yii;
  *
  * @property integer $id
  * @property string $descripcion
- * @property string $responsables
+ * @property string $colaboradores
  * @property string $fecha_inicio
  * @property string $fecha_fin
- * @property string $evidencias
+ * @property integer $numeracion
+ * @property integer $responsable
  *
  * @property Estrategias[] $estrategias
  */
@@ -32,11 +33,12 @@ class Objetivos extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'responsables', 'fecha_inicio', 'fecha_fin', 'evidencias'], 'required'],
+            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin', 'responsable'], 'required'],
             [['fecha_inicio', 'fecha_fin'], 'safe'],
+            [['numeracion', 'responsable'], 'integer'],
             [['descripcion'], 'string', 'max' => 500],
-            [['responsables'], 'string', 'max' => 100],
-            [['evidencias'], 'string', 'max' => 300],
+            [['colaboradores'], 'string', 'max' => 100],
+            [['numeracion'], 'unique'],
         ];
     }
 
@@ -48,10 +50,11 @@ class Objetivos extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'descripcion' => 'Descripcion',
-            'responsables' => 'Responsables',
+            'colaboradores' => 'Colaboradores',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
-            'evidencias' => 'Evidencias',
+            'numeracion' => 'Numeracion',
+            'responsable' => 'Responsable',
         ];
     }
 

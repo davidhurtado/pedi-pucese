@@ -39,7 +39,7 @@ class Objetivos extends \yii\db\ActiveRecord {
             [['numeracion'], 'integer'],
             [['numeracion'], 'unique'],
             [['fecha_inicio', 'fecha_fin'], 'verifDate'],
-            [['descripcion'], 'string', 'max' => 500],
+            [['descripcion'], 'string'],
             [['colaboradores'], 'validarColaboradores'],
         ];
     }

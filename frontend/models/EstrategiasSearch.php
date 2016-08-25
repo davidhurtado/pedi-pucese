@@ -40,7 +40,7 @@ class EstrategiasSearch extends Estrategias {
      */
     public function search($params, $id = null) {
 
-            $sql = Estrategias::find()->orderBy('id_objetivo, numeracion');
+            $sql = Estrategias::find()->where(['validacion'=>1])->orderBy('id_objetivo, numeracion');
         // add conditions that should always apply here
         $query = $sql;
         $dataProvider = new ActiveDataProvider([

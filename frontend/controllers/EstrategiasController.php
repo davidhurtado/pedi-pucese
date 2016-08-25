@@ -13,6 +13,7 @@ use yii\helpers\Html;
 use yii\data\ActiveDataProvider;
 use app\models\Programas;
 use yii\filters\AccessControl;
+
 /**
  * EstrategiasController implements the CRUD actions for Estrategias model.
  */
@@ -27,14 +28,14 @@ class EstrategiasController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'index', 'view','create-index','delete','bulk-delete'],
+                        'actions' => ['create', 'update', 'index', 'view', 'create-index', 'delete', 'bulk-delete'],
                         'allow' => true,
-                        'roles' => ['admin','crear-estrategia','actualizar-estrategia'],
+                        'roles' => ['admin', 'crear-estrategia', 'actualizar-estrategia'],
                     ],
                     [
                         'actions' => ['update', 'index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                        'roles' => ['admin', 'ACTUALIZAR_PROGRAMAS'],
                     ],
                 ],
             ],
@@ -149,7 +150,7 @@ class EstrategiasController extends Controller {
                 if ($model->load(Yii::$app->request->post())) {
                     $model->id_objetivo = $id;
                     if ($model->validate()) {
-                        $model->responsable=Yii::$app->user->identity->id;
+                        $model->responsable = Yii::$app->user->identity->id;
                         $model->colaboradores = implode(",", $model->colaboradores);
                         if ($model->save()) {
                             return [
@@ -277,8 +278,17 @@ class EstrategiasController extends Controller {
      */
     public function actionDelete($id) {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $model = new \yii\db\Query();
+        $model->createCommand()->update('estrategias', [
+            'validacion' => 0,
+                ], 'id=' . $id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'estrategias',
+            'id_objeto' => $id])->execute();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -304,8 +314,18 @@ class EstrategiasController extends Controller {
         $request = Yii::$app->request;
         $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
         foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
+            //$model = $this->findModel($pk);
+            //$model->delete();
+            $model = new \yii\db\Query();
+            $model->createCommand()->update('estrategias', [
+                'validacion' => 0,
+                    ], 'id=' . $pk)->execute();
+            $historial = new \yii\db\Query();
+            $historial->createCommand()->insert('historial', [
+                'usuario' => Yii::$app->user->identity->id,
+                'ruta' => 'frontend',
+                'tabla' => 'estrategias',
+                'id_objeto' => $pk])->execute();
         }
 
         if ($request->isAjax) {

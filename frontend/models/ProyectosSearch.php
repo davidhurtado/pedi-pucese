@@ -42,7 +42,7 @@ class ProyectosSearch extends Proyectos
      */
     public function search($params)
     {
-        $query = Proyectos::find();
+        $query = Proyectos::find()->where(['validacion'=>1])->orderBy('id_programa,numeracion,id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -42,7 +42,7 @@ class EstrategiaSearch extends Estrategias
      */
     public function search($params)
     {
-        $query = Estrategias::find()->orderBy('id_objetivo,numeracion');
+        $query = Estrategias::find()->where(['validacion'=>1])->orderBy('id_objetivo,numeracion');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,10 +59,14 @@ class EstrategiaSearch extends Estrategias
         $query->andFilterWhere([
             'id' => $this->id,
             'id_objetivo' => $this->id_objetivo,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
-            'presupuesto' => $this->presupuesto,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
+
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
             ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);

@@ -28,7 +28,7 @@ class SiteController extends Controller
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['admin','superadmin','organigrama','@'],
                     ],
                 ],
             ],
@@ -55,7 +55,11 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+         if (Yii::$app->user->can('admin') || Yii::$app->user->can('superadmin')|| Yii::$app->user->can('organigrama')) {
+            return $this->render('index');
+        } else {
+            return $this->redirect(Yii::$app->request->BaseUrl .'../../../frontend/web/');
+        }
     }
 
     public function actionLogin()

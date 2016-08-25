@@ -192,21 +192,21 @@ class PoaController extends Controller {
             $dataProvider = $searchModel->searchProyectosPorValidar(Yii::$app->request->queryParams, $id);
         } elseif ($accion == 'validados') {
             $dataProvider = $searchModel->searchProyectosValidados(Yii::$app->request->queryParams, $id);
-        }elseif ($accion == 'terminados') {
+        } elseif ($accion == 'terminados') {
             $dataProvider = $searchModel->searchProyectosTerminados(Yii::$app->request->queryParams, $id);
-        }else{
+        } else {
             return $this->redirect(['index']);
         }
-        $model=  Poa::findOne(['id'=>$id]);
-        if(!isset($model)){
-           return $this->redirect(['index']); 
+        $model = Poa::findOne(['id' => $id]);
+        if (!isset($model)) {
+            return $this->redirect(['index']);
         }
-        
+
         return $this->render('proyectos', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
                     'id' => $id,
-                    'accion'=>$accion
+                    'accion' => $accion
         ]);
     }
 
@@ -346,8 +346,17 @@ class PoaController extends Controller {
      */
     public function actionDelete($id) {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $model = new \yii\db\Query();
+        $model->createCommand()->update('poa', [
+            'validacion' => 0,
+                ], 'id=' . $id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'poa',
+            'id_objeto' => $id])->execute();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -373,8 +382,18 @@ class PoaController extends Controller {
         $request = Yii::$app->request;
         $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
         foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
+            //$model = $this->findModel($pk);
+            //$model->delete();
+            $model = new \yii\db\Query();
+            $model->createCommand()->update('poa', [
+                'validacion' => 0,
+                    ], 'id=' . $pk)->execute();
+            $historial = new \yii\db\Query();
+            $historial->createCommand()->insert('historial', [
+                'usuario' => Yii::$app->user->identity->id,
+                'ruta' => 'frontend',
+                'tabla' => 'poa',
+                'id_objeto' => $pk])->execute();
         }
 
         if ($request->isAjax) {

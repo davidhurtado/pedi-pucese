@@ -12,9 +12,6 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'name')->textarea(['rows' => 3,'style' => 'resize:none']) ?>
-
-    <?= $form->field($model, 'created')->textInput(['disabled'=>true]) ?>
-
     <?= $form->field($model, 'activo')->dropDownList(['0' => 'Desactivado', '1' => 'Activado',]); ?>
 
   

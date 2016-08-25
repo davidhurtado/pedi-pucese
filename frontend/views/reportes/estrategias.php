@@ -39,7 +39,11 @@ CrudAsset::register($this);
                     '{export}'
                 ],
             ],
-            'panel' => ['type' => 'primary', 'heading' => 'Objetivos y Estrategias'],
+            'panel' => [
+                'type' => 'primary', 
+                'heading' => '<i class="glyphicon glyphicon-list"></i> ESTRATEGIAS',
+                'before' => '<h4>VISTA GENERAL DE ESTRATEGIAS.</h4>',
+            ],
             'columns' => [
                 //['class' => 'kartik\grid\SerialColumn'],
                 [
@@ -71,22 +75,6 @@ CrudAsset::register($this);
                     'filterInputOptions' => ['placeholder' => 'Seleccionar Objetivo'],
                     'group' => true, // enable grouping
                     'subGroupOf' => 1, // supplier column index is the parent group
-                ],
-                [
-                    'attribute' => 'id_objetivo',
-                    'width' => '250px',
-                    'label' => 'Presupuesto',
-                    'value' => function ($model, $key, $index, $widget) {
-                        return $model->presupuesto;
-                    },
-                    'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map(Objetivos::find()->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
-                    'filterWidgetOptions' => [
-                        'pluginOptions' => ['allowClear' => true],
-                    ],
-                    'filterInputOptions' => ['placeholder' => 'Seleccionar Objetivo'],
-                    'group' => true, // enable grouping
-                    'subGroupOf' => 2 // supplier column index is the parent group
                 ],
             ],
         ])

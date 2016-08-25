@@ -4,7 +4,9 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use app\models\Objetivos;
 use app\models\Estrategias;
-
+use app\models\Programas;
+use kartik\grid\GridView;
+use yii\helpers\ArrayHelper;
 return [
     [
         'class' => 'kartik\grid\CheckboxColumn',
@@ -20,7 +22,7 @@ return [
     // ],
     [
         'class' => '\kartik\grid\DataColumn',
-        'attribute' => 'id_estrategia',
+        'attribute' => 'id_objetivo',
         'label' => 'Objetivo',
         //'filter' => false,
         'contentOptions' => ['style' => 'width: 10px; text-align:center'],
@@ -57,6 +59,12 @@ return [
             }
         },
                 'format' => 'raw',
+                'filterType' => GridView::FILTER_SELECT2,
+                    'filter' => ArrayHelper::map(Programas::find()->orderBy('id')->asArray()->all(), 'descripcion', 'descripcion'),
+                    'filterWidgetOptions' => [
+                        'pluginOptions' => ['allowClear' => true],
+                    ],
+                    'filterInputOptions' => ['placeholder' => 'Seleccionar Programa'],
             ],
             /* [
               'class' => '\kartik\grid\DataColumn',

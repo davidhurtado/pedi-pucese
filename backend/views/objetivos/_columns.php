@@ -20,7 +20,7 @@ return [
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
-        'attribute'=>'responsables',
+        'attribute'=>'colaboradores',
     ],
     [
         'class'=>'\kartik\grid\DataColumn',
@@ -34,6 +34,10 @@ return [
         'class'=>'\kartik\grid\DataColumn',
         'attribute'=>'numeracion',
     ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'responsable',
+    // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

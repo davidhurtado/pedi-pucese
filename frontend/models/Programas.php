@@ -104,6 +104,11 @@ class Programas extends \yii\db\ActiveRecord {
         return $this->hasOne(Estrategias::className(), ['id' => 'id_estrategia']);
     }
 
+    public function getIdObjetivo() {
+        $model = $this->hasOne(Estrategias::className(), ['id' => 'id_estrategia']);
+        return $this->hasOne(Objetivos::className(), ['id' => $model->id]);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

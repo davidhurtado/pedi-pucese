@@ -42,7 +42,7 @@ class ActividadesSearch extends Actividades
      */
     public function search($params)
     {
-        $query = Actividades::find();
+        $query = Actividades::find()->where(['validacion'=>1]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

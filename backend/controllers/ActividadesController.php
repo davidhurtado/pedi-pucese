@@ -94,7 +94,7 @@ class ActividadesController extends Controller
                     'title'=> "Create new Actividades",
                     'content'=>$this->renderAjax('create', [
                         'model' => $model,
-                    ]),
+                    ]), 
                     'footer'=> Html::button('Close',['class'=>'btn btn-default pull-left','data-dismiss'=>"modal"]).
                                 Html::button('Save',['class'=>'btn btn-primary','type'=>"submit"])
         
@@ -120,16 +120,7 @@ class ActividadesController extends Controller
                 ];         
             }
         }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('create', [
-                    'model' => $model,
-                ]);
-            }
+             return $this->redirect(['index']);
         }
        
     }
@@ -181,16 +172,7 @@ class ActividadesController extends Controller
                 ];        
             }
         }else{
-            /*
-            *   Process for non-ajax request
-            */
-            if ($model->load($request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } else {
-                return $this->render('update', [
-                    'model' => $model,
-                ]);
-            }
+             return $this->redirect(['index']);
         }
     }
 

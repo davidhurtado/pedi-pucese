@@ -16,6 +16,7 @@ use app\models\EstrategiasSearch;
 use yii\widgets\ActiveForm;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
+
 /**
  * ObjetivosController implements the CRUD actions for Objetivos model.
  */
@@ -30,14 +31,14 @@ class ObjetivosController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['create', 'update', 'index', 'view','create-index','delete','bulk-delete'],
+                        'actions' => ['create', 'update', 'index', 'view', 'create-index', 'delete', 'bulk-delete'],
                         'allow' => true,
-                        'roles' => ['admin','crear-objetivo','actualizar-objetivo'],
+                        'roles' => ['admin', 'crear-objetivo',],
                     ],
                     [
                         'actions' => ['update', 'index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin','ACTUALIZAR_PROGRAMAS'],
+                        'roles' => ['admin', 'ACTUALIZAR_PROGRAMAS'],
                     ],
                 ],
             ],
@@ -72,11 +73,11 @@ class ObjetivosController extends Controller {
      */
     public function actionView($id) {
         $searchModel = new EstrategiasSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id);
-        
-    /* $dataProvider = new ActiveDataProvider([
-            'query' => Estrategias::find()->where(['id_objetivo' => $id]),
-        ]);*/
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id);
+
+        /* $dataProvider = new ActiveDataProvider([
+          'query' => Estrategias::find()->where(['id_objetivo' => $id]),
+          ]); */
         return $this->render('view', [
                     'model' => $this->findModel($id),
                     'dataProvider' => $dataProvider,
@@ -110,7 +111,7 @@ class ObjetivosController extends Controller {
             } else
             if ($model->load(Yii::$app->request->post())) {
                 if ($model->validate()) {
-                    $model->responsable=Yii::$app->user->identity->id;
+                    $model->responsable = Yii::$app->user->identity->id;
                     $model->colaboradores = implode(",", $model->colaboradores);
                     if ($model->save()) {
                         return [
@@ -187,12 +188,12 @@ class ObjetivosController extends Controller {
                 }
 
                 if ($model->save()) {
-                     return [
-                            'forceReload' => '#crud-datatable-pjax',
-                            'title' => "Actualizado",
-                            'content' => '<span class="text-success">Objetivo Actualizado</span>',
-                            'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
-                        ];
+                    return [
+                        'forceReload' => '#crud-datatable-pjax',
+                        'title' => "Actualizado",
+                        'content' => '<span class="text-success">Objetivo Actualizado</span>',
+                        'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"])
+                    ];
                 } else {
                     $model_ = Objetivos::find()->where(['id' => $id])->one();
                     return [
@@ -216,7 +217,7 @@ class ObjetivosController extends Controller {
                 ];
             }
         } else {
-             return $this->redirect(['index']);
+            return $this->redirect(['index']);
         }
     }
 
@@ -229,8 +230,17 @@ class ObjetivosController extends Controller {
      */
     public function actionDelete($id) {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $model = new \yii\db\Query();
+        $model->createCommand()->update('objetivos', [
+        'validacion' => 0,
+        ], 'id='.$id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'objetivos',
+            'id_objeto' => $id])->execute();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -256,8 +266,18 @@ class ObjetivosController extends Controller {
         $request = Yii::$app->request;
         $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
         foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
+            //$model = $this->findModel($pk);
+            //$model->delete();
+            $model = new \yii\db\Query();
+            $model->createCommand()->update('objetivos', [
+                'validacion' => 0,
+                    ], 'id=' . $pk)->execute();
+            $historial = new \yii\db\Query();
+            $historial->createCommand()->insert('historial', [
+                'usuario' => Yii::$app->user->identity->id,
+                'ruta' => 'frontend',
+                'tabla' => 'objetivos',
+                'id_objeto' => $pk])->execute();
         }
 
         if ($request->isAjax) {

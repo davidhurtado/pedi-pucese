@@ -26,7 +26,7 @@ class SubproyectosController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'update', 'view', 'create-index', 'delete', 'bulk-delete','delete-document'],
+                        'actions' => ['index', 'update', 'view', 'create-index', 'delete', 'bulk-delete', 'delete-document'],
                         'allow' => true,
                         'roles' => ['admin', 'crear-proyecto', 'actualizar-proyecto'],
                     ],
@@ -155,8 +155,17 @@ class SubproyectosController extends Controller {
      */
     public function actionDelete($id) {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
+        //$this->findModel($id)->delete();
+        $model = new \yii\db\Query();
+        $model->createCommand()->update('subproyectos', [
+            'validacion' => 0,
+                ], 'id=' . $id)->execute();
+        $historial = new \yii\db\Query();
+        $historial->createCommand()->insert('historial', [
+            'usuario' => Yii::$app->user->identity->id,
+            'ruta' => 'frontend',
+            'tabla' => 'subproyectos',
+            'id_objeto' => $id])->execute();
         if ($request->isAjax) {
             /*
              *   Process for ajax request
@@ -171,28 +180,6 @@ class SubproyectosController extends Controller {
         }
     }
 
-    public function actionDeleteDocument() {
-        $model = $this->findModel($_GET['id']);
-        if ($_GET['action'] == 'deletefile') {
-            $file = Yii::$app->basePath . '/web/' . $_GET['file'];
-        }
-        $evidencias = str_replace($_GET['fileName'] . ';', '', $model->oldAttributes['evidencias']);
-        echo ' -> ' . $evidencias;
-        $connection = Yii::$app->db;
-        $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $evidencias . "' WHERE id=" . $_GET['id']);
-        $command->execute();
-        // check if file exists on server
-        if (empty($file) || !file_exists($file)) {
-            return false;
-        }
-
-        // check if uploaded file can be deleted on server
-        if (!unlink($file)) {
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Delete multiple existing Subproyectos model.
      * For ajax request will return json object
@@ -204,8 +191,18 @@ class SubproyectosController extends Controller {
         $request = Yii::$app->request;
         $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
         foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
+            //$model = $this->findModel($pk);
+            //$model->delete();
+            $model = new \yii\db\Query();
+            $model->createCommand()->update('subproyectos', [
+                'validacion' => 0,
+                    ], 'id=' . $pk)->execute();
+            $historial = new \yii\db\Query();
+            $historial->createCommand()->insert('historial', [
+                'usuario' => Yii::$app->user->identity->id,
+                'ruta' => 'frontend',
+                'tabla' => 'subproyectos',
+                'id_objeto' => $pk])->execute();
         }
 
         if ($request->isAjax) {

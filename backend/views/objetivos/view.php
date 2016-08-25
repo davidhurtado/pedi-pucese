@@ -12,10 +12,11 @@ use yii\widgets\DetailView;
         'attributes' => [
             'id',
             'descripcion',
-            'responsables',
+            'colaboradores',
             'fecha_inicio',
             'fecha_fin',
             'numeracion',
+            'responsable',
         ],
     ]) ?>
 

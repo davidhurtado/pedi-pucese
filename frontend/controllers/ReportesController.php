@@ -16,7 +16,9 @@ use yii\filters\AccessControl;
 use app\models\ObjetivosSearch;
 use app\models\EstrategiasSearch;
 use app\models\ProgramasSearch;
-use \app\models\ReportesSearch;
+use app\models\ProyectosSearch;
+use app\models\ReportesSearch;
+use app\models\ActividadesSearch;
 
 /**
  * Site controller
@@ -69,6 +71,26 @@ class ReportesController extends Controller {
         $dataProvider = $search->search(Yii::$app->request->queryParams);
 
         return $this->render('programas', [
+                    'search' => $search,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionProyectos() {
+        $search = new ProyectosSearch();
+        $dataProvider = $search->search(Yii::$app->request->queryParams);
+
+        return $this->render('proyectos', [
+                    'search' => $search,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionActividades() {
+        $search = new ActividadesSearch();
+        $dataProvider = $search->search(Yii::$app->request->queryParams);
+
+        return $this->render('actividades', [
                     'search' => $search,
                     'dataProvider' => $dataProvider,
         ]);
