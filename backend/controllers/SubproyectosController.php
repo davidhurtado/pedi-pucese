@@ -28,12 +28,12 @@ class SubproyectosController extends Controller {
                     [
                         'actions' => ['index', 'update', 'view', 'create-index', 'delete', 'bulk-delete','delete-document'],
                         'allow' => true,
-                        'roles' => ['admin', 'crear-proyecto', 'actualizar-proyecto'],
+                        'roles' => ['admin', 'crear-proyecto', 'actualizar-proyecto','superadmin'],
                     ],
                     [
                         'actions' => ['index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin', 'ACTUALIZAR_PROGRAMAS'],
+                        'roles' => ['admin', 'proyecto'],
                     ],
                 ],
             ],
@@ -70,13 +70,14 @@ class SubproyectosController extends Controller {
         $request = Yii::$app->request;
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            $model=$this->findModel($id);
             return [
-                'title' => "Subproyectos #" . $id,
+                'title' => "Subproyecto de " . $model->fecha_inicio.' a '.$model->fecha_fin,
                 'content' => $this->renderAjax('view', [
                     'model' => $this->findModel($id),
                 ]),
-                'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                Html::a('Modificar', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
             ];
         } else {
             return $this->render('view', [
@@ -96,49 +97,31 @@ class SubproyectosController extends Controller {
             Yii::$app->response->format = Response::FORMAT_JSON;
             if ($request->isGet) {
                 return [
-                    'title' => "Update Subproyectos #" . $id,
+                    'title' => "Actualizar Subproyecto de " . $model->fecha_inicio.' a '.$model->fecha_fin,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             } else if ($model->load($request->post()) && $model->save()) {
-
-                $image = $model->uploadDocument();
-                $model->evidencias = $model->getDocuments();
-                if ($image !== false) {
-                    $path = $model->getDocumentFile();
-                    $archivos = (explode(";", $model->evidencias));
-                    $i = 0;
-                    foreach ($image as $file) {
-                        $ext = end((explode(".", $file->name)));
-                        // generate a unique file name
-                        $file->saveAs($path . $archivos[$i]);
-                        $i++;
-                    }
-                }
-                $model->evidencias = $model->oldAttributes['evidencias'] . $model->evidencias;
-                $connection = Yii::$app->db;
-                $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $model->evidencias . "' WHERE id=" . $model->id);
-                $command->execute();
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "Subproyectos #" . $id,
+                    'title' => "Subproyecto de " . $model->fecha_inicio.' a '.$model->fecha_fin,
                     'content' => $this->renderAjax('view', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
                     Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
                 ];
             } else {
                 return [
-                    'title' => "Update Subproyectos #" . $id,
+                    'title' => "Actualizar Subproyecto de " . $model->fecha_inicio.' a '.$model->fecha_fin,
                     'content' => $this->renderAjax('update', [
                         'model' => $model,
                     ]),
-                    'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                    Html::button('Save', ['class' => 'btn btn-primary', 'type' => "submit"])
+                    'footer' => Html::button('Cerrar', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
+                    Html::button('Guardar', ['class' => 'btn btn-primary', 'type' => "submit"])
                 ];
             }
         } else {
@@ -146,81 +129,6 @@ class SubproyectosController extends Controller {
         }
     }
 
-    /**
-     * Delete an existing Subproyectos model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id) {
-        $request = Yii::$app->request;
-        $this->findModel($id)->delete();
-
-        if ($request->isAjax) {
-            /*
-             *   Process for ajax request
-             */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
-        } else {
-            /*
-             *   Process for non-ajax request
-             */
-            return $this->redirect(['index']);
-        }
-    }
-
-    public function actionDeleteDocument() {
-        $model = $this->findModel($_GET['id']);
-        if ($_GET['action'] == 'deletefile') {
-            $file = Yii::$app->basePath . '/web/' . $_GET['file'];
-        }
-        $evidencias = str_replace($_GET['fileName'] . ';', '', $model->oldAttributes['evidencias']);
-        echo ' -> ' . $evidencias;
-        $connection = Yii::$app->db;
-        $command = $connection->createCommand("UPDATE subproyectos SET evidencias='" . $evidencias . "' WHERE id=" . $_GET['id']);
-        $command->execute();
-        // check if file exists on server
-        if (empty($file) || !file_exists($file)) {
-            return false;
-        }
-
-        // check if uploaded file can be deleted on server
-        if (!unlink($file)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Delete multiple existing Subproyectos model.
-     * For ajax request will return json object
-     * and for non-ajax request if deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionBulkDelete() {
-        $request = Yii::$app->request;
-        $pks = explode(',', $request->post('pks')); // Array or selected records primary keys
-        foreach ($pks as $pk) {
-            $model = $this->findModel($pk);
-            $model->delete();
-        }
-
-        if ($request->isAjax) {
-            /*
-             *   Process for ajax request
-             */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose' => true, 'forceReload' => '#crud-datatable-pjax'];
-        } else {
-            /*
-             *   Process for non-ajax request
-             */
-            return $this->redirect(['index']);
-        }
-    }
 
     /**
      * Finds the Subproyectos model based on its primary key value.

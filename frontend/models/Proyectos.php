@@ -57,7 +57,7 @@ class Proyectos extends \yii\db\ActiveRecord {
             'id_programa' => 'Id Programa',
             'nombre' => 'Nombre',
             'descripcion' => 'Descripción',
-            'colaboradores' => 'Responsable',
+            'colaboradores' => 'Colaboradores',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
             'presupuesto' => 'Presupuesto',

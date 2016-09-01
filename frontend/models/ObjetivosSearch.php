@@ -18,7 +18,7 @@ class ObjetivosSearch extends Objetivos {
     public function rules() {
         return [
             [['id', 'numeracion'], 'integer'],
-            [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['descripcion','validacion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
 

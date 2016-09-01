@@ -1,1 +1,0 @@
-java -jar C:\xampp\htdocs\pedi\tests\selenium-server\selenium-server-standalone-2.47.1.jar -Dwebdriver.chrome.driver=C:\xampp\htdocs\pedi\tests\selenium-server\chromedriver.exe

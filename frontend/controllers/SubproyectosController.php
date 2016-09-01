@@ -70,13 +70,14 @@ class SubproyectosController extends Controller {
         $request = Yii::$app->request;
         if ($request->isAjax) {
             Yii::$app->response->format = Response::FORMAT_JSON;
+            $model= $this->findModel($id);
             return [
-                'title' => "Subproyectos #" . $id,
+                'title' => "Subproyecto de " . $model->fecha_inicio.' a '.$model->fecha_fin,
                 'content' => $this->renderAjax('view', [
-                    'model' => $this->findModel($id),
+                    'model' =>$model,
                 ]),
                 'footer' => Html::button('Close', ['class' => 'btn btn-default pull-left', 'data-dismiss' => "modal"]) .
-                Html::a('Edit', ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
+                Html::a('Actividades', ['actividades/view', 'id' => $model->id_proyecto], ['class' => 'btn btn-primary'])
             ];
         } else {
             return $this->render('view', [

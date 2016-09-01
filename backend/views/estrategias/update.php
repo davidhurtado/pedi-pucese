@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-
+use app\models\Objetivos;
 /* @var $this yii\web\View */
 /* @var $model app\models\Estrategias */
 ?>
@@ -9,6 +9,9 @@ use yii\helpers\Html;
 
     <?= $this->render('_form', [
         'model' => $model,
+        'objetivo'=>  Objetivos::findOne($model->id_objetivo),
+        'controlador'=>$controlador,
+        'accion' => $accion
     ]) ?>
 
 </div>

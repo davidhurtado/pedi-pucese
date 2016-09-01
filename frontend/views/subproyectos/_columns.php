@@ -57,14 +57,13 @@ return [
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,
-        'template' => '{view}&nbsp;&nbsp;{update}',
+        'template' => '{view}',
         'vAlign' => 'middle',
         'urlCreator' => function($action, $model, $key, $index) {
             $modelo = str_replace("app\\models\\", "", get_class($model));
             return Url::to([strtolower($modelo) . '/' . $action, 'id' => $key]);
         },
                 'viewOptions' => ['role' => 'modal-remote', 'title' => 'View', 'data-toggle' => 'tooltip'],
-                'updateOptions' => ['role' => 'modal-remote', 'title' => 'Update', 'data-toggle' => 'tooltip'],
             ],
         ];
         

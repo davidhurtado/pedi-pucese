@@ -33,12 +33,12 @@ class ObjetivosController extends Controller {
                     [
                         'actions' => ['create', 'update', 'index', 'view', 'create-index', 'delete', 'bulk-delete'],
                         'allow' => true,
-                        'roles' => ['admin', 'crear-objetivo',],
+                        'roles' => ['admin', 'crear-objetivo','objetivo'],
                     ],
                     [
                         'actions' => ['update', 'index', 'view'],
                         'allow' => true,
-                        'roles' => ['admin', 'ACTUALIZAR_PROGRAMAS'],
+                        'roles' => ['admin', 'actualizar-objetivo'],
                     ],
                 ],
             ],

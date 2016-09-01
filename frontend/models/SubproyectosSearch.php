@@ -58,9 +58,14 @@ class SubproyectosSearch extends Subproyectos
         $query->andFilterWhere([
             'id' => $this->id,
             'id_proyecto' => $this->id_proyecto,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
+
 
         $query->andFilterWhere(['like', 'evidencias', $this->evidencias]);
 

@@ -18,8 +18,8 @@ class ProyectosSearch extends Proyectos
     public function rules()
     {
         return [
-            [['id', 'id_programa', 'numeracion'], 'integer'],
-            [['nombre', 'descripcion', 'responsables', 'fecha_inicio', 'fecha_fin'], 'safe'],
+            [['id', 'id_programa','validacion','estado'], 'integer'],
+            [['nombre', 'descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
             [['presupuesto'], 'number'],
         ];
     }
@@ -42,7 +42,7 @@ class ProyectosSearch extends Proyectos
      */
     public function search($params)
     {
-        $query = Proyectos::find();
+        $query = Proyectos::find()->orderBy('id_programa,numeracion,id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,15 +59,21 @@ class ProyectosSearch extends Proyectos
         $query->andFilterWhere([
             'id' => $this->id,
             'id_programa' => $this->id_programa,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
             'presupuesto' => $this->presupuesto,
-            'numeracion' => $this->numeracion,
+             'validacion' => $this->validacion,
+             'estado' => $this->estado,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
+
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'responsables', $this->responsables]);
+            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }

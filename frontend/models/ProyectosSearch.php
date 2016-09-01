@@ -42,7 +42,7 @@ class ProyectosSearch extends Proyectos
      */
     public function search($params)
     {
-        $query = Proyectos::find()->where(['validacion'=>1])->orderBy('id_programa,numeracion,id');
+        $query = Proyectos::find()->where(['validacion'=>1])->andWhere(['responsable'=>Yii::$app->user->identity->id])->orderBy('id_programa,numeracion,id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -59,10 +59,15 @@ class ProyectosSearch extends Proyectos
         $query->andFilterWhere([
             'id' => $this->id,
             'id_programa' => $this->id_programa,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
             'presupuesto' => $this->presupuesto,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
+
 
         $query->andFilterWhere(['like', 'nombre', $this->nombre])
             ->andFilterWhere(['like', 'descripcion', $this->descripcion])

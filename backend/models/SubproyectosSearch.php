@@ -18,7 +18,7 @@ class SubproyectosSearch extends Subproyectos
     public function rules()
     {
         return [
-            [['id', 'id_proyecto', 'numeracion'], 'integer'],
+            [['id', 'id_proyecto'], 'integer'],
             [['evidencias', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
@@ -58,10 +58,14 @@ class SubproyectosSearch extends Subproyectos
         $query->andFilterWhere([
             'id' => $this->id,
             'id_proyecto' => $this->id_proyecto,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
-            'numeracion' => $this->numeracion,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
+
 
         $query->andFilterWhere(['like', 'evidencias', $this->evidencias]);
 

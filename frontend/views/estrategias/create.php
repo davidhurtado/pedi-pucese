@@ -18,7 +18,7 @@ use app\models\Objetivos;
             'id' => $id
         ]);
     } else {
-        $objetivo = Objetivos::find()->orderBy('id')->asArray()->all();
+        $objetivo = Objetivos::find()->where(['validacion'=>1])->orderBy('id')->asArray()->all();
         echo $this->render('_form', [
             'model' => $objetivo,
             'controlador' => $controlador,

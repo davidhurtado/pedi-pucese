@@ -90,7 +90,7 @@ CrudAsset::register($this);
                         return $objetivo->numeracion . '.' . $estrategia->numeracion . '.' . $programa->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
                     },
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map(Programas::find()->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
+                    'filter' => ArrayHelper::map(Programas::find()->where(['validacion'=>1])->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true],
                     ],

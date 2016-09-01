@@ -59,6 +59,10 @@ CrudAsset::register($this);
                     'fecha_inicio',
                     'fecha_fin',
                     'presupuesto',
+                    [
+                        'attribute' => 'estado',
+                        'value' => $model->estado==1?'Borrador':'Ejecucion',
+                    ],
                 ],
             ])
             ?>
@@ -76,7 +80,7 @@ CrudAsset::register($this);
                 'columns' => require(__DIR__ . '/../subproyectos' . '/_columns.php'),
                 'toolbar' => [
                     ['content' =>
-                        Html::a('<i class="glyphicon glyphicon-plus"></i>', ['subproyectos/create', 'id' => $model->id], ['role' => 'modal-remote', 'title' => 'Crear nuevo Subproyecto', 'class' => 'btn btn-default']) .
+                       // Html::a('<i class="glyphicon glyphicon-plus"></i>', ['subproyectos/create', 'id' => $model->id], ['role' => 'modal-remote', 'title' => 'Crear nuevo Subproyecto', 'class' => 'btn btn-default']) .
                         Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['', 'id' => $_GET['id']], ['data-pjax' => 1, 'class' => 'btn btn-default', 'title' => 'Reset Grid']) .
                         //'{toggleData}'.
                         '{export}'

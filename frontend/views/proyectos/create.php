@@ -19,7 +19,7 @@ use app\models\Programas;
             'id' => $id
         ]);
     } else {
-        $programa = Programas::find()->orderBy('id')->asArray()->all();
+        $programa = Programas::find()->where(['validacion'=>1])->orderBy('id')->asArray()->all();
         echo $this->render('_form', [
             'model' => $programa,
             'controlador'=>$controlador,

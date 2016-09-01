@@ -3,7 +3,7 @@
 namespace app\models;
 
 use Yii;
-use \yii\db\Query;
+
 /**
  * This is the model class for table "actividades".
  *
@@ -11,9 +11,10 @@ use \yii\db\Query;
  * @property integer $id_subproyecto
  * @property string $descripcion
  * @property string $codigo_presupuestario
- * @property string $presupuesto_actividades
+ * @property string $presupuesto
  * @property string $fecha_inicio
  * @property string $fecha_fin
+ * @property integer $validacion
  *
  * @property Subproyectos $idSubproyecto
  */
@@ -33,38 +34,19 @@ class Actividades extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['descripcion', 'codigo_presupuestario','fecha_inicio','fecha_fin'], 'required'],
-            [['id_subproyecto'], 'integer'],
+            [['id_subproyecto', 'descripcion', 'codigo_presupuestario', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_subproyecto', 'validacion'], 'integer'],
             [['presupuesto'], 'number'],
-            [['fecha_inicio','fecha_fin'], 'verifDate'],
+            [['fecha_inicio', 'fecha_fin'], 'safe'],
             [['descripcion'], 'string', 'max' => 500],
             [['codigo_presupuestario'], 'string', 'max' => 10],
             [['id_subproyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Subproyectos::className(), 'targetAttribute' => ['id_subproyecto' => 'id']],
         ];
     }
-    
-
-     //  -----> CREAR REGLAS DE VALIDACIONES PARA FECHAS    
-    public function verifDate($attribute){
-        $time = new \DateTime('now', new \DateTimeZone('America/Guayaquil'));
-        $currentDate = $time->format('Y-m-d h:m:s');
-        
-        if($this->$attribute <=  $currentDate ){
-            $this->addError($attribute, 'No puede ser menor a la fecha actual');
-        }
-        
-    }
-    
-   
-    
-
 
     /**
      * @inheritdoc
      */
-    
-    
-    
     public function attributeLabels()
     {
         return [
@@ -72,9 +54,10 @@ class Actividades extends \yii\db\ActiveRecord
             'id_subproyecto' => 'Id Subproyecto',
             'descripcion' => 'Descripcion',
             'codigo_presupuestario' => 'Codigo Presupuestario',
-            'presupuesto_actividades' => 'Presupuesto Actividades',
+            'presupuesto' => 'Presupuesto',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
+            'validacion' => 'Validacion',
         ];
     }
 

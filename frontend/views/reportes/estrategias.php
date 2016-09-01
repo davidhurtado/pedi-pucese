@@ -68,7 +68,7 @@ CrudAsset::register($this);
                         return $objetivo->numeracion . '.' . $estrategia->numeracion . ': ' . $model->descripcion;
                     },
                     'filterType' => GridView::FILTER_SELECT2,
-                    'filter' => ArrayHelper::map(Objetivos::find()->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
+                    'filter' => ArrayHelper::map(Objetivos::find()->where(['validacion'=>1])->orderBy('id')->asArray()->all(), 'id', 'descripcion'),
                     'filterWidgetOptions' => [
                         'pluginOptions' => ['allowClear' => true],
                     ],

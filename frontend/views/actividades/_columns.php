@@ -38,6 +38,10 @@ return [
         // 'class'=>'\kartik\grid\DataColumn',
         // 'attribute'=>'fecha_fin',
     // ],
+    // [
+        // 'class'=>'\kartik\grid\DataColumn',
+        // 'attribute'=>'validacion',
+    // ],
     [
         'class' => 'kartik\grid\ActionColumn',
         'dropdown' => false,

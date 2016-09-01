@@ -30,6 +30,16 @@ class ReportesController extends Controller {
      */
     public function behaviors() {
         return [
+             /*'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['create', 'update', 'index', 'view', 'objetivos','create-index', 'delete', 'bulk-delete'],
+                        'allow' => true,
+                        'roles' => ['admin', 'reportes','superadmin'],
+                    ],
+                ],
+            ],*/
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -65,7 +75,15 @@ class ReportesController extends Controller {
                     'dataProvider' => $dataProvider,
         ]);
     }
+  public function actionObjetivos() {
+        $search = new ObjetivosSearch();
+        $dataProvider = $search->search(Yii::$app->request->queryParams);
 
+        return $this->render('objetivos', [
+                    'search' => $search,
+                    'dataProvider' => $dataProvider,
+        ]);
+    }
     public function actionProgramas() {
         $search = new ProgramasSearch();
         $dataProvider = $search->search(Yii::$app->request->queryParams);
@@ -96,14 +114,5 @@ class ReportesController extends Controller {
         ]);
     }
 
-    public function actionObjetivos() {
-        $search = new objetivosSearch();
-        $dataProvider = $search->search(Yii::$app->request->queryParams);
-
-        return $this->render('objetivos', [
-                    'search' => $search,
-                    'dataProvider' => $dataProvider,
-        ]);
-    }
 
 }

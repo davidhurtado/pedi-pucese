@@ -3,7 +3,7 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Actividades */
+/* @var $model frontend\models\Actividades */
 ?>
 <div class="actividades-view">
  
@@ -17,6 +17,7 @@ use yii\widgets\DetailView;
             'presupuesto',
             'fecha_inicio',
             'fecha_fin',
+            'validacion',
         ],
     ]) ?>
 

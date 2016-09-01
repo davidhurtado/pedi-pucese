@@ -2,8 +2,11 @@
 
 namespace app\models;
 
+use yii\helpers\ArrayHelper;
+use yii\web\UploadedFile;
+use yii\helpers\Url;
 use Yii;
-
+use \yii\db\Query;
 /**
  * This is the model class for table "subproyectos".
  *
@@ -18,28 +21,26 @@ use Yii;
  * @property Actividades[] $actividades
  * @property Proyectos $idProyecto
  */
-class Subproyectos extends \yii\db\ActiveRecord
-{
+class Subproyectos extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public $evidencias;
+    public $evidencias_array = Array();
+
+    public static function tableName() {
         return 'subproyectos';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id_proyecto', 'nombre', 'descripcion', 'evidencias', 'fecha_inicio', 'fecha_fin'], 'required'],
+            [['id_proyecto', 'fecha_inicio', 'fecha_fin'], 'required'],
             [['id_proyecto'], 'integer'],
-            [['fecha_inicio', 'fecha_fin'], 'safe'],
-            [['nombre'], 'string', 'max' => 200],
-            [['descripcion'], 'string', 'max' => 500],
-            [['evidencias'], 'string', 'max' => 300],
+            //[['evidencias'], 'string', 'max' => 300],
             [['id_proyecto'], 'exist', 'skipOnError' => true, 'targetClass' => Proyectos::className(), 'targetAttribute' => ['id_proyecto' => 'id']],
         ];
     }
@@ -47,14 +48,10 @@ class Subproyectos extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
-            'nombre' => 'Nombre',
-            'descripcion' => 'Descripcion',
-            'evidencias' => 'Evidencias Subproyectos',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
         ];
@@ -63,16 +60,34 @@ class Subproyectos extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getActividades()
-    {
+    public function getActividades() {
         return $this->hasMany(Actividades::className(), ['id_subproyecto' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdProyecto()
-    {
+    public function getIdProyecto() {
         return $this->hasOne(Proyectos::className(), ['id' => 'id_proyecto']);
     }
+
+    public function getFechas() {
+        $model_ = Subproyectos::findOne($_GET['id']);
+        return $model_;
+    }
+
+
+    //Para los Fixtures
+    public function saveSubproyecto() {
+        if (!$this->validate()) {
+            return null;
+        }
+        $subproyecto = new Subproyectos();
+        $subproyecto->id_proyecto = $this->id_proyecto;
+        $subproyecto->evidencias = $this->evidencias;
+        $subproyecto->fecha_inicio = $this->fecha_inicio;
+        $subproyecto->fecha_fin = $this->fecha_fin;
+        return $subproyecto->save() ? $subproyecto : null;
+    }
+
 }

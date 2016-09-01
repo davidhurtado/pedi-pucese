@@ -77,7 +77,14 @@ use yii\helpers\ArrayHelper;
             <?= $form->field($model, 'presupuesto')->textInput() ?>
         </div>
         <div class="form-group field-proyectos-estado col-md-6 col-xs-12 col-sm-6 required">
-            <?= $form->field($model, 'estado')->dropDownList(['1' => 'Borrador', '2' => 'Ok', '3' => 'Ejecucion','4' => 'Terminado']); ?>
+            <?php 
+            if(Yii::$app->user->can('admin')||Yii::$app->user->can('superadmin')||Yii::$app->user->can('aprobar-poa')){
+                $drop=['1' => 'Borrador', '2' => 'Ok', '3' => 'Ejecucion','4' => 'Terminado'];
+            }else{
+                 $drop=['1' => 'Borrador', '2' => 'Ok'];
+            }
+            ?>
+            <?= $form->field($model, 'estado')->dropDownList($drop); ?>
         </div>
         <?php if (!Yii::$app->request->isAjax) { ?>
             <div class="form-group">

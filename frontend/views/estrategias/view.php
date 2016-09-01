@@ -17,6 +17,7 @@ use \yii\db\Query;
 $objetivo = Objetivos::findOne(['id' => $model->id_objetivo]);
 
 $this->title = 'Estrategia ' . $objetivo->numeracion . '.' . $model->numeracion . ': ' . $model->descripcion;
+Yii::$app->params['titulo_exportacion']=$this->title ;
 CrudAsset::register($this);
 ?>
 <div class="estrategias-view">

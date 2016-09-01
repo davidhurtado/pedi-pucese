@@ -10,15 +10,14 @@ use app\models\Objetivos;
 /**
  * ObjetivosSearch represents the model behind the search form about `app\models\Objetivos`.
  */
-class ObjetivosSearch extends Objetivos
-{
+class ObjetivosSearch extends Objetivos {
+
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['id', 'numeracion', 'responsable'], 'integer'],
+            [['id', 'numeracion','validacion'], 'integer'],
             [['descripcion', 'colaboradores', 'fecha_inicio', 'fecha_fin'], 'safe'],
         ];
     }
@@ -26,8 +25,7 @@ class ObjetivosSearch extends Objetivos
     /**
      * @inheritdoc
      */
-    public function scenarios()
-    {
+    public function scenarios() {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -39,9 +37,8 @@ class ObjetivosSearch extends Objetivos
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
-    {
-        $query = Objetivos::find();
+    public function search($params) {
+        $query = Objetivos::find()->orderBy('id');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,15 +54,20 @@ class ObjetivosSearch extends Objetivos
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'fecha_inicio' => $this->fecha_inicio,
-            'fecha_fin' => $this->fecha_fin,
             'numeracion' => $this->numeracion,
-            'responsable' => $this->responsable,
+            'validacion' => $this->validacion,
         ]);
+        if (!empty($this->fecha_inicio)) {
+            $query->andFilterWhere(['between', 'fecha_inicio', $this->fecha_inicio . '-01-01', $this->fecha_inicio . '-12-31']);
+        }
+        if (!empty($this->fecha_fin)) {
+            $query->andFilterWhere(['between', 'fecha_fin', $this->fecha_fin . '-01-01', $this->fecha_fin . '-12-31']);
+        }
 
         $query->andFilterWhere(['like', 'descripcion', $this->descripcion])
-            ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
+                ->andFilterWhere(['like', 'colaboradores', $this->colaboradores]);
 
         return $dataProvider;
     }
+
 }
